@@ -21,7 +21,7 @@ export default function Login() {
             .then(({ data }) => {
                 setUser(data.user);
                 setToken(data.token);
-                message.success("Login successful!");
+                message.success("Signed in successfully!");
             })
             .catch((err) => {
                 const error =
@@ -108,7 +108,7 @@ export default function Login() {
                                 loading={loading}
                                 style={{ width: "100%", borderRadius: "10px" }}
                             >
-                                {loading ? "Logging in..." : "Sign In"}
+                                {loading ? "Signing in..." : "Sign In"}
                             </Button>
                         </Form.Item>
                     </Form>
