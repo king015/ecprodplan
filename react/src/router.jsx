@@ -1,17 +1,17 @@
 import { Navigate, createBrowserRouter } from "react-router-dom";
-import Login from "./views/Login";
-import Signup from "./views/Signup";
-import Users from "./views/Users";
+import Login from "./views/login/Login";
+import Signup from "./views/signup/Signup";
+import Users from "./views/users/Users";
 import NotFound from "./views/notfound/NotFound";
 import DefaultLayouts from "./components/layouts/DefaultLayouts";
 import GuestLayouts from "./components/layouts/GuestLayouts";
-import Dashboard from "./views/Dashboard";
-import UserForm from "./views/UserForm";
-import FinishedGoods from "./views/FinishedGoods";
+import Dashboard from "./views/dashboard/Dashboard";
+import UserForm from "./views/users/UserForm";
+import FinishedGoods from "./views/finishedGoods/FinishedGoods";
 
-import ProductionPlan from "./views/ProductionPlan";
+import ProductionPlan from "./views/productionPlan/ProductionPlan";
 import Logs from "./views/Views";
-import WorkInProcess from "./views/WorkInProcess";
+import WorkInProcess from "./views/wip/WorkInProcess";
 
 const router = createBrowserRouter([
     {
@@ -20,7 +20,7 @@ const router = createBrowserRouter([
         children: [
             {
                 path: "/",
-                element: <Navigate to="/users" />,
+                element: <Navigate to="/dashboard" />,
             },
             {
                 path: "/users",

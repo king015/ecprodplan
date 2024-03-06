@@ -17,7 +17,7 @@ import {
     TablePagination,
     styled,
 } from "@mui/material";
-import UserFormModal from "./UserForm";
+import UserFormModal from "./users/UserForm";
 
 const StyledTableContainer = styled(TableContainer)(({ theme }) => ({
     marginBottom: theme.spacing(2),

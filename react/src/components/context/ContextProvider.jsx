@@ -47,6 +47,7 @@ export const ContextProvider = ({ children }) => {
     );
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useStateContext = () => useContext(StateContext);
 
 ContextProvider.propTypes = {

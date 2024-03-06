@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ProductionPlanController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -33,6 +34,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+     // Production Plan routes
+     Route::get('/production-plans', [ProductionPlanController::class, 'index'])->name('production-plans.index');
+     Route::post('/production-plans', [ProductionPlanController::class, 'store'])->name('production-plans.store');
+     Route::get('/production-plans/{productionPlan}', [ProductionPlanController::class, 'show'])->name('production-plans.show');
+     Route::put('/production-plans/{productionPlan}', [ProductionPlanController::class, 'update'])->name('production-plans.update');
+     Route::delete('/production-plans/{productionPlan}', [ProductionPlanController::class, 'destroy'])->name('production-plans.destroy');
 });
 
 require __DIR__.'/auth.php';
