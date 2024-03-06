@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Password;
+use Illuminate\Validation\Rule;
 
 class StoreUserRequest extends FormRequest
 {
@@ -24,13 +25,18 @@ class StoreUserRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:55',
-            'email' => 'required|email|unique,users,email',
+            'email' => [
+                'required',
+                'email',
+                Rule::unique('users', 'email'),
+            ],
             'password' => [
                 'required',
                 'confirmed',
                 Password::min(8)
-                ->letters()
-                ->symbols()
+                    ->letters()
+                    ->symbols()
+                    ->uncompromised(), // Add this rule to check if the password has been compromised
             ],
         ];
     }
