@@ -1,7 +1,7 @@
 import { Link as RouterLink } from "react-router-dom";
 import { createRef, useState } from "react";
-import { useStateContext } from "../components/context/ContextProvider";
-import axiosClient from "../axios-client";
+import { useStateContext } from "../../components/context/ContextProvider";
+import axiosClient from "../../axios-client";
 import {
     Box,
     Button,
