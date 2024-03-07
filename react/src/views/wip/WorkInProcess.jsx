@@ -52,7 +52,7 @@ export default function FinishedGoods() {
             cancelText: "No",
             onOk() {
                 axiosClient
-                    .delete(`/work_in_process/${wip.id}`)
+                    .delete(`/work_in_processes/${wip.id}`)
                     .then(() => {
                         getWorkInProcess();
                         message.success("Data successfully deleted");
@@ -69,10 +69,11 @@ export default function FinishedGoods() {
     const getWorkInProcess = () => {
         setLoading(true);
         axiosClient
-            .get("/combined_data")
+            .get("/work_in_processes")
             .then(({ data }) => {
+                console.log(data);
                 setLoading(false);
-                setWorkInProcess(data.production_plan);
+                setWorkInProcess(data.work_in_process);
             })
             .catch(() => {
                 setLoading(false);
@@ -87,14 +88,16 @@ export default function FinishedGoods() {
         setFilterValue(event.target.value);
     };
 
-    const filteredData = workInProcess.filter((fg) =>
-        Object.values(fg).some(
-            (value) =>
-                value &&
-                typeof value === "string" &&
-                value.toLowerCase().includes(filterValue.toLowerCase())
-        )
-    );
+    const filteredData = Array.isArray(workInProcess)
+        ? workInProcess.filter((fg) =>
+              Object.values(fg).some(
+                  (value) =>
+                      value &&
+                      typeof value === "string" &&
+                      value.toLowerCase().includes(filterValue.toLowerCase())
+              )
+          )
+        : [];
 
     const columns = [
         {

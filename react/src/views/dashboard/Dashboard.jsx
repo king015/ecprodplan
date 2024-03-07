@@ -17,19 +17,18 @@ function Dashboard() {
         { year: "2024", value: 5 },
     ];
 
-    // Chart configuration
     const chartConfig = {
         data: data,
         xField: "year",
         yField: "value",
-        height: 400, // Increased height for better visibility
+        height: 400,
         point: {
             size: 5,
             shape: "diamond",
             style: {
-                fill: "white", // Color of the points
-                stroke: "#5B8FF9", // Border color of the points
-                lineWidth: 2, // Border width of the points
+                fill: "white",
+                stroke: "#5B8FF9",
+                lineWidth: 2,
             },
         },
         label: {
@@ -39,7 +38,6 @@ function Dashboard() {
         },
     };
 
-    // Columns configuration for the table
     const columns = [
         {
             title: "Activity",
@@ -74,13 +72,10 @@ function Dashboard() {
             }
         };
 
-        // Fetch activity data initially
         fetchActivityData();
 
-        // Fetch activity data periodically every 5 seconds
         const intervalId = setInterval(fetchActivityData, 5000);
 
-        // Cleanup interval on component unmount
         return () => clearInterval(intervalId);
     }, []);
 
@@ -92,21 +87,50 @@ function Dashboard() {
                 alignItems: "center",
                 padding: "20px",
                 background: "#f0f2f5",
+                textAlign: "left",
+                marginLeft: "20px",
             }}
         >
-            <div style={{ display: "flex", justifyContent: "center" }}>
-                <div style={{ padding: "20px", margin: "0 10px" }}>
+            <h1
+                style={{
+                    fontSize: "2.5rem",
+                    fontWeight: "bold",
+                    marginBottom: "20px",
+                    color: "#333",
+                }}
+            >
+                Dashboard
+            </h1>
+            <div
+                style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    flexWrap: "wrap",
+                    maxWidth: "1700px",
+                    width: "100%",
+                    margin: "0 auto",
+                }}
+            >
+                <div
+                    style={{
+                        padding: "20px",
+                        margin: "10px",
+                        width: "calc(33% - 20px)",
+                    }}
+                >
                     <Card
                         title="Users"
                         bordered={false}
                         style={{
                             borderRadius: "8px",
                             background:
-                                "linear-gradient(45deg, #ff9a9e, #fad0c4)",
+                                "linear-gradient(45deg, #FF6B81, #FF8E53)",
                             color: "#fff",
-                            width: "385px",
-                            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+                            width: "100%",
+                            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+                            transition: "transform 0.3s",
                         }}
+                        hoverable
                     >
                         <p
                             style={{
@@ -117,14 +141,14 @@ function Dashboard() {
                         >
                             Total Users: {usersValue}
                         </p>
-                        {/* Button linking to the Users section */}
+
                         <Link to="/users">
                             <Button
                                 type="primary"
                                 style={{
                                     marginTop: "10px",
-                                    background: "#FF6B81",
-                                    borderColor: "#FF6B81",
+                                    background: "#ff9a00",
+                                    borderColor: "#ff9a00",
                                 }}
                             >
                                 View
@@ -132,18 +156,26 @@ function Dashboard() {
                         </Link>
                     </Card>
                 </div>
-                <div style={{ padding: "20px", margin: "0 10px" }}>
+                <div
+                    style={{
+                        padding: "20px",
+                        margin: "10px",
+                        width: "calc(33% - 20px)",
+                    }}
+                >
                     <Card
                         title="Work In Process"
                         bordered={false}
                         style={{
                             borderRadius: "8px",
                             background:
-                                "linear-gradient(45deg, #96fbc4, #f9f586)",
-                            color: "#333",
-                            width: "385px",
-                            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+                                "linear-gradient(45deg, #00DBDE, #FC00FF)",
+                            color: "#fff",
+                            width: "100%",
+                            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+                            transition: "transform 0.3s",
                         }}
+                        hoverable
                     >
                         <p
                             style={{
@@ -154,14 +186,14 @@ function Dashboard() {
                         >
                             Total Work In Process: {workInProgressValue}
                         </p>
-                        {/* Button linking to the Work In Process section */}
+
                         <Link to="/work-in-process">
                             <Button
                                 type="primary"
                                 style={{
                                     marginTop: "10px",
-                                    background: "#82ca9d",
-                                    borderColor: "#82ca9d",
+                                    background: "#00FFC8",
+                                    borderColor: "#00FFC8",
                                 }}
                             >
                                 View
@@ -169,18 +201,26 @@ function Dashboard() {
                         </Link>
                     </Card>
                 </div>
-                <div style={{ padding: "20px", margin: "0 10px" }}>
+                <div
+                    style={{
+                        padding: "20px",
+                        margin: "10px",
+                        width: "calc(33% - 20px)",
+                    }}
+                >
                     <Card
                         title="Finished Goods"
                         bordered={false}
                         style={{
                             borderRadius: "8px",
                             background:
-                                "linear-gradient(45deg, #96fbc4, #f9f586)",
-                            color: "#333",
-                            width: "385px",
-                            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+                                "linear-gradient(45deg, #E8CBC0, #636FA4)",
+                            color: "#fff",
+                            width: "100%",
+                            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+                            transition: "transform 0.3s",
                         }}
+                        hoverable
                     >
                         <p
                             style={{
@@ -191,14 +231,14 @@ function Dashboard() {
                         >
                             Total Finished Goods: {finishedGoodsValue}
                         </p>
-                        {/* Button linking to the Finished Goods section */}
+
                         <Link to="/finished-goods">
                             <Button
                                 type="primary"
                                 style={{
                                     marginTop: "10px",
-                                    background: "#f6cd61",
-                                    borderColor: "#f6cd61",
+                                    background: "#B06AB3",
+                                    borderColor: "#B06AB3",
                                 }}
                             >
                                 View
@@ -213,17 +253,37 @@ function Dashboard() {
                     display: "flex",
                     justifyContent: "center",
                     marginTop: 20,
-                    background: "#fff",
+                    background:
+                        "linear-gradient(180deg, #ffffff 0%, #f0f2f5 100%)",
                     borderRadius: "8px",
-                    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+                    boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
                     padding: "20px",
-                    overflow: "auto",
-                    width: "100%",
-                    maxWidth: "1270px",
+                    maxWidth: "1700px",
+                    margin: "20px auto",
                 }}
             >
                 <div style={{ width: "60%", marginRight: 10 }}>
-                    <Line {...chartConfig} />
+                    <Line
+                        {...chartConfig}
+                        style={{
+                            background: "#fff",
+                            borderRadius: "8px",
+                            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+                        }}
+                        interactions={[
+                            {
+                                type: "slider",
+                                cfg: {
+                                    start: 0,
+                                    end: 1,
+                                },
+                            },
+                            {
+                                type: "tooltip",
+                            },
+                        ]}
+                        animation={false}
+                    />
                 </div>
                 <div style={{ width: "40%" }}>
                     <h4 style={{ marginBottom: "20px", color: "#333" }}>

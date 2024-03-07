@@ -22,6 +22,7 @@ import {
     FolderViewOutlined,
     FileDoneOutlined,
     SyncOutlined,
+    DesktopOutlined,
 } from "@ant-design/icons";
 
 import {
@@ -104,6 +105,7 @@ export default function DefaultLayouts() {
         axiosClient.get("/user").then(({ data }) => {
             setUser(data);
         });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     if (!token) {
@@ -113,29 +115,66 @@ export default function DefaultLayouts() {
     return (
         <Box sx={{ display: "flex" }}>
             <CssBaseline />
-            <AppBar position="fixed" open={open} sx={{ bgcolor: "#1976d2" }}>
+            <AppBar
+                position="fixed"
+                open={open}
+                sx={{ bgcolor: "#1976d2", boxShadow: "none" }}
+            >
                 <Toolbar
-                    sx={{ display: "flex", justifyContent: "space-between" }}
+                    sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        padding: "0 20px",
+                    }}
                 >
-                    <Box sx={{ display: "flex", alignItems: "center" }}>
+                    <Box
+                        sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            transition: "transform 0.3s",
+                            transform: open
+                                ? "translateX(100px)"
+                                : "translateX(0)",
+                        }}
+                    >
+                        <Typography
+                            variant="h6"
+                            noWrap
+                            sx={{
+                                color: "#fff",
+                                flexGrow: 1,
+                                paddingRight: open ? "16px" : "0",
+                                padding: "15px",
+                                transition: "margin-left 0.3s",
+                            }}
+                        >
+                            ECPDP
+                        </Typography>
                         <IconButton
                             color="inherit"
                             aria-label="toggle drawer"
                             onClick={handleDrawerToggle}
                             edge="start"
-                            sx={{ mr: 2 }}
+                            sx={{
+                                mr: 2,
+                                transition: "margin-right 0.3s",
+                                marginRight: open ? "0" : "-16px",
+                            }}
                         >
                             {open ? <ChevronLeftIcon /> : <MenuIcon />}
                         </IconButton>
-                        <Typography variant="h6" noWrap>
-                            ECPDP
-                        </Typography>
                     </Box>
+
                     <Box sx={{ display: "flex", alignItems: "center" }}>
                         <Typography
                             variant="body1"
                             noWrap
-                            sx={{ mr: 2, textTransform: "uppercase" }}
+                            sx={{
+                                mr: 2,
+                                textTransform: "uppercase",
+                                color: "#fff",
+                            }}
                         >
                             {user.name}
                         </Typography>
@@ -148,9 +187,9 @@ export default function DefaultLayouts() {
                             edge="end"
                         >
                             {isMenuOpen ? (
-                                <ExpandLessOutlinedIcon />
-                            ) : (
                                 <ExpandMoreOutlinedIcon />
+                            ) : (
+                                <ExpandLessOutlinedIcon />
                             )}
                         </IconButton>
                         <Menu
@@ -173,238 +212,283 @@ export default function DefaultLayouts() {
                     </Box>
                 </Toolbar>
             </AppBar>
+
             {loading && <div>Loading...</div>}
             <Drawer
                 sx={{
                     width: drawerWidth,
                     flexShrink: 0,
+                    transition: "width 0.3s",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "space-between", // Arrange items vertically with space in-between
                     "& .MuiDrawer-paper": {
                         width: drawerWidth,
                         boxSizing: "border-box",
-                        backgroundColor: "#343434 ",
-                        color: "#fff",
+                        backgroundColor: "#2E2E2E",
+                        color: "#FFFFFF",
                         marginTop: "64px",
                         height: `calc(100% - 64px)`,
+                        boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.2)",
                     },
                 }}
                 variant="persistent"
                 anchor="left"
                 open={open}
             >
-                <List>
-                    <ListItem>
-                        <StyledListItemIcon>
-                            <CalendarMonthOutlinedIcon />
-                        </StyledListItemIcon>
-                        <ListItemText
-                            primary={`${currentTime.toLocaleDateString(
-                                "en-US",
-                                {
-                                    weekday: "short",
-                                    month: "short",
-                                    day: "2-digit",
-                                    year: "numeric",
-                                }
-                            )}`}
+                <div>
+                    <List>
+                        <ListItem>
+                            <StyledListItemIcon>
+                                <CalendarMonthOutlinedIcon />
+                            </StyledListItemIcon>
+                            <ListItemText
+                                primary={`${currentTime.toLocaleDateString(
+                                    "en-US",
+                                    {
+                                        weekday: "short",
+                                        month: "short",
+                                        day: "2-digit",
+                                        year: "numeric",
+                                    }
+                                )}`}
+                            />
+                        </ListItem>
+                        <Divider
+                            sx={{
+                                backgroundColor: "#ffffff",
+                                opacity: 0.5,
+                            }}
                         />
-                    </ListItem>
-                    <Divider
-                        sx={{
-                            backgroundColor: "#ffffff",
-                            opacity: 0.5,
-                            height: 3,
-                        }}
-                    />
-                    <ListItem>
-                        <StyledListItemIcon>
-                            <AccessTimeOutlinedIcon />
-                        </StyledListItemIcon>
-                        <ListItemText
-                            primary={`${currentTime.toLocaleTimeString()}`}
+                        <ListItem>
+                            <StyledListItemIcon>
+                                <AccessTimeOutlinedIcon />
+                            </StyledListItemIcon>
+                            <ListItemText
+                                primary={`${currentTime.toLocaleTimeString()}`}
+                            />
+                        </ListItem>
+                        <Divider
+                            sx={{
+                                backgroundColor: "#ffffff",
+                                opacity: 0.5,
+                            }}
                         />
-                    </ListItem>
-                    <Divider
-                        sx={{
-                            backgroundColor: "#ffffff",
-                            opacity: 0.5,
-                            height: 2,
-                        }}
-                    />
-                    <ListItem
-                        button
-                        component={Link}
-                        to="/dashboard"
-                        sx={{
-                            transition: "0.3s",
-                            "&:hover": {
-                                paddingLeft: "32px",
-                            },
-                            "&:hover .MuiListItemIcon-root": {
-                                marginLeft: "8px",
-                            },
-                        }}
-                    >
-                        <StyledListItemIcon sx={{ transition: "0.3s" }}>
-                            <DashboardIcon />
-                        </StyledListItemIcon>
-                        <ListItemText primary="Dashboard" />
-                    </ListItem>
-                    <Divider
-                        sx={{
-                            backgroundColor: "#ffffff",
-                            opacity: 0.5,
-                            height: 3,
-                        }}
-                    />
+                        <ListItem
+                            button
+                            component={Link}
+                            to="/dashboard"
+                            sx={{
+                                transition: "0.3s",
+                                "&:hover": {
+                                    paddingLeft: "32px",
+                                },
+                                "&:hover .MuiListItemIcon-root": {
+                                    marginLeft: "8px",
+                                },
+                            }}
+                        >
+                            <StyledListItemIcon sx={{ transition: "0.3s" }}>
+                                <DashboardIcon />
+                            </StyledListItemIcon>
+                            <ListItemText primary="Dashboard" />
+                        </ListItem>
+                        <Divider
+                            sx={{
+                                backgroundColor: "#ffffff",
+                                opacity: 0.5,
+                            }}
+                        />
 
-                    <Accordion
-                        sx={{
-                            backgroundColor: "#212121",
-                            borderRadius: "8px",
-                            boxShadow: "none",
-                        }}
-                    >
-                        <AccordionSummary
-                            expandIcon={
-                                <ExpandMoreOutlinedIcon
+                        <Accordion
+                            sx={{
+                                backgroundColor: "#212121",
+                                borderRadius: "8px",
+                                boxShadow: "none",
+                            }}
+                        >
+                            <AccordionSummary
+                                expandIcon={
+                                    <ExpandMoreOutlinedIcon
+                                        sx={{ color: "#fefefe" }}
+                                    />
+                                }
+                                aria-controls="finished-goods-content"
+                                id="finished-goods-header"
+                                sx={{
+                                    backgroundColor: "#343434",
+                                    borderBottom: "1px solid #616161",
+                                }}
+                            >
+                                <StyledListItemIcon>
+                                    <PsychologyIcon />
+                                </StyledListItemIcon>
+                                <ListItemText
+                                    primary="Production Plan"
                                     sx={{ color: "#fefefe" }}
                                 />
-                            }
-                            aria-controls="finished-goods-content"
-                            id="finished-goods-header"
+                            </AccordionSummary>
+                            <AccordionDetails
+                                sx={{ padding: 0, color: "#fefefe" }}
+                            >
+                                <List sx={{ backgroundColor: "#212121" }}>
+                                    <ListItem
+                                        button
+                                        component={Link}
+                                        to="/production-plan"
+                                        sx={{
+                                            paddingLeft: "48px",
+                                        }}
+                                    >
+                                        <StyledListItemIcon>
+                                            <FolderViewOutlined />
+                                        </StyledListItemIcon>
+                                        <ListItemText primary="Overview" />
+                                    </ListItem>
+                                    <Divider
+                                        sx={{
+                                            backgroundColor: "#ffffff",
+                                            opacity: 0.5,
+                                        }}
+                                    />
+                                    <ListItem
+                                        button
+                                        component={Link}
+                                        to="/finished-goods"
+                                        sx={{
+                                            paddingLeft: "48px",
+                                        }}
+                                    >
+                                        <StyledListItemIcon>
+                                            <FileDoneOutlined />
+                                        </StyledListItemIcon>
+                                        <ListItemText primary="Finished Goods" />
+                                    </ListItem>
+                                    <Divider
+                                        sx={{
+                                            backgroundColor: "#ffffff",
+                                            opacity: 0.5,
+                                        }}
+                                    />
+                                    <ListItem
+                                        button
+                                        component={Link}
+                                        to="/work-in-process"
+                                        sx={{
+                                            paddingLeft: "48px",
+                                        }}
+                                    >
+                                        <StyledListItemIcon>
+                                            <SyncOutlined />{" "}
+                                        </StyledListItemIcon>
+                                        <ListItemText primary="WIP" />
+                                    </ListItem>
+                                </List>
+                            </AccordionDetails>
+                        </Accordion>
+
+                        <Divider
                             sx={{
-                                backgroundColor: "#343434",
-                                borderBottom: "1px solid #616161",
+                                backgroundColor: "#ffffff",
+                                opacity: 0.5,
+                            }}
+                        />
+
+                        <ListItem
+                            button
+                            component={Link}
+                            to="/users"
+                            sx={{
+                                transition: "0.3s",
+                                "&:hover": {
+                                    paddingLeft: "32px",
+                                },
+                                "&:hover .MuiListItemIcon-root": {
+                                    marginLeft: "8px",
+                                },
                             }}
                         >
                             <StyledListItemIcon>
-                                <PsychologyIcon />
+                                <PeopleIcon />
                             </StyledListItemIcon>
-                            <ListItemText
-                                primary="Production Plan"
-                                sx={{ color: "#fefefe" }}
-                            />
-                        </AccordionSummary>
-                        <AccordionDetails sx={{ padding: 0, color: "#fefefe" }}>
-                            <List sx={{ backgroundColor: "#212121" }}>
-                                <ListItem
-                                    button
-                                    component={Link}
-                                    to="/production-plan"
-                                    sx={{
-                                        paddingLeft: "48px",
-                                    }}
-                                >
-                                    <StyledListItemIcon>
-                                        <FolderViewOutlined />
-                                    </StyledListItemIcon>
-                                    <ListItemText primary="Overview" />
-                                </ListItem>
-                                <Divider
-                                    sx={{
-                                        backgroundColor: "#ffffff",
-                                        opacity: 0.5,
-                                    }}
-                                />
-                                <ListItem
-                                    button
-                                    component={Link}
-                                    to="/finished-goods"
-                                    sx={{
-                                        paddingLeft: "48px",
-                                    }}
-                                >
-                                    <StyledListItemIcon>
-                                        <FileDoneOutlined />
-                                    </StyledListItemIcon>
-                                    <ListItemText primary="Finished Goods" />
-                                </ListItem>
-                                <Divider
-                                    sx={{
-                                        backgroundColor: "#ffffff",
-                                        opacity: 0.5,
-                                    }}
-                                />
-                                <ListItem
-                                    button
-                                    component={Link}
-                                    to="/work-in-process"
-                                    sx={{
-                                        paddingLeft: "48px",
-                                    }}
-                                >
-                                    <StyledListItemIcon>
-                                        <SyncOutlined />{" "}
-                                    </StyledListItemIcon>
-                                    <ListItemText primary="WIP" />
-                                </ListItem>
-                            </List>
-                        </AccordionDetails>
-                    </Accordion>
+                            <ListItemText primary="Users" />
+                        </ListItem>
+                        <Divider
+                            sx={{
+                                backgroundColor: "#ffffff",
+                                opacity: 0.5,
+                            }}
+                        />
 
-                    <Divider
-                        sx={{
-                            backgroundColor: "#ffffff",
-                            opacity: 0.5,
-                            height: 2,
-                        }}
-                    />
+                        <ListItem
+                            button
+                            component={Link}
+                            to="/logs"
+                            sx={{
+                                transition: "0.3s",
+                                "&:hover": {
+                                    paddingLeft: "32px",
+                                },
+                                "&:hover .MuiListItemIcon-root": {
+                                    marginLeft: "8px",
+                                },
+                            }}
+                        >
+                            <StyledListItemIcon>
+                                <SaveAsIcon />
+                            </StyledListItemIcon>
+                            <ListItemText primary="Logs" />
+                        </ListItem>
 
-                    <ListItem
-                        button
-                        component={Link}
-                        to="/users"
-                        sx={{
-                            transition: "0.3s",
-                            "&:hover": {
-                                paddingLeft: "32px",
-                            },
-                            "&:hover .MuiListItemIcon-root": {
-                                marginLeft: "8px",
-                            },
+                        <Divider
+                            sx={{
+                                backgroundColor: "#ffffff",
+                                opacity: 0.5,
+                            }}
+                        />
+                    </List>
+                </div>
+                <div
+                    style={{
+                        backgroundColor: "#1976d2",
+                        padding: "10px",
+                        textAlign: "center",
+                        fontSize: "14px",
+                        position: "absolute",
+                        bottom: "20px",
+                        left: "50%",
+                        transform: "translateX(-50%)",
+                        boxShadow: "0px 8px 16px rgba(25, 118, 210, 0.2)",
+                        zIndex: 999,
+                        width: "100%",
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                    }}
+                >
+                    <span
+                        style={{
+                            display: "flex",
+                            alignItems: "center",
+                            marginRight: "auto",
+                            fontWeight: "bold",
                         }}
                     >
-                        <StyledListItemIcon>
-                            <PeopleIcon />
-                        </StyledListItemIcon>
-                        <ListItemText primary="Users" />
-                    </ListItem>
-                    <Divider
-                        sx={{
-                            backgroundColor: "#ffffff",
-                            opacity: 0.5,
-                            height: 2,
-                        }}
-                    />
+                        <DesktopOutlined style={{ marginRight: "5px" }} />
+                        ECPPS
+                    </span>
 
-                    <ListItem
-                        button
-                        component={Link}
-                        to="/logs"
-                        sx={{
-                            transition: "0.3s",
-                            "&:hover": {
-                                paddingLeft: "32px",
-                            },
-                            "&:hover .MuiListItemIcon-root": {
-                                marginLeft: "8px",
-                            },
+                    <span
+                        style={{
+                            fontSize: "14px", // Increase font size for sharper appearance
+                            color: "#ffffff",
+                            fontWeight: "bold", // Adjust font weight for sharper appearance
+                            marginRight: "10px",
                         }}
                     >
-                        <StyledListItemIcon>
-                            <SaveAsIcon />
-                        </StyledListItemIcon>
-                        <ListItemText primary="Logs" />
-                    </ListItem>
-
-                    <Divider
-                        sx={{
-                            backgroundColor: "#ffffff",
-                            opacity: 0.5,
-                            height: 2,
-                        }}
-                    />
-                </List>
+                        v 1.0.0
+                    </span>
+                </div>
             </Drawer>
             <Main open={open}>
                 <MainContentBox>
@@ -412,7 +496,7 @@ export default function DefaultLayouts() {
                 </MainContentBox>
                 <Footer>
                     <Typography variant="body2" align="center">
-                        &copy; ECPDP {new Date().getFullYear()}
+                        &copy; ECPPS {new Date().getFullYear()}
                     </Typography>
                 </Footer>
             </Main>

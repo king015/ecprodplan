@@ -16,6 +16,7 @@ namespace App\Models{
  * 
  *
  * @property int $id
+ * @property int|null $wip_id
  * @property string $customer
  * @property string $code
  * @property string $itemDescription
@@ -29,6 +30,9 @@ namespace App\Models{
  * @property int $fg_out
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property int $work_in_process_id
+ * @property-read \App\Models\ProductionPlan|null $productionPlan
+ * @method static \Database\Factories\FinishedGoodsFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|FinishedGoods newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|FinishedGoods newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|FinishedGoods query()
@@ -46,6 +50,8 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|FinishedGoods whereLocation($value)
  * @method static \Illuminate\Database\Eloquent\Builder|FinishedGoods wherePartNumber($value)
  * @method static \Illuminate\Database\Eloquent\Builder|FinishedGoods whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|FinishedGoods whereWipId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|FinishedGoods whereWorkInProcessId($value)
  */
 	class FinishedGoods extends \Eloquent {}
 }
@@ -104,6 +110,11 @@ namespace App\Models{
  * @property int $fg_out
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\FinishedGoods> $finishedGoods
+ * @property-read int|null $finished_goods_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\WorkInProcess> $workInProcess
+ * @property-read int|null $work_in_process_count
+ * @method static \Database\Factories\ProductionPlanFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|ProductionPlan newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|ProductionPlan newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|ProductionPlan query()
@@ -228,6 +239,8 @@ namespace App\Models{
  * @property int $fp_packing
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\ProductionPlan|null $productionPlan
+ * @method static \Database\Factories\WorkInProcessFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|WorkInProcess newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|WorkInProcess newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|WorkInProcess query()

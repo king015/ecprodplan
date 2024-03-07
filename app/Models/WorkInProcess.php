@@ -44,4 +44,10 @@ class WorkInProcess extends Model
         'sealing',
         'fp_packing',
     ];
+
+    public function productionPlan()
+    {
+        return $this->belongsTo(ProductionPlan::class, 'work_in_process_id');
+    }
+
 }

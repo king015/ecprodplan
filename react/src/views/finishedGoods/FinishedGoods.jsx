@@ -71,10 +71,11 @@ export default function FinishedGoods() {
     const getFinishedGoods = () => {
         setLoading(true);
         axiosClient
-            .get("/combined_data")
+            .get("/finished_goods") // Change the endpoint to fetch combined data
             .then(({ data }) => {
+                console.log(data); // Log the data received from the server
                 setLoading(false);
-                setFinishedGoods(data.production_plan);
+                setFinishedGoods(data || []);
             })
             .catch(() => {
                 setLoading(false);
@@ -89,14 +90,16 @@ export default function FinishedGoods() {
         getFinishedGoods();
     }, []);
 
-    const filteredData = finishedGoods.filter((fg) =>
-        Object.values(fg).some(
-            (value) =>
-                value &&
-                typeof value === "string" &&
-                value.toLowerCase().includes(filterValue.toLowerCase())
-        )
-    );
+    const filteredData = Array.isArray(finishedGoods)
+        ? finishedGoods.filter((fg) =>
+              Object.values(fg).some(
+                  (value) =>
+                      value &&
+                      typeof value === "string" &&
+                      value.toLowerCase().includes(filterValue.toLowerCase())
+              )
+          )
+        : [];
 
     return (
         <>

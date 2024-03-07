@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\FinishedGoodsController;
 use App\Http\Controllers\ProductionPlanController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\WorkInProcessController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -36,11 +38,27 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
      // Production Plan routes
-     Route::get('/production-plans', [ProductionPlanController::class, 'index'])->name('production-plans.index');
-     Route::post('/production-plans', [ProductionPlanController::class, 'store'])->name('production-plans.store');
-     Route::get('/production-plans/{productionPlan}', [ProductionPlanController::class, 'show'])->name('production-plans.show');
-     Route::put('/production-plans/{productionPlan}', [ProductionPlanController::class, 'update'])->name('production-plans.update');
-     Route::delete('/production-plans/{productionPlan}', [ProductionPlanController::class, 'destroy'])->name('production-plans.destroy');
+     Route::get('/production-plan', [ProductionPlanController::class, 'index'])->name('production-plan.index');
+     Route::post('/production-plan', [ProductionPlanController::class, 'store'])->name('production-pla.store');
+     Route::get('/production-plan/{productionPlan}', [ProductionPlanController::class, 'show'])->name('production-plan.show');
+     Route::put('/production-plan/{productionPlan}', [ProductionPlanController::class, 'update'])->name('production-plan.update');
+     Route::delete('/production-plan/{productionPlan}', [ProductionPlanController::class, 'destroy'])->name('production-plan.destroy');
+
+       // Work In Process routes
+    Route::get('/work-in-process', [WorkInProcessController::class, 'index'])->name('work-in-process.index');
+    Route::post('/work-in-process', [WorkInProcessController::class, 'store'])->name('work-in-process.store');
+    Route::get('/work-in-process/{workInProcess}', [WorkInProcessController::class, 'show'])->name('work-in-process.show');
+    Route::put('/work-in-process/{workInProcess}', [WorkInProcessController::class, 'update'])->name('work-in-process.update');
+    Route::delete('/work-in-process/{workInProcess}', [WorkInProcessController::class, 'destroy'])->name('work-in-process.destroy');
+
+    // Finished Goods routes
+    Route::get('/finished-goods', [FinishedGoodsController::class, 'index'])->name('finished-goods.index');
+    Route::post('/finished-goods', [FinishedGoodsController::class, 'store'])->name('finished-goods.store');
+    Route::get('/finished-goods/{finishedGoods}', [FinishedGoodsController::class, 'show'])->name('finished-goods.show');
+    Route::put('/finished-goods/{finishedGoods}', [FinishedGoodsController::class, 'update'])->name('finished-goods.update');
+    Route::delete('/finished-goods/{finishedGoods}', [FinishedGoodsController::class, 'destroy'])->name('finished-goods.destroy');
+
+
 });
 
 require __DIR__.'/auth.php';

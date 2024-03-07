@@ -25,7 +25,7 @@ import { exportToCSV, exportToExcel } from "../../exportUtils";
 const { Text } = Typography;
 
 export default function FinishedGoods() {
-    const [workInProcess, setWorkInProcess] = useState([]);
+    const [productionPlan, setProductionPlan] = useState([]);
     const [loading, setLoading] = useState(false);
     // const { setNotification } = useStateContext();
 
@@ -66,11 +66,10 @@ export default function FinishedGoods() {
     const getWorkInProcess = () => {
         setLoading(true);
         axiosClient
-            .get("/combined_data")
+            .get("/production_plan")
             .then(({ data }) => {
                 setLoading(false);
-                setWorkInProcess(data.finished_goods);
-                setWorkInProcess(data.production_plan);
+                setProductionPlan(data);
             })
             .catch(() => {
                 setLoading(false);
@@ -81,20 +80,22 @@ export default function FinishedGoods() {
         setFilterValue(event.target.value);
     };
 
-    const filteredData = workInProcess.filter((fg) =>
-        Object.values(fg).some(
-            (value) =>
-                value &&
-                typeof value === "string" &&
-                value.toLowerCase().includes(filterValue.toLowerCase())
-        )
-    );
+    const filteredData = Array.isArray(productionPlan)
+        ? productionPlan.filter((fg) =>
+              Object.values(fg).some(
+                  (value) =>
+                      value &&
+                      typeof value === "string" &&
+                      value.toLowerCase().includes(filterValue.toLowerCase())
+              )
+          )
+        : [];
 
     const handleExport = (fileType) => {
         if (fileType === "csv") {
-            exportToCSV(workInProcess, "work_in_process.csv");
+            exportToCSV(productionPlan, "work_in_process.csv");
         } else if (fileType === "excel") {
-            exportToExcel(workInProcess, "work_in_process.xlsx");
+            exportToExcel(productionPlan, "work_in_process.xlsx");
         }
     };
 

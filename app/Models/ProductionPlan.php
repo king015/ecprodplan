@@ -56,4 +56,20 @@ class ProductionPlan extends Model
         'sealing',
         'fp_packing',
     ];
+
+    /**
+     * Get the Finished Goods related to this production plan.
+     */
+    public function finishedGoods()
+    {
+        return $this->hasMany(FinishedGoods::class);
+    }
+
+    /**
+     * Get the Work In Process related to this production plan.
+     */
+    public function workInProcess()
+    {
+        return $this->hasMany(WorkInProcess::class);
+    }
 }

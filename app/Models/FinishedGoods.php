@@ -12,7 +12,7 @@ class FinishedGoods extends Model
     /**
      * The attributes that are mass assignable.
      *
-     * @var array<string>
+     * @var array
      */
     protected $fillable = [
         'customer',
@@ -25,4 +25,12 @@ class FinishedGoods extends Model
         'ending_date',
         'fg_in',
     ];
+
+    /**
+     * Get the production plan associated with the finished good.
+     */
+    public function productionPlan()
+    {
+        return $this->belongsTo(ProductionPlan::class);
+    }
 }

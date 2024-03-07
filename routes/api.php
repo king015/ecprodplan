@@ -18,23 +18,18 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::apiResource('/users', UserController::class);
-    Route::apiResource('/production_plans', ProductionPlanController::class); // Corrected resource name
+    Route::apiResource('/production_plan', ProductionPlanController::class);
     Route::apiResource('/finished_goods', FinishedGoodsController::class);
-    Route::apiResource('/work_in_processes', WorkInProcessController::class); // Corrected resource name
+    Route::apiResource('/work_in_processes', WorkInProcessController::class);
 });
 
 Route::post('/signup', [AuthController::class, 'signup']);
 Route::post('/login', [AuthController::class, 'login']);
 
 Route::get('/combined_data', function () {
-    $productionPlans = ProductionPlan::all();
-    $finishedGoods = FinishedGoods::all();
-    $workInProcess = WorkInProcess::all();
+    $combinedData = ProductionPlan::with('finishedGoods', 'workInProcess')->get();
 
     return response()->json([
-        'production_plan' => $productionPlans,
-        'finished_goods' => $finishedGoods,
-        'work_in_processes' => $workInProcess,
+        'combined_data' => $combinedData,
     ]);
 });
-
