@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\ActivityLogController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\FinishedGoodsController;
@@ -18,6 +19,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::apiResource('/users', UserController::class);
+    Route::get('/user_activities', [ActivityLogController::class, 'index']);
     Route::apiResource('/production_plan', ProductionPlanController::class);
     Route::apiResource('/finished_goods', FinishedGoodsController::class);
     Route::apiResource('/work_in_processes', WorkInProcessController::class);

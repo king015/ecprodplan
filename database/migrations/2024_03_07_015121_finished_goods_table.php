@@ -26,8 +26,6 @@ return new class extends Migration
             $table->unsignedBigInteger('fg_in');
             $table->unsignedBigInteger('fg_out');
             $table->timestamps();
-            $table->unsignedBigInteger('work_in_process_id')->nullable();
-
         });
     }
 

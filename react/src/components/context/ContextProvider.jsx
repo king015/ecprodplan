@@ -1,5 +1,6 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 import PropTypes from "prop-types";
+import { message } from "antd";
 
 const StateContext = createContext({
     currentUser: null,
@@ -8,12 +9,14 @@ const StateContext = createContext({
     setUser: () => {},
     setToken: () => {},
     setNotification: () => {},
+    logout: () => {},
 });
 
 export const ContextProvider = ({ children }) => {
     const [user, setUser] = useState({});
     const [token, _setToken] = useState(localStorage.getItem("ACCESS_TOKEN"));
     const [notification, _setNotification] = useState("");
+    const [sessionTimeout, setSessionTimeout] = useState(null);
 
     const setNotification = (message) => {
         _setNotification(message);
@@ -26,10 +29,35 @@ export const ContextProvider = ({ children }) => {
         _setToken(token);
         if (token) {
             localStorage.setItem("ACCESS_TOKEN", token);
+
+            resetSessionTimeout();
         } else {
             localStorage.removeItem("ACCESS_TOKEN");
+            clearTimeout(sessionTimeout);
         }
     };
+
+    const resetSessionTimeout = () => {
+        clearTimeout(sessionTimeout);
+        const timeout = setTimeout(() => {
+            logout();
+
+            message.error("Session expired. Please login again.");
+        }, 10 * 60 * 1000);
+        setSessionTimeout(timeout);
+    };
+
+    const logout = () => {
+        setUser({});
+        setToken(null);
+    };
+
+    useEffect(() => {
+        resetSessionTimeout();
+
+        return () => clearTimeout(sessionTimeout);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     return (
         <StateContext.Provider
@@ -40,6 +68,7 @@ export const ContextProvider = ({ children }) => {
                 setToken,
                 notification,
                 setNotification,
+                logout,
             }}
         >
             {children}
@@ -53,3 +82,4 @@ export const useStateContext = () => useContext(StateContext);
 ContextProvider.propTypes = {
     children: PropTypes.node.isRequired,
 };
+``;

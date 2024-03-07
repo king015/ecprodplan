@@ -1,4 +1,4 @@
-import { Button, Card, Table } from "antd";
+import { Button, Card, Table, Spin, Divider } from "antd"; // Import Spin component
 import { Line } from "@ant-design/charts";
 import { useEffect, useState } from "react";
 import axiosClient from "../../axios-client";
@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 
 function Dashboard() {
     const [activityData, setActivityData] = useState([]);
+    const [loading, setLoading] = useState(true); // State to manage loading state
     const usersValue = 20;
     const workInProgressValue = 25;
     const finishedGoodsValue = 30;
@@ -69,6 +70,8 @@ function Dashboard() {
                 setActivityData(response.data);
             } catch (error) {
                 console.error("Error fetching activity data:", error);
+            } finally {
+                setLoading(false);
             }
         };
 
@@ -116,9 +119,11 @@ function Dashboard() {
                         padding: "20px",
                         margin: "10px",
                         width: "calc(33% - 20px)",
+                        transition: "transform 0.3s",
                     }}
                 >
                     <Card
+                        key="users"
                         title="Users"
                         bordered={false}
                         style={{
@@ -131,6 +136,20 @@ function Dashboard() {
                             transition: "transform 0.3s",
                         }}
                         hoverable
+                        actions={[
+                            <Link key="users-link" to="/users">
+                                <Button
+                                    type="primary"
+                                    style={{
+                                        marginTop: "10px",
+                                        background: "#ff9a00",
+                                        borderColor: "#ff9a00",
+                                    }}
+                                >
+                                    View
+                                </Button>
+                            </Link>,
+                        ]}
                     >
                         <p
                             style={{
@@ -141,29 +160,19 @@ function Dashboard() {
                         >
                             Total Users: {usersValue}
                         </p>
-
-                        <Link to="/users">
-                            <Button
-                                type="primary"
-                                style={{
-                                    marginTop: "10px",
-                                    background: "#ff9a00",
-                                    borderColor: "#ff9a00",
-                                }}
-                            >
-                                View
-                            </Button>
-                        </Link>
                     </Card>
                 </div>
+
                 <div
                     style={{
                         padding: "20px",
                         margin: "10px",
                         width: "calc(33% - 20px)",
+                        transition: "transform 0.3s",
                     }}
                 >
                     <Card
+                        key="work-in-process"
                         title="Work In Process"
                         bordered={false}
                         style={{
@@ -176,6 +185,23 @@ function Dashboard() {
                             transition: "transform 0.3s",
                         }}
                         hoverable
+                        actions={[
+                            <Link
+                                key="work-in-process-link"
+                                to="/work-in-process"
+                            >
+                                <Button
+                                    type="primary"
+                                    style={{
+                                        marginTop: "10px",
+                                        background: "#00FFC8",
+                                        borderColor: "#00FFC8",
+                                    }}
+                                >
+                                    View
+                                </Button>
+                            </Link>,
+                        ]}
                     >
                         <p
                             style={{
@@ -186,29 +212,19 @@ function Dashboard() {
                         >
                             Total Work In Process: {workInProgressValue}
                         </p>
-
-                        <Link to="/work-in-process">
-                            <Button
-                                type="primary"
-                                style={{
-                                    marginTop: "10px",
-                                    background: "#00FFC8",
-                                    borderColor: "#00FFC8",
-                                }}
-                            >
-                                View
-                            </Button>
-                        </Link>
                     </Card>
                 </div>
+
                 <div
                     style={{
                         padding: "20px",
                         margin: "10px",
                         width: "calc(33% - 20px)",
+                        transition: "transform 0.3s",
                     }}
                 >
                     <Card
+                        key="finished-goods"
                         title="Finished Goods"
                         bordered={false}
                         style={{
@@ -221,6 +237,23 @@ function Dashboard() {
                             transition: "transform 0.3s",
                         }}
                         hoverable
+                        actions={[
+                            <Link
+                                key="finished-goods-link"
+                                to="/finished-goods"
+                            >
+                                <Button
+                                    type="primary"
+                                    style={{
+                                        marginTop: "10px",
+                                        background: "#B06AB3",
+                                        borderColor: "#B06AB3",
+                                    }}
+                                >
+                                    View
+                                </Button>
+                            </Link>,
+                        ]}
                     >
                         <p
                             style={{
@@ -231,19 +264,6 @@ function Dashboard() {
                         >
                             Total Finished Goods: {finishedGoodsValue}
                         </p>
-
-                        <Link to="/finished-goods">
-                            <Button
-                                type="primary"
-                                style={{
-                                    marginTop: "10px",
-                                    background: "#B06AB3",
-                                    borderColor: "#B06AB3",
-                                }}
-                            >
-                                View
-                            </Button>
-                        </Link>
                     </Card>
                 </div>
             </div>
@@ -263,38 +283,64 @@ function Dashboard() {
                 }}
             >
                 <div style={{ width: "60%", marginRight: 10 }}>
-                    <Line
-                        {...chartConfig}
-                        style={{
-                            background: "#fff",
-                            borderRadius: "8px",
-                            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-                        }}
-                        interactions={[
-                            {
-                                type: "slider",
-                                cfg: {
-                                    start: 0,
-                                    end: 1,
+                    <Spin spinning={loading}>
+                        <Line
+                            {...chartConfig}
+                            style={{
+                                background: "#fff",
+                                borderRadius: "8px",
+                                boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+                            }}
+                            interactions={[
+                                {
+                                    type: "slider",
+                                    cfg: {
+                                        start: 0,
+                                        end: 1,
+                                    },
                                 },
-                            },
-                            {
-                                type: "tooltip",
-                            },
-                        ]}
-                        animation={false}
-                    />
+                                {
+                                    type: "tooltip",
+                                },
+                            ]}
+                            animation={false}
+                        />
+                    </Spin>
                 </div>
-                <div style={{ width: "40%" }}>
-                    <h4 style={{ marginBottom: "20px", color: "#333" }}>
-                        Activity Table
+                <div
+                    style={{
+                        width: "100%",
+                        maxWidth: "800px",
+                        margin: "0 auto",
+                        background: "#fff",
+                        padding: "20px",
+                        borderRadius: "8px",
+                        boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                        marginBottom: "20px",
+                    }}
+                >
+                    <h4
+                        style={{
+                            marginBottom: "20px",
+                            color: "#333",
+                            fontSize: "1.5rem",
+                            textAlign: "center",
+                            fontWeight: "bold",
+                        }}
+                    >
+                        Activity Logs
                     </h4>
-                    <Table
-                        dataSource={activityData}
-                        columns={columns}
-                        pagination={false}
-                        scroll={{ y: 400 }}
-                    />
+                    <Divider style={{ marginBottom: "20px" }} />{" "}
+                    <Spin spinning={loading}>
+                        <Table
+                            dataSource={activityData}
+                            columns={columns}
+                            pagination={false}
+                            scroll={{ y: 400 }}
+                            bordered
+                            style={{ borderRadius: "8px" }}
+                        />
+                    </Spin>
                 </div>
             </div>
         </div>

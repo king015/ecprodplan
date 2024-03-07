@@ -187,9 +187,9 @@ export default function DefaultLayouts() {
                             edge="end"
                         >
                             {isMenuOpen ? (
-                                <ExpandMoreOutlinedIcon />
-                            ) : (
                                 <ExpandLessOutlinedIcon />
+                            ) : (
+                                <ExpandMoreOutlinedIcon />
                             )}
                         </IconButton>
                         <Menu
