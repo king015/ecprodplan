@@ -15,6 +15,18 @@ namespace App\Models{
 /**
  * 
  *
+ * @property-read \App\Models\User|null $user
+ * @method static \Illuminate\Database\Eloquent\Builder|ActivityLog newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|ActivityLog newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|ActivityLog query()
+ */
+	class ActivityLog extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * 
+ *
  * @property int $id
  * @property int|null $wip_id
  * @property string $customer
@@ -30,7 +42,7 @@ namespace App\Models{
  * @property int $fg_out
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property int $work_in_process_id
+ * @property int|null $work_in_process_id
  * @property-read \App\Models\ProductionPlan|null $productionPlan
  * @method static \Database\Factories\FinishedGoodsFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|FinishedGoods newModelQuery()
