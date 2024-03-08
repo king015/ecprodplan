@@ -3,34 +3,31 @@
 namespace App\Http\Controllers;
 
 use App\Models\FinishedGoods;
-use App\Http\Requests\StoreFinishedGoodsRequest;
-use App\Http\Requests\UpdateFinishedGoodsRequest;
+use Illuminate\Http\Request;
 use App\Http\Resources\FinishedGoodsResource;
 
 class FinishedGoodsController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
-     *  @param mixed $resource
-     *
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
-     *
      */
     public function index()
     {
-        return FinishedGoodsResource::collection(FinishedGoods::all());
+        $finishedGoods = FinishedGoods::orderBy('created_at', 'desc')->paginate(10);
+        return FinishedGoodsResource::collection($finishedGoods);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreFinishedGoodsRequest $request)
+    public function store(Request $request)
     {
-        $data =  $request->validated();
+        $data = $request->validate([
+            // Define validation rules for your fields here
+        ]);
 
         $finishedGoods = FinishedGoods::create($data);
-        return response(new FinishedGoodsResource($finishedGoods), 201) ;
+        return new FinishedGoodsResource($finishedGoods);
     }
 
     /**
@@ -38,17 +35,19 @@ class FinishedGoodsController extends Controller
      */
     public function show(FinishedGoods $finishedGoods)
     {
-        return new FinishedGoodsResource(($finishedGoods));
+        return new FinishedGoodsResource($finishedGoods);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateFinishedGoodsRequest $request, FinishedGoods $finishedGoods)
+    public function update(Request $request, FinishedGoods $finishedGoods)
     {
-        $data = $request->validated();
-        $finishedGoods->update($data);
+        $data = $request->validate([
+            // Define validation rules for your fields here
+        ]);
 
+        $finishedGoods->update($data);
         return new FinishedGoodsResource($finishedGoods);
     }
 
@@ -58,7 +57,6 @@ class FinishedGoodsController extends Controller
     public function destroy(FinishedGoods $finishedGoods)
     {
         $finishedGoods->delete();
-
-        return response("", 204);
+        return response()->noContent();
     }
 }

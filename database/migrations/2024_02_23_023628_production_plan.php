@@ -21,6 +21,7 @@ return new class extends Migration
             $table->integer('thurs');
             $table->integer('fri');
             $table->integer('sat');
+            $table->integer('fg');
 
             $table->timestamps();
         });

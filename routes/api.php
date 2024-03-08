@@ -22,7 +22,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user_activities', [ActivityLogController::class, 'index']);
     Route::apiResource('/production_plan', ProductionPlanController::class);
     Route::apiResource('/finished_goods', FinishedGoodsController::class);
-    Route::apiResource('/work_in_processes', WorkInProcessController::class);
+    Route::apiResource('/work_in_process', WorkInProcessController::class);
 });
 
 Route::post('/signup', [AuthController::class, 'signup']);

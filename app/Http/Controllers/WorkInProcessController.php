@@ -6,6 +6,7 @@ use App\Models\WorkInProcess;
 use App\Http\Requests\StoreWorkInProcessRequest;
 use App\Http\Requests\UpdateWorkInProcessRequest;
 use App\Http\Resources\WorkInProcessResource;
+use Illuminate\Http\Response;
 
 class WorkInProcessController extends Controller
 {
@@ -14,19 +15,18 @@ class WorkInProcessController extends Controller
      */
     public function index()
     {
-        return WorkInProcessResource::collection(WorkInProcess::all());
+        $workInProcess = WorkInProcess::orderBy('created_at', 'desc')->paginate(10);
+        return WorkInProcessResource::collection($workInProcess);
     }
-
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(StoreWorkInProcessRequest $request)
     {
-        $data =  $request->validated();
-
+        $data = $request->validated();
         $workInProcess = WorkInProcess::create($data);
-        return response(new WorkInProcessResource($workInProcess), 201) ;
+        return response(new WorkInProcessResource($workInProcess), Response::HTTP_CREATED);
     }
 
     /**
@@ -44,7 +44,6 @@ class WorkInProcessController extends Controller
     {
         $data = $request->validated();
         $workInProcess->update($data);
-
         return new WorkInProcessResource($workInProcess);
     }
 
@@ -54,7 +53,6 @@ class WorkInProcessController extends Controller
     public function destroy(WorkInProcess $workInProcess)
     {
         $workInProcess->delete();
-
-        return response("", 204);
+        return response("", Response::HTTP_NO_CONTENT);
     }
 }

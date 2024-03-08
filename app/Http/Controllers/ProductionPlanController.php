@@ -3,33 +3,31 @@
 namespace App\Http\Controllers;
 
 use App\Models\ProductionPlan;
-use App\Http\Requests\StoreProductionPlanRequest;
-use App\Http\Requests\UpdateProductionPlanRequest;
+use Illuminate\Http\Request;
 use App\Http\Resources\ProductionPlanResource;
 
 class ProductionPlanController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
-     * @param mixed $resource
-     *
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
     public function index()
     {
-        return ProductionPlanResource::collection(ProductionPlan::query()->orderBy('id', 'desc')->paginate(50));
+        $productionPlans = ProductionPlan::orderBy('created_at', 'desc')->paginate(10);
+        return ProductionPlanResource::collection($productionPlans);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreProductionPlanRequest $request)
+    public function store(Request $request)
     {
-        $data =  $request->validated();
+        $data = $request->validate([
+            // Define validation rules for your fields here
+        ]);
 
         $productionPlan = ProductionPlan::create($data);
-        return response(new ProductionPlanResource($productionPlan), 201) ;
+        return new ProductionPlanResource($productionPlan);
     }
 
     /**
@@ -43,11 +41,13 @@ class ProductionPlanController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateProductionPlanRequest $request, ProductionPlan $productionPlan)
+    public function update(Request $request, ProductionPlan $productionPlan)
     {
-        $data = $request->validated();
-        $productionPlan->update($data);
+        $data = $request->validate([
+            // Define validation rules for your fields here
+        ]);
 
+        $productionPlan->update($data);
         return new ProductionPlanResource($productionPlan);
     }
 
@@ -57,7 +57,6 @@ class ProductionPlanController extends Controller
     public function destroy(ProductionPlan $productionPlan)
     {
         $productionPlan->delete();
-
-        return response("", 204);
+        return response()->noContent();
     }
 }

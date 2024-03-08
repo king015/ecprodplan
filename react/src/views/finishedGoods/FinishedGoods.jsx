@@ -71,14 +71,32 @@ export default function FinishedGoods() {
     const getFinishedGoods = () => {
         setLoading(true);
         axiosClient
-            .get("/finished_goods") // Change the endpoint to fetch combined data
+            .get("/finished_goods")
             .then(({ data }) => {
-                console.log(data); // Log the data received from the server
                 setLoading(false);
-                setFinishedGoods(data || []);
+                if (data && Array.isArray(data) && data.length > 0) {
+                    console.log("Fetched data:", data);
+                    const processedData = data.map((fg) => ({
+                        ...fg,
+                        customer: fg.finished_goods.customer,
+                        code: fg.finished_goods.code,
+                        item_description: fg.finished_goods.itemDescription,
+                        part_number: fg.finished_goods.partNumber,
+                    }));
+                    console.log("Processed data:", processedData);
+                    setFinishedGoods(processedData);
+                } else {
+                    console.error("Error: No finished goods data found");
+                    message.error(
+                        "Failed to fetch data. No finished goods data found."
+                    );
+                    setFinishedGoods([]);
+                }
             })
-            .catch(() => {
+            .catch((error) => {
                 setLoading(false);
+                console.error("Error fetching data:", error);
+                message.error("Failed to fetch data. Please try again.");
             });
     };
 
