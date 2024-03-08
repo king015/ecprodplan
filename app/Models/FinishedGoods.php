@@ -29,8 +29,8 @@ class FinishedGoods extends Model
     /**
      * Get the production plan associated with the finished good.
      */
-    public function productionPlan()
+    public function finishedGoods()
     {
-        return $this->belongsTo(ProductionPlan::class);
+        return $this->hasMany(FinishedGoods::class);
     }
 }

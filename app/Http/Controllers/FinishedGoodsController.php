@@ -19,7 +19,7 @@ class FinishedGoodsController extends Controller
      */
     public function index()
     {
-        return FinishedGoodsResource::collection(FinishedGoods::query()->orderBy('id', 'desc')->paginate(50));
+        return FinishedGoodsResource::collection(FinishedGoods::all());
     }
 
     /**

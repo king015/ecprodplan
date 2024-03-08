@@ -14,8 +14,9 @@ class WorkInProcessController extends Controller
      */
     public function index()
     {
-        return WorkInProcessResource::collection(WorkInProcess::query()->orderBy('id', 'desc')->paginate(50));
+        return WorkInProcessResource::collection(WorkInProcess::all());
     }
+
 
     /**
      * Store a newly created resource in storage.

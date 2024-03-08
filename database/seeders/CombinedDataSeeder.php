@@ -27,9 +27,9 @@ class CombinedDataSeeder extends Seeder
         ProductionPlan::truncate();
         DB::statement('SET FOREIGN_KEY_CHECKS=1');
 
-        // Generate work in process and finished goods data
+
         for ($i = 0; $i < 10; $i++) {
-            // Create work in process data
+
             $workInProcess = WorkInProcess::create([
                 'creaser' => $faker->randomDigit,
                 'flexo_print' => $faker->randomDigit,
@@ -81,7 +81,7 @@ class CombinedDataSeeder extends Seeder
             ProductionPlan::create([
                 // Add production plan fields here
                 // For example:
-                'wip_id' => $workInProcess->id,
+                'work_in_process_id' => $workInProcess->id,
                 'fg_id' => $finishedGoods->id,
             ]);
 

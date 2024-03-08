@@ -71,12 +71,29 @@ export default function FinishedGoods() {
         axiosClient
             .get("/work_in_processes")
             .then(({ data }) => {
-                console.log(data);
                 setLoading(false);
-                setWorkInProcess(data.work_in_process);
+                if (data && data.work_in_processes) {
+                    console.log("Fetched data:", data);
+                    const processedData = data.work_in_processes.map((wip) => ({
+                        ...wip,
+                        customer: wip.finished_goods.customer,
+                        code: wip.finisheds_good.code,
+                        itemDescription: wip.finished_goods.itemDescription,
+                        partNumber: wip.finished_goods.partNumber,
+                    }));
+                    console.log("Processed data:", processedData);
+                    setWorkInProcess(processedData);
+                } else {
+                    console.error("Error: No work in process data found");
+                    message.error(
+                        "Failed to fetch data. No work in process data found."
+                    );
+                }
             })
-            .catch(() => {
+            .catch((error) => {
                 setLoading(false);
+                console.error("Error fetching data:", error);
+                message.error("Failed to fetch data. Please try again.");
             });
     };
 
@@ -156,19 +173,19 @@ export default function FinishedGoods() {
         },
         {
             title: "Item Description",
-            dataIndex: "item_description",
-            key: "item_description",
+            dataIndex: "itemDescription",
+            key: "itemDescription",
             fixed: "left",
             width: 500,
-            sorter: (a, b) => a.item_description - b.item_description,
+            sorter: (a, b) => a.itemDescription - b.itemDescription,
         },
         {
             title: "Part Number",
-            dataIndex: "part_number",
-            key: "part_number",
+            dataIndex: "partNumber",
+            key: "partNumber",
             fixed: "left", // Fixed column
             width: 150,
-            sorter: (a, b) => a.part_number - b.part_number,
+            sorter: (a, b) => a.partNumber - b.partNumber,
         },
         {
             title: "Board Process",

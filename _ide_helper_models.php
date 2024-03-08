@@ -15,10 +15,20 @@ namespace App\Models{
 /**
  * 
  *
- * @property-read \App\Models\User|null $user
+ * @property int $id
+ * @property int $user_id
+ * @property string $activity
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\User $user
  * @method static \Illuminate\Database\Eloquent\Builder|ActivityLog newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|ActivityLog newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|ActivityLog query()
+ * @method static \Illuminate\Database\Eloquent\Builder|ActivityLog whereActivity($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ActivityLog whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ActivityLog whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ActivityLog whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ActivityLog whereUserId($value)
  */
 	class ActivityLog extends \Eloquent {}
 }
@@ -42,8 +52,8 @@ namespace App\Models{
  * @property int $fg_out
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property int|null $work_in_process_id
- * @property-read \App\Models\ProductionPlan|null $productionPlan
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, FinishedGoods> $finishedGoods
+ * @property-read int|null $finished_goods_count
  * @method static \Database\Factories\FinishedGoodsFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|FinishedGoods newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|FinishedGoods newQuery()
@@ -63,7 +73,6 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|FinishedGoods wherePartNumber($value)
  * @method static \Illuminate\Database\Eloquent\Builder|FinishedGoods whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|FinishedGoods whereWipId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|FinishedGoods whereWorkInProcessId($value)
  */
 	class FinishedGoods extends \Eloquent {}
 }
