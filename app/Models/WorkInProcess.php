@@ -47,7 +47,7 @@ class WorkInProcess extends Model
 
     public function productionPlan()
     {
-        return $this->belongsTo(ProductionPlan::class, 'work_in_process_id');
+        return $this->belongsTo(ProductionPlan::class, 'production_plan_id');
     }
 
 }

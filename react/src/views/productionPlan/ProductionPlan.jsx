@@ -33,7 +33,7 @@ export default function FinishedGoods() {
     const [pagination, setPagination] = useState({ current: 1, pageSize: 5 });
 
     useEffect(() => {
-        getWorkInProcess();
+        getProductionPlan();
     }, []);
 
     const onDeleteClick = (plan) => {
@@ -47,7 +47,7 @@ export default function FinishedGoods() {
                 axiosClient
                     .delete(`/production_plan/${plan.id}`)
                     .then(() => {
-                        getWorkInProcess();
+                        getProductionPlan();
                         message.success("Data successfully deleted");
                     })
                     .catch(() => {
@@ -60,10 +60,10 @@ export default function FinishedGoods() {
     };
 
     const handleRefresh = () => {
-        getWorkInProcess();
+        getProductionPlan();
     };
 
-    const getWorkInProcess = () => {
+    const getProductionPlan = () => {
         setLoading(true);
         axiosClient
             .get("/production_plan")

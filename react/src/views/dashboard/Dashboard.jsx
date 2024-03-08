@@ -1,4 +1,4 @@
-import { Button, Card, Table, Spin, Divider } from "antd"; // Import Spin component
+import { Button, Card, Table, Spin, Divider } from "antd";
 import { Line } from "@ant-design/charts";
 import { useEffect, useState } from "react";
 import axiosClient from "../../axios-client";
@@ -6,10 +6,10 @@ import { Link } from "react-router-dom";
 
 function Dashboard() {
     const [activityData, setActivityData] = useState([]);
-    const [loading, setLoading] = useState(true); // State to manage loading state
-    const usersValue = 20;
-    const workInProgressValue = 25;
-    const finishedGoodsValue = 30;
+    const [loading, setLoading] = useState(true);
+    const usersValue = 0;
+    const workInProgressValue = 0;
+    const finishedGoodsValue = 0;
 
     const data = [
         { year: "2021", value: 3 },
@@ -49,16 +49,16 @@ function Dashboard() {
         },
         {
             title: "Time",
-            dataIndex: "time",
-            key: "time",
-            sorter: (a, b) => new Date(a.time) - new Date(b.time),
+            dataIndex: "timestamps",
+            key: "timestamps",
+            sorter: (a, b) => new Date(a.timestamps) - new Date(b.timestamps),
             sortDirections: ["ascend", "descend"],
         },
         {
             title: "User",
-            dataIndex: "user",
-            key: "user",
-            sorter: (a, b) => a.user.localeCompare(b.user),
+            dataIndex: "user_id",
+            key: "user_id",
+            sorter: (a, b) => a.user_id.localeCompare(b.user_id),
             sortDirections: ["ascend", "descend"],
         },
     ];

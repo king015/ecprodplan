@@ -31,6 +31,12 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::get('/combined_data', function () {
     $combinedData = ProductionPlan::with('finishedGoods', 'workInProcess')->get();
 
+    if ($combinedData->isEmpty()) {
+        return response()->json([
+            'message' => 'No combined data found.',
+        ], 404);
+    }
+
     return response()->json([
         'combined_data' => $combinedData,
     ]);
