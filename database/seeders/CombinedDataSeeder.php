@@ -82,7 +82,7 @@ class CombinedDataSeeder extends Seeder
                 // Add production plan fields here
                 // For example:
                 'work_in_process_id' => $workInProcess->id,
-                'fg_id' => $finishedGoods->id,
+                'finished_goods_id' => $finishedGoods->id,
             ]);
 
             // Output the combined data

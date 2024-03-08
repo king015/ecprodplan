@@ -24,13 +24,16 @@ class FinishedGoods extends Model
         'ending_inventory',
         'ending_date',
         'fg_in',
+        'fg_out',
     ];
+
+    protected $table = 'finished_goods';
 
     /**
      * Get the production plan associated with the finished good.
      */
     public function finishedGoods()
     {
-        return $this->hasMany(FinishedGoods::class);
+        return $this->hasMany(FinishedGoods::class, 'work_in_process_id');
     }
 }

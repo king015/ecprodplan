@@ -52,7 +52,7 @@ export default function FinishedGoods() {
             cancelText: "No",
             onOk() {
                 axiosClient
-                    .delete(`/work_in_processes/${wip.id}`)
+                    .delete(`/work_in_process/${wip.id}`)
                     .then(() => {
                         getWorkInProcess();
                         message.success("Data successfully deleted");
@@ -69,25 +69,22 @@ export default function FinishedGoods() {
     const getWorkInProcess = () => {
         setLoading(true);
         axiosClient
-            .get("/work_in_processes")
+            .get("/work_in_process")
             .then(({ data }) => {
                 setLoading(false);
-                if (data && data.work_in_processes) {
-                    console.log("Fetched data:", data);
-                    const processedData = data.work_in_processes.map((wip) => ({
+                if (data && data.length > 0) {
+                    const processedData = data.map((wip) => ({
                         ...wip,
                         customer: wip.finished_goods.customer,
-                        code: wip.finisheds_good.code,
+                        code: wip.finished_goods.code,
                         itemDescription: wip.finished_goods.itemDescription,
                         partNumber: wip.finished_goods.partNumber,
                     }));
-                    console.log("Processed data:", processedData);
                     setWorkInProcess(processedData);
                 } else {
-                    console.error("Error: No work in process data found");
-                    message.error(
-                        "Failed to fetch data. No work in process data found."
-                    );
+                    // No data found
+                    message.warning("No work in process data found.");
+                    setWorkInProcess([]); // Set an empty array
                 }
             })
             .catch((error) => {
@@ -275,18 +272,18 @@ export default function FinishedGoods() {
                     sorter: (a, b) => a.packing - b.packing,
                 },
                 {
+                    title: "M-P",
+                    dataIndex: "manual_slotting",
+                    key: "manual_printing",
+                    width: 60,
+                    sorter: (a, b) => a.manual_printing - b.manual_printing,
+                },
+                {
                     title: "PAL-A",
                     dataIndex: "pallet_assembly",
                     key: "pallet_assembly",
                     sorter: (a, b) => a.pallet_assembly - b.pallet_assembly,
                     width: 60,
-                },
-                {
-                    title: "M-P",
-                    dataIndex: "manual_printing",
-                    key: "manual_printing",
-                    width: 60,
-                    sorter: (a, b) => a.manual_printing - b.manual_printing,
                 },
                 {
                     title: "M-C",

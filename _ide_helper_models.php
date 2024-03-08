@@ -15,20 +15,10 @@ namespace App\Models{
 /**
  * 
  *
- * @property int $id
- * @property int $user_id
- * @property string $activity
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \App\Models\User $user
+ * @property-read \App\Models\User|null $user
  * @method static \Illuminate\Database\Eloquent\Builder|ActivityLog newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|ActivityLog newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|ActivityLog query()
- * @method static \Illuminate\Database\Eloquent\Builder|ActivityLog whereActivity($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ActivityLog whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ActivityLog whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ActivityLog whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ActivityLog whereUserId($value)
  */
 	class ActivityLog extends \Eloquent {}
 }
@@ -38,7 +28,7 @@ namespace App\Models{
  * 
  *
  * @property int $id
- * @property int|null $wip_id
+ * @property int|null $work_in_process_id
  * @property string $customer
  * @property string $code
  * @property string $itemDescription
@@ -72,7 +62,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|FinishedGoods whereLocation($value)
  * @method static \Illuminate\Database\Eloquent\Builder|FinishedGoods wherePartNumber($value)
  * @method static \Illuminate\Database\Eloquent\Builder|FinishedGoods whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|FinishedGoods whereWipId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|FinishedGoods whereWorkInProcessId($value)
  */
 	class FinishedGoods extends \Eloquent {}
 }
@@ -82,10 +72,6 @@ namespace App\Models{
  * 
  *
  * @property int $id
- * @property string $customer
- * @property string $code
- * @property string $item_description
- * @property string $part_number
  * @property string $weekly_requisites
  * @property int $mon
  * @property int $tues
@@ -93,42 +79,7 @@ namespace App\Models{
  * @property int $thurs
  * @property int $fri
  * @property int $sat
- * @property int $finished_goods
- * @property int $creaser
- * @property int $flexo_print
- * @property int $printer_slotter
- * @property int $slotting
- * @property int $clapper
- * @property int $diecut
- * @property int $stitching
- * @property int $detach
- * @property int $gluing
- * @property int $pre_assembly
- * @property int $manual_slotting
- * @property int $packing
- * @property int $pallet_assembly
- * @property int $manual_printing
- * @property int $manual_cutting
- * @property int $laminating
- * @property int $box_assembly
- * @property int $fp_manual_cutting
- * @property int $fp_diecut
- * @property int $bandsaw
- * @property int $skiving
- * @property int $fp_detach
- * @property int $heating_plate
- * @property int $hotmelt
- * @property int $assembly_heating
- * @property int $fp_manual_printing
- * @property int $sealing
- * @property int $fp_packing
- * @property string $location
- * @property int $beginning_inventory
- * @property string $beginning_date
- * @property int $ending_inventory
- * @property string $ending_date
- * @property int $fg_in
- * @property int $fg_out
+ * @property int $fg
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\FinishedGoods> $finishedGoods
@@ -139,51 +90,12 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|ProductionPlan newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|ProductionPlan newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|ProductionPlan query()
- * @method static \Illuminate\Database\Eloquent\Builder|ProductionPlan whereAssemblyHeating($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductionPlan whereBandsaw($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductionPlan whereBeginningDate($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductionPlan whereBeginningInventory($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductionPlan whereBoxAssembly($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductionPlan whereClapper($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductionPlan whereCode($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductionPlan whereCreaser($value)
  * @method static \Illuminate\Database\Eloquent\Builder|ProductionPlan whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductionPlan whereCustomer($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductionPlan whereDetach($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductionPlan whereDiecut($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductionPlan whereEndingDate($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductionPlan whereEndingInventory($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductionPlan whereFgIn($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductionPlan whereFgOut($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductionPlan whereFinishedGoods($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductionPlan whereFlexoPrint($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductionPlan whereFpDetach($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductionPlan whereFpDiecut($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductionPlan whereFpManualCutting($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductionPlan whereFpManualPrinting($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductionPlan whereFpPacking($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductionPlan whereFg($value)
  * @method static \Illuminate\Database\Eloquent\Builder|ProductionPlan whereFri($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductionPlan whereGluing($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductionPlan whereHeatingPlate($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductionPlan whereHotmelt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|ProductionPlan whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductionPlan whereItemDescription($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductionPlan whereLaminating($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductionPlan whereLocation($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductionPlan whereManualCutting($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductionPlan whereManualPrinting($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductionPlan whereManualSlotting($value)
  * @method static \Illuminate\Database\Eloquent\Builder|ProductionPlan whereMon($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductionPlan wherePacking($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductionPlan wherePalletAssembly($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductionPlan wherePartNumber($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductionPlan wherePreAssembly($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductionPlan wherePrinterSlotter($value)
  * @method static \Illuminate\Database\Eloquent\Builder|ProductionPlan whereSat($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductionPlan whereSealing($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductionPlan whereSkiving($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductionPlan whereSlotting($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductionPlan whereStitching($value)
  * @method static \Illuminate\Database\Eloquent\Builder|ProductionPlan whereThurs($value)
  * @method static \Illuminate\Database\Eloquent\Builder|ProductionPlan whereTues($value)
  * @method static \Illuminate\Database\Eloquent\Builder|ProductionPlan whereUpdatedAt($value)
@@ -230,6 +142,7 @@ namespace App\Models{
  * 
  *
  * @property int $id
+ * @property int|null $finished_goods_id
  * @property int $creaser
  * @property int $flexo_print
  * @property int $printer_slotter
@@ -241,7 +154,6 @@ namespace App\Models{
  * @property int $gluing
  * @property int $pre_assembly
  * @property int $manual_slotting
- * @property int $packing
  * @property int $pallet_assembly
  * @property int $manual_printing
  * @property int $manual_cutting
@@ -273,6 +185,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|WorkInProcess whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|WorkInProcess whereDetach($value)
  * @method static \Illuminate\Database\Eloquent\Builder|WorkInProcess whereDiecut($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|WorkInProcess whereFinishedGoodsId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|WorkInProcess whereFlexoPrint($value)
  * @method static \Illuminate\Database\Eloquent\Builder|WorkInProcess whereFpDetach($value)
  * @method static \Illuminate\Database\Eloquent\Builder|WorkInProcess whereFpDiecut($value)
@@ -287,7 +200,6 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|WorkInProcess whereManualCutting($value)
  * @method static \Illuminate\Database\Eloquent\Builder|WorkInProcess whereManualPrinting($value)
  * @method static \Illuminate\Database\Eloquent\Builder|WorkInProcess whereManualSlotting($value)
- * @method static \Illuminate\Database\Eloquent\Builder|WorkInProcess wherePacking($value)
  * @method static \Illuminate\Database\Eloquent\Builder|WorkInProcess wherePalletAssembly($value)
  * @method static \Illuminate\Database\Eloquent\Builder|WorkInProcess wherePreAssembly($value)
  * @method static \Illuminate\Database\Eloquent\Builder|WorkInProcess wherePrinterSlotter($value)
@@ -296,6 +208,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|WorkInProcess whereSlotting($value)
  * @method static \Illuminate\Database\Eloquent\Builder|WorkInProcess whereStitching($value)
  * @method static \Illuminate\Database\Eloquent\Builder|WorkInProcess whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|WorkInProcess withAttributes(array $attributes)
  */
 	class WorkInProcess extends \Eloquent {}
 }

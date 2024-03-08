@@ -12,7 +12,7 @@ class WorkInProcess extends Model
     /**
      * The attributes that are mass assignable.
      *
-     * @var array<string>
+     * @var array
      */
     protected $fillable = [
         'creaser',
@@ -43,11 +43,44 @@ class WorkInProcess extends Model
         'fp_manual_printing',
         'sealing',
         'fp_packing',
+        'finished_goods_id',
     ];
 
+    protected $table = 'work_in_process';
+
+    /**
+     * Get the production plan associated with the work in process.
+     */
     public function productionPlan()
     {
-        return $this->belongsTo(ProductionPlan::class, 'production_plan_id');
+        return $this->belongsTo(ProductionPlan::class, 'finished_goods_id');
     }
 
+    /**
+     * Calculate total work in process.
+     *
+     * @return int
+     */
+    public function getTotalWorkInProcess()
+    {
+        // Sum all the work in process attributes
+        return array_sum($this->getAttributes());
+    }
+
+    /**
+     * Scope a query to include only work in process with specific attributes.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param  array  $attributes
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeWithAttributes($query, array $attributes)
+    {
+        // Filter the query to include only work in process with the specified attributes
+        foreach ($attributes as $attribute => $value) {
+            $query->where($attribute, $value);
+        }
+
+        return $query;
+    }
 }
