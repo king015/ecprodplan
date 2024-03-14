@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreWorkInProcessRequest extends FormRequest
@@ -11,7 +12,7 @@ class StoreWorkInProcessRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,38 +23,47 @@ class StoreWorkInProcessRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'customer'=>'required|string',
-            'code'=>'required|string',
-            'item_description'=>'required|string',
-            'part_number'=>'required|string',
-            'creaser'=>'required|integer',
-            'flexo_print'=>'required|integer',
-            'printer_slotter'=>'required|integer',
-            'slotting'=>'required|integer',
-            'clapper'=>'required|integer',
-            'diecut'=>'required|integer',
-            'stitching'=>'required|integer',
-            'detach'=>'required|integer',
-            'gluing'=>'required|integer',
-            'pre_assembly'=>'required|integer',
-            'manual_slotting'=>'required|integer',
-            'packing'=>'required|integer',
-            'pallet_assembly'=>'required|integer',
-            'manual_printing'=>'required|integer',
-            'manual_cutting'=>'required|integer',
-            'laminating'=>'required|integer',
-            'box_assembly'=>'required|integer',
-            'fp_manual_cutting'=>'required|integer',
-            'fp_diecut'=>'required|integer',
-            'bandsaw'=>'required|integer',
-            'skiving'=>'required|integer',
-            'fp_detach'=>'required|integer',
-            'heating_plate' => 'required|integer',
-            'hotmelt'=>'required|integer',
-            'assembly_heating'=>'required|integer',
-            'fp_manual_printing'=>'required|integer',
-            'sealing'=>'required|integer',
-            'fp_packing'=>'required|integer',
+            'creaser'=>'integer',
+            'flexo_print'=>'integer',
+            'printer_slotter'=>'integer',
+            'slotting'=>'integer',
+            'clapper'=>'integer',
+            'diecut'=>'integer',
+            'stitching'=>'integer',
+            'detach'=>'integer',
+            'gluing'=>'integer',
+            'pre_assembly'=>'integer',
+            'manual_slotting'=>'integer',
+            'packing'=>'integer',
+            'pallet_assembly'=>'integer',
+            'manual_printing'=>'integer',
+            'manual_cutting'=>'integer',
+            'laminating'=>'integer',
+            'box_assembly'=>'integer',
+            'fp_manual_cutting'=>'integer',
+            'fp_diecut'=>'integer',
+            'bandsaw'=>'integer',
+            'skiving'=>'integer',
+            'fp_detach'=>'integer',
+            'heating_plate' => 'integer',
+            'hotmelt'=>'integer',
+            'assembly_heating'=>'integer',
+            'fp_manual_printing'=>'integer',
+            'sealing'=>'integer',
+            'fp_packing'=>'integer',
         ];
+    }
+
+    public function validationData()
+    {
+        $data = parent::validationData();
+
+        // Add the token to the validation data
+        $token = $this->header('Authorization');
+        if ($token) {
+            $data['token'] = $token;
+        }
+
+        return $data;
     }
 }

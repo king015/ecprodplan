@@ -9,31 +9,36 @@ class FinishedGoods extends Model
 {
     use HasFactory;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
     protected $fillable = [
         'customer',
         'code',
         'itemDescription',
         'partNumber',
+        'location',
         'beginning_inventory',
         'beginning_date',
         'ending_inventory',
         'ending_date',
         'fg_in',
         'fg_out',
+        'production_plan_id'
     ];
 
     protected $table = 'finished_goods';
 
     /**
-     * Get the production plan associated with the finished good.
+     * Get the work in process associated with the finished goods.
      */
-    public function finishedGoods()
+    public function workInProcess()
     {
-        return $this->hasMany(FinishedGoods::class, 'work_in_process_id');
+        return $this->hasOne(WorkInProcess::class);
+    }
+
+    /**
+     * Get the production plan associated with the finished goods.
+     */
+    public function productionPlan()
+    {
+        return $this->belongsTo(ProductionPlan::class, 'production_plan_id');
     }
 }

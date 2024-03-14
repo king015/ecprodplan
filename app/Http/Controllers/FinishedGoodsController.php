@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreFinishedGoodsRequest;
 use App\Models\FinishedGoods;
 use Illuminate\Http\Request;
 use App\Http\Resources\FinishedGoodsResource;
+use Auth;
 
 class FinishedGoodsController extends Controller
 {
@@ -20,13 +22,14 @@ class FinishedGoodsController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreFinishedGoodsRequest $request)
     {
-        $data = $request->validate([
-            // Define validation rules for your fields here
-        ]);
+        // The request is automatically authorized and validated
+        // Access the validated data including the token using $request->validated()
+        $validatedData = $request->validated();
 
-        $finishedGoods = FinishedGoods::create($data);
+        // Now you can use the validated data, including the token
+        $finishedGoods = FinishedGoods::create($validatedData);
         return new FinishedGoodsResource($finishedGoods);
     }
 

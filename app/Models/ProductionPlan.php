@@ -9,11 +9,6 @@ class ProductionPlan extends Model
 {
     use HasFactory;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<string>
-     */
     protected $fillable = [
         'weekly_requisites',
         'mon',
@@ -28,18 +23,18 @@ class ProductionPlan extends Model
     protected $table = 'production_plan';
 
     /**
-     * Get the Finished Goods related to this production plan.
+     * Get the finished goods related to this production plan.
      */
     public function finishedGoods()
     {
-        return $this->hasMany(FinishedGoods::class);
+        return $this->hasMany(FinishedGoods::class, 'production_plan_id');
     }
 
     /**
-     * Get the Work In Process related to this production plan.
+     * Get the work in process related to this production plan.
      */
     public function workInProcess()
     {
-        return $this->hasMany(WorkInProcess::class);
+        return $this->hasMany(WorkInProcess::class, 'production_plan_id');
     }
 }

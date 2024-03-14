@@ -9,11 +9,6 @@ class WorkInProcess extends Model
 {
     use HasFactory;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
     protected $fillable = [
         'creaser',
         'flexo_print',
@@ -49,11 +44,11 @@ class WorkInProcess extends Model
     protected $table = 'work_in_process';
 
     /**
-     * Get the production plan associated with the work in process.
+     * Get the finished goods associated with the work in process.
      */
-    public function productionPlan()
+    public function finishedGoods()
     {
-        return $this->belongsTo(ProductionPlan::class, 'finished_goods_id');
+        return $this->belongsTo(FinishedGoods::class);
     }
 
     /**
@@ -64,7 +59,7 @@ class WorkInProcess extends Model
     public function getTotalWorkInProcess()
     {
         // Sum all the work in process attributes
-        return array_sum($this->getAttributes());
+        return array_sum($this->attributesToArray());
     }
 
     /**

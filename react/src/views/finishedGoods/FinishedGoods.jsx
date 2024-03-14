@@ -72,26 +72,10 @@ export default function FinishedGoods() {
         setLoading(true);
         axiosClient
             .get("/finished_goods")
-            .then(({ data }) => {
+            .then((response) => {
+                setFinishedGoods(response.data.data || []);
+
                 setLoading(false);
-                if (data && Array.isArray(data) && data.length > 0) {
-                    console.log("Fetched data:", data);
-                    const processedData = data.map((fg) => ({
-                        ...fg,
-                        customer: fg.finished_goods.customer,
-                        code: fg.finished_goods.code,
-                        item_description: fg.finished_goods.itemDescription,
-                        part_number: fg.finished_goods.partNumber,
-                    }));
-                    console.log("Processed data:", processedData);
-                    setFinishedGoods(processedData);
-                } else {
-                    console.error("Error: No finished goods data found");
-                    message.error(
-                        "Failed to fetch data. No finished goods data found."
-                    );
-                    setFinishedGoods([]);
-                }
             })
             .catch((error) => {
                 setLoading(false);
@@ -99,7 +83,6 @@ export default function FinishedGoods() {
                 message.error("Failed to fetch data. Please try again.");
             });
     };
-
     const handleFilterChange = (event) => {
         setFilterValue(event.target.value);
     };
@@ -259,16 +242,16 @@ export default function FinishedGoods() {
                     />
                     <Column
                         title="Item Description"
-                        dataIndex="item_description"
-                        key="item_description"
+                        dataIndex="itemDescription"
+                        key="itemDescription"
                         sorter={(a, b) =>
                             a.item_description.localeCompare(b.item_description)
                         }
                     />
                     <Column
                         title="Part Number"
-                        dataIndex="part_number"
-                        key="part_number"
+                        dataIndex="partNumber"
+                        key="partNumber"
                         sorter={(a, b) =>
                             a.part_number.localeCompare(b.part_number)
                         }
