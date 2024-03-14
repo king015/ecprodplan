@@ -1,25 +1,51 @@
-import { Button, Modal, Form, Input, Select, DatePicker, Row, Col } from "antd";
+import { useState } from "react";
 import PropTypes from "prop-types";
-import axiosClient from "../../axios-client";
-import { customerOptions } from "./const";
+import {
+    Button,
+    Modal,
+    Form,
+    Input,
+    Select,
+    DatePicker,
+    Row,
+    Col,
+    message,
+} from "antd";
 import { SaveOutlined } from "@ant-design/icons";
+import { customerOptions } from "./const";
+import axiosClient from "../../axios-client";
 
 const { Option } = Select;
 
-export default function FinishedGoodsModal({ open, handleClose }) {
+const FinishedGoodsModal = ({ open, handleClose }) => {
     const [form] = Form.useForm();
+    const [loading, setLoading] = useState(false);
 
     const handleSubmit = () => {
         form.validateFields()
             .then((values) => {
+                setLoading(true);
+                const token = localStorage.getItem("ACCESS_TOKEN");
+
+                if (!token) {
+                    message.error(
+                        "Token not found in localStorage. Please login."
+                    );
+                    return;
+                }
+
+                const headers = {
+                    Authorization: `Bearer ${token}`,
+                };
+
                 axiosClient
-                    .post("/finished_goods", values)
+                    .post("/finished_goods", values, { headers })
                     .then(() => {
-                        console.log("Data posted successfully");
+                        message.success("Finished Goods posted successfully");
                         handleClose();
                     })
                     .catch((error) => {
-                        console.error("Error posting data:", error);
+                        console.error("Error posting Finished Goods:", error);
                         if (error.response) {
                             console.log("Response data:", error.response.data);
                             console.log(
@@ -31,6 +57,9 @@ export default function FinishedGoodsModal({ open, handleClose }) {
                                 error.response.headers
                             );
                         }
+                    })
+                    .finally(() => {
+                        setLoading(false);
                     });
             })
             .catch((errorInfo) => {
@@ -52,11 +81,12 @@ export default function FinishedGoodsModal({ open, handleClose }) {
                     key="submit"
                     type="primary"
                     onClick={handleSubmit}
+                    loading={loading}
                 >
-                    Save
+                    Submit
                 </Button>,
             ]}
-            width={1000}
+            width={800}
         >
             <Form
                 form={form}
@@ -75,7 +105,7 @@ export default function FinishedGoodsModal({ open, handleClose }) {
                     fg_out: "",
                 }}
             >
-                <Row gutter={[16, 16]}>
+                <Row gutter={[16, 0]}>
                     <Col span={12}>
                         <Form.Item
                             label="Customer"
@@ -87,7 +117,7 @@ export default function FinishedGoodsModal({ open, handleClose }) {
                                 },
                             ]}
                         >
-                            <Select style={{ width: "100%" }}>
+                            <Select style={{ width: "100%", height: "35px" }}>
                                 {customerOptions.map((option) => (
                                     <Option
                                         key={option.value}
@@ -110,7 +140,7 @@ export default function FinishedGoodsModal({ open, handleClose }) {
                                 },
                             ]}
                         >
-                            <Input style={{ width: "100%" }} />
+                            <Input style={{ width: "100%", height: "35px" }} />
                         </Form.Item>
                     </Col>
                     <Col span={12}>
@@ -124,7 +154,7 @@ export default function FinishedGoodsModal({ open, handleClose }) {
                                 },
                             ]}
                         >
-                            <Input style={{ width: "100%" }} />
+                            <Input style={{ width: "100%", height: "35px" }} />
                         </Form.Item>
                     </Col>
                     <Col span={12}>
@@ -138,7 +168,7 @@ export default function FinishedGoodsModal({ open, handleClose }) {
                                 },
                             ]}
                         >
-                            <Input style={{ width: "100%" }} />
+                            <Input style={{ width: "100%", height: "35px" }} />
                         </Form.Item>
                     </Col>
                     <Col span={12}>
@@ -152,7 +182,7 @@ export default function FinishedGoodsModal({ open, handleClose }) {
                                 },
                             ]}
                         >
-                            <Input style={{ width: "100%" }} />
+                            <Input style={{ width: "100%", height: "35px" }} />
                         </Form.Item>
                     </Col>
                     <Col span={12}>
@@ -166,7 +196,10 @@ export default function FinishedGoodsModal({ open, handleClose }) {
                                 },
                             ]}
                         >
-                            <Input style={{ width: "100%" }} type="number" />
+                            <Input
+                                style={{ width: "100%", height: "35px" }}
+                                type="number"
+                            />
                         </Form.Item>
                     </Col>
                     <Col span={12}>
@@ -182,8 +215,7 @@ export default function FinishedGoodsModal({ open, handleClose }) {
                             ]}
                         >
                             <DatePicker
-                                style={{ width: "100%" }}
-                                inputStyle={{ width: "100%" }}
+                                style={{ width: "100%", height: "35px" }}
                             />
                         </Form.Item>
                     </Col>
@@ -199,7 +231,10 @@ export default function FinishedGoodsModal({ open, handleClose }) {
                                 },
                             ]}
                         >
-                            <Input style={{ width: "100%" }} type="number" />
+                            <Input
+                                style={{ width: "100%", height: "35px" }}
+                                type="number"
+                            />
                         </Form.Item>
                     </Col>
                     <Col span={12}>
@@ -215,8 +250,7 @@ export default function FinishedGoodsModal({ open, handleClose }) {
                             ]}
                         >
                             <DatePicker
-                                style={{ width: "100%" }}
-                                inputStyle={{ width: "100%" }}
+                                style={{ width: "100%", height: "35px" }}
                             />
                         </Form.Item>
                     </Col>
@@ -231,7 +265,10 @@ export default function FinishedGoodsModal({ open, handleClose }) {
                                 },
                             ]}
                         >
-                            <Input style={{ width: "100%" }} type="number" />
+                            <Input
+                                style={{ width: "100%", height: "35px" }}
+                                type="number"
+                            />
                         </Form.Item>
                     </Col>
                     <Col span={12}>
@@ -245,16 +282,21 @@ export default function FinishedGoodsModal({ open, handleClose }) {
                                 },
                             ]}
                         >
-                            <Input style={{ width: "100%" }} type="number" />
+                            <Input
+                                style={{ width: "100%", height: "35px" }}
+                                type="number"
+                            />
                         </Form.Item>
                     </Col>
                 </Row>
             </Form>
         </Modal>
     );
-}
+};
 
 FinishedGoodsModal.propTypes = {
     open: PropTypes.bool.isRequired,
     handleClose: PropTypes.func.isRequired,
 };
+
+export default FinishedGoodsModal;

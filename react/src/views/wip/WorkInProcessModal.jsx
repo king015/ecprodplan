@@ -9,7 +9,7 @@ const { Option } = Select;
 
 const WorkInProcessModal = ({ open, handleClose }) => {
     const [form] = Form.useForm();
-    const { setWorkInProcess } = useState();
+
     const [formData, setFormData] = useState({
         customer: "",
         code: "",
@@ -23,28 +23,18 @@ const WorkInProcessModal = ({ open, handleClose }) => {
     const [boardProcessQuantities, setBoardProcessQuantities] = useState({});
 
     const handleChange = (value, name) => {
-        let updatedValue;
+        // Ensure that value is an array
+        const updatedValue = Array.isArray(value) ? value : [];
 
-        if (Array.isArray(value) && value.length > 0) {
-            const quantities = value.reduce((acc, item) => {
-                acc[item] = 0;
-                return acc;
-            }, {});
+        const quantities = updatedValue.reduce((acc, item) => {
+            acc[item] = 0;
+            return acc;
+        }, {});
 
-            if (name === "foamProcess") {
-                setFoamProcessQuantities(quantities);
-            } else if (name === "boardProcess") {
-                setBoardProcessQuantities(quantities);
-            }
-
-            updatedValue = value;
-        } else {
-            if (name === "foamProcess") {
-                setFoamProcessQuantities({});
-            } else if (name === "boardProcess") {
-                setBoardProcessQuantities({});
-            }
-            updatedValue = value;
+        if (name === "foamProcess") {
+            setFoamProcessQuantities(quantities);
+        } else if (name === "boardProcess") {
+            setBoardProcessQuantities(quantities);
         }
 
         setFormData((prevData) => ({
@@ -52,7 +42,6 @@ const WorkInProcessModal = ({ open, handleClose }) => {
             [name]: updatedValue,
         }));
     };
-
     const handleQuantityChange = (value, name) => {
         if (name.startsWith("foam")) {
             setFoamProcessQuantities((prevQuantities) => ({
@@ -69,16 +58,33 @@ const WorkInProcessModal = ({ open, handleClose }) => {
 
     const handleSubmit = () => {
         form.validateFields().then((values) => {
+            const token = localStorage.getItem("ACCESS_TOKEN");
+            console.log("Token:", token); // Log the token to check if it's retrieved correctly
+
+            const headers = {
+                Authorization: `Bearer ${token}`,
+            };
+            console.log("Headers:", headers); // Log the headers to check if Authorization header is set correctly
+
             const data = {
-                ...values,
-                ...formData,
+                customer: values.customer,
+                code: values.code || "",
+                itemDescription: values.itemDescription || "",
+                partNumber: values.partNumber || "",
+                boardProcess: formData.boardProcess.map((process) => ({
+                    name: process,
+                    quantity: boardProcessQuantities[`${process}Quantity`] || 0,
+                })),
+                foamProcess: formData.foamProcess.map((process) => ({
+                    name: process,
+                    quantity: foamProcessQuantities[`${process}Quantity`] || 0,
+                })),
             };
 
             axiosClient
-                .post("/combine_data", data)
-                .then((data) => {
-                    setWorkInProcess(data.production_plan);
-                    message.success("Data saved successfully");
+                .post("/work_in_process", data, { headers })
+                .then(() => {
+                    message.success("Work in Process saved successfully");
                     handleClose();
                 })
                 .catch((error) => {
@@ -90,18 +96,8 @@ const WorkInProcessModal = ({ open, handleClose }) => {
                             "Response headers:",
                             error.response.headers
                         );
-
-                        if (error.response.data.errors) {
-                            const { errors } = error.response.data;
-                            Object.values(errors).forEach((errorMsg) => {
-                                message.error(errorMsg);
-                            });
-                        }
-                    } else {
-                        message.error(
-                            "An error occurred while posting the data."
-                        );
                     }
+                    message.error("An error occurred while posting the data.");
                 });
         });
     };
@@ -129,7 +125,7 @@ const WorkInProcessModal = ({ open, handleClose }) => {
                 </Button>,
             ]}
             width={1300}
-            Height={1000}
+            height={1000}
         >
             <Form
                 form={form}
@@ -177,22 +173,21 @@ const WorkInProcessModal = ({ open, handleClose }) => {
                         </Form.Item>
                         <Form.Item
                             label="Item Description"
-                            name="item_description"
+                            name="itemDescription"
                         >
                             <Input
                                 onChange={(e) =>
                                     handleChange(
                                         e.target.value,
-                                        "item_description"
+                                        "itemDescription"
                                     )
                                 }
                             />
                         </Form.Item>
-                        <Form.Item label="Part Number" name="part_number">
-                            {" "}
+                        <Form.Item label="Part Number" name="partNumber">
                             <Input
                                 onChange={(e) =>
-                                    handleChange(e.target.value, "part_number")
+                                    handleChange(e.target.value, "partNumber")
                                 }
                             />
                         </Form.Item>
@@ -207,79 +202,37 @@ const WorkInProcessModal = ({ open, handleClose }) => {
                                     handleChange(value, "boardProcess")
                                 }
                             >
-                                <Option value="Creaser" name="creaser">
-                                    Creaser
-                                </Option>
-                                <Option
-                                    value="Flexo Printing"
-                                    name="flexo_printing"
-                                >
+                                <Option value="Creaser">Creaser</Option>
+                                <Option value="Flexo Printing">
                                     Flexo Printing
                                 </Option>
-                                <Option
-                                    value="Printer Slotter"
-                                    name="printer_slotter"
-                                >
+                                <Option value="Printer Slotter">
                                     Printer Slotter
                                 </Option>
-                                <Option value="Slotting" name="slotting">
-                                    Slotting
-                                </Option>
-                                <Option value="Clapper" name="clapper">
-                                    Clapper
-                                </Option>
-                                <Option value="Diecut" name="diecut">
-                                    Diecut
-                                </Option>
-                                <Option value="Stitching" name="stitching">
-                                    Stitching
-                                </Option>
-                                <Option value="Detach" name="detach">
-                                    Detach
-                                </Option>
-                                <Option value="Gluing" name="gluing">
-                                    Gluing
-                                </Option>
-                                <Option
-                                    value="Pre-Assembly"
-                                    name="pre_assembly"
-                                >
+                                <Option value="Slotting">Slotting</Option>
+                                <Option value="Clapper">Clapper</Option>
+                                <Option value="Diecut">Diecut</Option>
+                                <Option value="Stitching">Stitching</Option>
+                                <Option value="Detach">Detach</Option>
+                                <Option value="Gluing">Gluing</Option>
+                                <Option value="Pre-Assembly">
                                     Pre-Assembly
                                 </Option>
-                                <Option
-                                    value="Manual Slotting"
-                                    name="manual_slotting"
-                                >
+                                <Option value="Manual Slotting">
                                     Manual Slotting
                                 </Option>
-                                <Option value="Packing" name="packing">
-                                    Packing
-                                </Option>
-                                <Option
-                                    value="Pallet Assembly"
-                                    name="pallet_assembly"
-                                >
+                                <Option value="Packing">Packing</Option>
+                                <Option value="Pallet Assembly">
                                     Pallet Assembly
                                 </Option>
-                                <Option
-                                    value="Manual Printing"
-                                    name="manual_printing"
-                                >
+                                <Option value="Manual Printing">
                                     Manual Printing
                                 </Option>
-                                <Option
-                                    value="Manual Cutting"
-                                    name="manual_cutting"
-                                >
+                                <Option value="Manual Cutting">
                                     Manual Cutting
                                 </Option>
-                                <Option value="Laminating" name="laminating">
-                                    Laminating
-                                </Option>
-                                <Option
-                                    value="Box Assembly"
-                                    name="box_assembly"
-                                >
+                                <Option value="Laminating">Laminating</Option>
+                                <Option value="Box Assembly">
                                     Box Assembly
                                 </Option>
                             </Select>
@@ -307,7 +260,10 @@ const WorkInProcessModal = ({ open, handleClose }) => {
 
                             {/* Render the total quantity if any item selected */}
                             <Form.Item label="Total Board Process Quantity">
-                                <Input disabled value={formData.boardProcess} />
+                                <Input
+                                    disabled
+                                    value={formData.boardProcess.length}
+                                />
                             </Form.Item>
                         </Form.Item>
                     </Col>
@@ -321,51 +277,25 @@ const WorkInProcessModal = ({ open, handleClose }) => {
                                     handleChange(value, "foamProcess")
                                 }
                             >
-                                <Option
-                                    value="Manual Cutting"
-                                    name="fp_manual_cutting"
-                                >
+                                <Option value="Manual Cutting">
                                     Manual Cutting
                                 </Option>
-                                <Option value="Diecut" name="fp_diecut">
-                                    Diecut
-                                </Option>
-                                <Option value="Bandsaw" name="bandsaw">
-                                    Bandsaw
-                                </Option>
-                                <Option value="Skiving" name="skiving">
-                                    Skiving
-                                </Option>
-                                <Option value="Detach" name="fp_detach">
-                                    Detach
-                                </Option>
-                                <Option
-                                    value="Heating Plate"
-                                    name="heating_plate"
-                                >
+                                <Option value="Diecut">Diecut</Option>
+                                <Option value="Bandsaw">Bandsaw</Option>
+                                <Option value="Skiving">Skiving</Option>
+                                <Option value="Detach">Detach</Option>
+                                <Option value="Heating Plate">
                                     Heating Plate
                                 </Option>
-                                <Option value="Hotmelt" name="hotmelt">
-                                    Hotmelt
-                                </Option>
-                                <Option
-                                    value="Assembly Heating"
-                                    name="assembly_heating"
-                                >
+                                <Option value="Hotmelt">Hotmelt</Option>
+                                <Option value="Assembly Heating">
                                     Assembly Heating
                                 </Option>
-                                <Option
-                                    value="Manual Printing"
-                                    name="fp_manual_printing"
-                                >
+                                <Option value="Manual Printing">
                                     Manual Printing
                                 </Option>
-                                <Option value="Sealing" name="sealing">
-                                    Sealing
-                                </Option>
-                                <Option value="Packing" name="fp_packing">
-                                    Packing
-                                </Option>
+                                <Option value="Sealing">Sealing</Option>
+                                <Option value="Packing">Packing</Option>
                             </Select>
                             {/* Render the generated number input fields */}
                             {Object.entries(foamProcessQuantities).map(
@@ -390,7 +320,10 @@ const WorkInProcessModal = ({ open, handleClose }) => {
                             )}
 
                             <Form.Item label="Total Foam Process Quantity">
-                                <Input disabled value={formData.foamProcess} />
+                                <Input
+                                    disabled
+                                    value={formData.foamProcess.length}
+                                />
                             </Form.Item>
                         </Form.Item>
                     </Col>

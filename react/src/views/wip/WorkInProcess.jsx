@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-// import { useStateContext } from "../../components/context/ContextProvider";
 import {
     Typography,
     Button,
@@ -22,11 +21,9 @@ import WorkInProcessModal from "./WorkInProcessModal";
 
 const { Text } = Typography;
 
-export default function FinishedGoods() {
-    const [workInProcess, setWorkInProcess] = useState([]);
-
+export default function Production() {
+    const [productions, setProductions] = useState([]);
     const [loading, setLoading] = useState(false);
-    // const { setNotification } = useStateContext();
     const [openModal, setOpenModal] = useState(false);
     const [filterValue, setFilterValue] = useState("");
     const [pagination, setPagination] = useState({ current: 1, pageSize: 5 });
@@ -43,7 +40,7 @@ export default function FinishedGoods() {
         getWorkInProcess();
     }, []);
 
-    const onDeleteClick = (wip) => {
+    const onDeleteClick = (production) => {
         Modal.confirm({
             title: "Delete data",
             content: "Are you sure you want to delete this data?",
@@ -52,7 +49,7 @@ export default function FinishedGoods() {
             cancelText: "No",
             onOk() {
                 axiosClient
-                    .delete(`/work_in_process/${wip.id}`)
+                    .delete(`/production/${production.id}`)
                     .then(() => {
                         getWorkInProcess();
                         message.success("Data successfully deleted");
@@ -69,23 +66,10 @@ export default function FinishedGoods() {
     const getWorkInProcess = () => {
         setLoading(true);
         axiosClient
-            .get("/work_in_process")
-            .then(({ data }) => {
+            .get("/combined_data") // Fetch combined data from the API
+            .then((response) => {
+                setProductions(response.data.combined_data || []); // Set combined data to state
                 setLoading(false);
-                if (data && data.length > 0) {
-                    const processedData = data.map((wip) => ({
-                        ...wip,
-                        customer: wip.finished_goods.customer,
-                        code: wip.finished_goods.code,
-                        itemDescription: wip.finished_goods.itemDescription,
-                        partNumber: wip.finished_goods.partNumber,
-                    }));
-                    setWorkInProcess(processedData);
-                } else {
-                    // No data found
-                    message.warning("No work in process data found.");
-                    setWorkInProcess([]); // Set an empty array
-                }
             })
             .catch((error) => {
                 setLoading(false);
@@ -102,16 +86,14 @@ export default function FinishedGoods() {
         setFilterValue(event.target.value);
     };
 
-    const filteredData = Array.isArray(workInProcess)
-        ? workInProcess.filter((fg) =>
-              Object.values(fg).some(
-                  (value) =>
-                      value &&
-                      typeof value === "string" &&
-                      value.toLowerCase().includes(filterValue.toLowerCase())
-              )
-          )
-        : [];
+    const filteredData = productions.filter((production) =>
+        Object.values(production).some(
+            (value) =>
+                value &&
+                typeof value === "string" &&
+                value.toLowerCase().includes(filterValue.toLowerCase())
+        )
+    );
 
     const columns = [
         {
@@ -153,37 +135,40 @@ export default function FinishedGoods() {
             ),
         },
         {
-            title: "Customer",
-            dataIndex: "customer",
-            key: "customer",
-            fixed: "left",
-            width: 300,
-            sorter: (a, b) => a.customer - b.customer,
-        },
-        {
             title: "EP Code",
             dataIndex: "code",
             key: "code",
             fixed: "left",
             width: 100,
-            sorter: (a, b) => a.code - b.code,
+            sorter: (a, b) => a.code.localeCompare(b.code),
         },
+        {
+            title: "Customer",
+            dataIndex: "customer",
+            key: "customer",
+            width: 200,
+            fixed: "left",
+            sorter: (a, b) => a.customer.localeCompare(b.customer),
+        },
+
         {
             title: "Item Description",
             dataIndex: "itemDescription",
             key: "itemDescription",
             fixed: "left",
             width: 500,
-            sorter: (a, b) => a.itemDescription - b.itemDescription,
+            sorter: (a, b) =>
+                a.itemDescription.localeCompare(b.itemDescription),
         },
         {
             title: "Part Number",
             dataIndex: "partNumber",
             key: "partNumber",
-            fixed: "left", // Fixed column
+            fixed: "left",
             width: 150,
-            sorter: (a, b) => a.partNumber - b.partNumber,
+            sorter: (a, b) => a.partNumber.localeCompare(b.partNumber),
         },
+
         {
             title: "Board Process",
             children: [
@@ -273,7 +258,7 @@ export default function FinishedGoods() {
                 },
                 {
                     title: "M-P",
-                    dataIndex: "manual_slotting",
+                    dataIndex: "manual_printing",
                     key: "manual_printing",
                     width: 60,
                     sorter: (a, b) => a.manual_printing - b.manual_printing,

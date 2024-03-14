@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('finished_goods', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('work_in_process_id')->nullable();
+            $table->unsignedBigInteger('production_plan_id')->nullable();
             $table->string('customer');
             $table->string('code');
             $table->string('itemDescription');

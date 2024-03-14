@@ -8,7 +8,7 @@ const UserForm = ({ visible, handleCancel }) => {
     const [loading, setLoading] = useState(false);
 
     const onFinish = (values) => {
-        setLoading(true); // Set loading to true when submitting
+        setLoading(true);
         axiosClient
             .post("/users", values)
             .then((response) => {

@@ -2,26 +2,32 @@
 
 namespace App\Http\Resources;
 
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class WorkInProcessResource extends JsonResource
+class ProductionResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array
+     * @return array<string, mixed>
      */
-    public function toArray($request)
+    public function toArray(Request $request): array
     {
-        // Check if finishedGoods relationship is loaded
-        $customer = $this->whenLoaded('finishedGoods')->customer ?? null;
-        $code = $this->whenLoaded('finishedGoods')->code ?? null;
-        $itemDescription = $this->whenLoaded('finishedGoods')->itemDescription ?? null;
-        $partNumber = $this->whenLoaded('finishedGoods')->partNumber ?? null;
-
-        // Return an array with properties, or an empty array if finishedGoods is null
         return [
+            'id' => $this->id,
+            'customer'=> $this->customer,
+            'code'=> $this->code,
+            'itemDescription'=> $this->itemDescription,
+            'partNumber'=> $this->partNumber,
+            'weekly_requisites' => $this->weekly_requisites,
+            'mon' => $this->mon,
+            'tues' => $this->tues,
+            'wed' => $this->wed,
+            'thurs' => $this->thurs,
+            'fri' => $this->fri,
+            'sat' => $this->sat,
+            'fg' => $this->fg,
             'creaser' => $this->creaser,
             'flexo_print' => $this->flexo_print,
             'printer_slotter' => $this->printer_slotter,
@@ -50,11 +56,12 @@ class WorkInProcessResource extends JsonResource
             'fp_manual_printing' => $this->fp_manual_printing,
             'sealing' => $this->sealing,
             'fp_packing' => $this->fp_packing,
-            // Include customer, code, itemDescription, and partNumber from finishedGoods if it's loaded
-            'customer' => $customer,
-            'code' => $code,
-            'itemDescription' => $itemDescription,
-            'partNumber' => $partNumber,
+            'ending_inventory',
+            'ending_date',
+            'fg_in',
+            'fg_out',
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
         ];
     }
 }

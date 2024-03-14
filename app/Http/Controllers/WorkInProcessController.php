@@ -7,6 +7,7 @@ use App\Http\Requests\StoreWorkInProcessRequest;
 use App\Http\Requests\UpdateWorkInProcessRequest;
 use App\Http\Resources\WorkInProcessResource;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 
 class WorkInProcessController extends Controller
 {
@@ -15,7 +16,8 @@ class WorkInProcessController extends Controller
      */
     public function index()
     {
-        $workInProcess = WorkInProcess::orderBy('created_at', 'desc')->paginate(10);
+        $workInProcess = WorkInProcess::with('finishedGoods')->orderBy('id', 'desc')->paginate(10);
+
         return WorkInProcessResource::collection($workInProcess);
     }
 
@@ -26,7 +28,8 @@ class WorkInProcessController extends Controller
     {
         $data = $request->validated();
         $workInProcess = WorkInProcess::create($data);
-        return response(new WorkInProcessResource($workInProcess), Response::HTTP_CREATED);
+
+        return new WorkInProcessResource($workInProcess);
     }
 
     /**
@@ -42,8 +45,11 @@ class WorkInProcessController extends Controller
      */
     public function update(UpdateWorkInProcessRequest $request, WorkInProcess $workInProcess)
     {
+        $this->authorize('update', $workInProcess);
+
         $data = $request->validated();
         $workInProcess->update($data);
+
         return new WorkInProcessResource($workInProcess);
     }
 
@@ -52,7 +58,10 @@ class WorkInProcessController extends Controller
      */
     public function destroy(WorkInProcess $workInProcess)
     {
+        $this->authorize('delete', $workInProcess);
+
         $workInProcess->delete();
-        return response("", Response::HTTP_NO_CONTENT);
+
+        return response()->noContent();
     }
 }

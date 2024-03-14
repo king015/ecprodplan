@@ -22,6 +22,10 @@ class UpdateWorkInProcessRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'customer'=>'required|string',
+            'code'=>'required|string',
+            'itemDescription'=>'required|string',
+            'partNumber'=>'required|string',
             'creaser'=>'required|integer',
             'flexo_print'=>'required|integer',
             'printer_slotter'=>'required|integer',

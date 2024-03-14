@@ -4,14 +4,14 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreProductionPlanRequest extends FormRequest
+class UpdateWipRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return true;
+        return false;
     }
 
     /**
@@ -22,14 +22,7 @@ class StoreProductionPlanRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'weekly_requisites'=>'integer',
-            'mon'=>'integer',
-            'tues'=>'integer',
-            'wed'=>'integer',
-            'thurs'=>'integer',
-            'fri'=>'integer',
-            'sat'=>'integer',
-            'fg'=>'integer',
+            //
         ];
     }
 }
