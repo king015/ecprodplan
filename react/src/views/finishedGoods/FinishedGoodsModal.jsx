@@ -86,7 +86,7 @@ const FinishedGoodsModal = ({ open, handleClose }) => {
                     Submit
                 </Button>,
             ]}
-            width={800}
+            width={900}
         >
             <Form
                 form={form}
@@ -106,29 +106,7 @@ const FinishedGoodsModal = ({ open, handleClose }) => {
                 }}
             >
                 <Row gutter={[16, 0]}>
-                    <Col span={12}>
-                        <Form.Item
-                            label="Customer"
-                            name="customer"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: "Please select customer",
-                                },
-                            ]}
-                        >
-                            <Select style={{ width: "100%", height: "35px" }}>
-                                {customerOptions.map((option) => (
-                                    <Option
-                                        key={option.value}
-                                        value={option.value}
-                                    >
-                                        {option.label}
-                                    </Option>
-                                ))}
-                            </Select>
-                        </Form.Item>
-                    </Col>
+                    {/* Left Column */}
                     <Col span={12}>
                         <Form.Item
                             label="EP Code"
@@ -140,10 +118,31 @@ const FinishedGoodsModal = ({ open, handleClose }) => {
                                 },
                             ]}
                         >
-                            <Input style={{ width: "100%", height: "35px" }} />
+                            <Input style={{ height: "35px", width: "100%" }} />
                         </Form.Item>
-                    </Col>
-                    <Col span={12}>
+
+                        <Form.Item
+                            label="Customer"
+                            name="customer"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Please select customer",
+                                },
+                            ]}
+                        >
+                            <Select style={{ height: "35px", width: "100%" }}>
+                                {customerOptions.map((option) => (
+                                    <Option
+                                        key={option.value}
+                                        value={option.value}
+                                    >
+                                        {option.label}
+                                    </Option>
+                                ))}
+                            </Select>
+                        </Form.Item>
+
                         <Form.Item
                             label="Item Description"
                             name="itemDescription"
@@ -154,10 +153,9 @@ const FinishedGoodsModal = ({ open, handleClose }) => {
                                 },
                             ]}
                         >
-                            <Input style={{ width: "100%", height: "35px" }} />
+                            <Input style={{ height: "35px", width: "100%" }} />
                         </Form.Item>
-                    </Col>
-                    <Col span={12}>
+
                         <Form.Item
                             label="Part Number"
                             name="partNumber"
@@ -168,10 +166,9 @@ const FinishedGoodsModal = ({ open, handleClose }) => {
                                 },
                             ]}
                         >
-                            <Input style={{ width: "100%", height: "35px" }} />
+                            <Input style={{ height: "35px", width: "100%" }} />
                         </Form.Item>
-                    </Col>
-                    <Col span={12}>
+
                         <Form.Item
                             label="Location"
                             name="location"
@@ -182,10 +179,9 @@ const FinishedGoodsModal = ({ open, handleClose }) => {
                                 },
                             ]}
                         >
-                            <Input style={{ width: "100%", height: "35px" }} />
+                            <Input style={{ height: "35px", width: "100%" }} />
                         </Form.Item>
-                    </Col>
-                    <Col span={12}>
+
                         <Form.Item
                             label="Beginning Inventory"
                             name="beginning_inventory"
@@ -197,11 +193,13 @@ const FinishedGoodsModal = ({ open, handleClose }) => {
                             ]}
                         >
                             <Input
-                                style={{ width: "100%", height: "35px" }}
+                                style={{ height: "35px", width: "100%" }}
                                 type="number"
                             />
                         </Form.Item>
                     </Col>
+
+                    {/* Right Column */}
                     <Col span={12}>
                         <Form.Item
                             label="Beginning Inventory Date"
@@ -215,12 +213,10 @@ const FinishedGoodsModal = ({ open, handleClose }) => {
                             ]}
                         >
                             <DatePicker
-                                style={{ width: "100%", height: "35px" }}
+                                style={{ height: "35px", width: "100%" }}
                             />
                         </Form.Item>
-                    </Col>
 
-                    <Col span={12}>
                         <Form.Item
                             label="Ending Inventory"
                             name="ending_inventory"
@@ -232,12 +228,11 @@ const FinishedGoodsModal = ({ open, handleClose }) => {
                             ]}
                         >
                             <Input
-                                style={{ width: "100%", height: "35px" }}
+                                style={{ height: "35px", width: "100%" }}
                                 type="number"
                             />
                         </Form.Item>
-                    </Col>
-                    <Col span={12}>
+
                         <Form.Item
                             label="Ending Inventory Date"
                             name="ending_date"
@@ -245,16 +240,15 @@ const FinishedGoodsModal = ({ open, handleClose }) => {
                                 {
                                     required: true,
                                     message:
-                                        "Please select Beginning Inventory Date",
+                                        "Please select Ending Inventory Date",
                                 },
                             ]}
                         >
                             <DatePicker
-                                style={{ width: "100%", height: "35px" }}
+                                style={{ height: "35px", width: "100%" }}
                             />
                         </Form.Item>
-                    </Col>
-                    <Col span={12}>
+
                         <Form.Item
                             label="FG In"
                             name="fg_in"
@@ -266,12 +260,11 @@ const FinishedGoodsModal = ({ open, handleClose }) => {
                             ]}
                         >
                             <Input
-                                style={{ width: "100%", height: "35px" }}
+                                style={{ height: "35px", width: "100%" }}
                                 type="number"
                             />
                         </Form.Item>
-                    </Col>
-                    <Col span={12}>
+
                         <Form.Item
                             label="FG Out"
                             name="fg_out"
@@ -283,7 +276,7 @@ const FinishedGoodsModal = ({ open, handleClose }) => {
                             ]}
                         >
                             <Input
-                                style={{ width: "100%", height: "35px" }}
+                                style={{ height: "35px", width: "100%" }}
                                 type="number"
                             />
                         </Form.Item>
