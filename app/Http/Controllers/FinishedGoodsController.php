@@ -15,7 +15,7 @@ class FinishedGoodsController extends Controller
      */
     public function index()
     {
-        $finishedGoods = FinishedGoods::orderBy('created_at', 'desc')->paginate(10);
+        $finishedGoods = FinishedGoods::orderBy('id', 'desc')->paginate(10);
         return FinishedGoodsResource::collection($finishedGoods);
     }
 

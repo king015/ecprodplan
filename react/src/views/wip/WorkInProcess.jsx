@@ -15,25 +15,36 @@ import {
     DeleteOutlined,
     PlusCircleOutlined,
     SyncOutlined,
+    TagsOutlined,
 } from "@ant-design/icons";
 import axiosClient from "../../axios-client";
 import WorkInProcessModal from "./WorkInProcessModal";
+import ProcessModal from "./ProcessModal";
 
 const { Text } = Typography;
 
 export default function Production() {
-    const [productions, setProductions] = useState([]);
+    const [workInProcess, setWorkInProcess] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [openModal, setOpenModal] = useState(false);
+    const [openWorkInProcessModal, setOpenWorkInProcessModal] = useState(false);
+    const [openProcessModal, setOpenProcessModal] = useState(false);
     const [filterValue, setFilterValue] = useState("");
     const [pagination, setPagination] = useState({ current: 1, pageSize: 5 });
 
-    const handleOpenModal = () => {
-        setOpenModal(true);
+    const handleOpenWorkInProcessModal = () => {
+        setOpenWorkInProcessModal(true);
     };
 
-    const handleCloseModal = () => {
-        setOpenModal(false);
+    const handleCloseWorkInProcessModal = () => {
+        setOpenWorkInProcessModal(false);
+    };
+
+    const handleOpenProcessModal = () => {
+        setOpenProcessModal(true);
+    };
+
+    const handleCloseProcessModal = () => {
+        setOpenProcessModal(false);
     };
 
     useEffect(() => {
@@ -49,7 +60,7 @@ export default function Production() {
             cancelText: "No",
             onOk() {
                 axiosClient
-                    .delete(`/production/${production.id}`)
+                    .delete(`/work_in_process/${production.id}`)
                     .then(() => {
                         getWorkInProcess();
                         message.success("Data successfully deleted");
@@ -66,9 +77,17 @@ export default function Production() {
     const getWorkInProcess = () => {
         setLoading(true);
         axiosClient
-            .get("/combined_data") // Fetch combined data from the API
+            .get("/finished_goods_data")
             .then((response) => {
-                setProductions(response.data.combined_data || []); // Set combined data to state
+                const finishedGoodsData =
+                    response.data.finished_goods_data || [];
+
+                const mappedData = finishedGoodsData.map((item) => ({
+                    ...item,
+                    creaser: null,
+                    flexo_print: null,
+                }));
+                setWorkInProcess(mappedData);
                 setLoading(false);
             })
             .catch((error) => {
@@ -86,7 +105,7 @@ export default function Production() {
         setFilterValue(event.target.value);
     };
 
-    const filteredData = productions.filter((production) =>
+    const filteredData = workInProcess.filter((production) =>
         Object.values(production).some(
             (value) =>
                 value &&
@@ -96,25 +115,6 @@ export default function Production() {
     );
 
     const columns = [
-        {
-            key: "action",
-            width: 35,
-            fixed: "left",
-            render: (text, record) => (
-                <Space size="small" style={{ width: 100 }}>
-                    <Tooltip title="Edit" placement="right">
-                        <Button
-                            icon={<EditOutlined style={{ color: "#1E90FF" }} />}
-                            size="small"
-                            onClick={() => {
-                                console.log("Edit", record);
-                                message.info(`Editing record ${record.id}`);
-                            }}
-                        />
-                    </Tooltip>
-                </Space>
-            ),
-        },
         {
             key: "action",
             fixed: "left",
@@ -128,6 +128,41 @@ export default function Production() {
                             onClick={() => {
                                 onDeleteClick(record);
                                 message.error(`Deleting record ${record.id}`);
+                            }}
+                        />
+                    </Tooltip>
+                </Space>
+            ),
+        },
+        {
+            key: "action",
+            fixed: "left",
+            width: 35,
+            render: () => (
+                <Space size="small" style={{ width: 100 }}>
+                    <Tooltip title="View Processes" placement="right">
+                        <Button
+                            icon={<TagsOutlined style={{ color: "#006400" }} />}
+                            size="small"
+                            onClick={handleOpenProcessModal}
+                        />
+                    </Tooltip>
+                </Space>
+            ),
+        },
+        {
+            key: "action",
+            width: 35,
+            fixed: "left",
+            render: (text, record) => (
+                <Space size="small" style={{ width: 100 }}>
+                    <Tooltip title="Edit" placement="right">
+                        <Button
+                            icon={<EditOutlined style={{ color: "#1E90FF" }} />}
+                            size="small"
+                            onClick={() => {
+                                console.log("Edit", record);
+                                message.info(`Editing record ${record.id}`);
                             }}
                         />
                     </Tooltip>
@@ -438,7 +473,7 @@ export default function Production() {
                 <Tooltip title="Add" placement="right">
                     <Button
                         icon={<PlusCircleOutlined />}
-                        onClick={handleOpenModal}
+                        onClick={handleOpenWorkInProcessModal}
                         style={{
                             marginRight: 8,
                             borderRadius: "50%",
@@ -481,8 +516,13 @@ export default function Production() {
                 />
             </div>
             <WorkInProcessModal
-                open={openModal}
-                handleClose={handleCloseModal}
+                visible={openWorkInProcessModal}
+                handleClose={handleCloseWorkInProcessModal}
+            />
+            <ProcessModal
+                visible={openProcessModal}
+                onClose={handleCloseProcessModal}
+                process="Per Item"
             />
         </>
     );

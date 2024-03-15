@@ -66,13 +66,26 @@ export default function FinishedGoods() {
     const getProductionPlan = () => {
         setLoading(true);
         axiosClient
-            .get("/production_plan")
-            .then(({ data }) => {
+            .get("/finished_goods_data")
+            .then((response) => {
+                const finishedGoodsData =
+                    response.data.finished_goods_data || [];
+                // Map finished goods data to match the structure of workInProcess
+                const mappedData = finishedGoodsData.map((item) => ({
+                    ...item,
+                    // Add dummy values for other columns not present in finished goods data
+                    creaser: null,
+                    flexo_print: null,
+                    // Add more dummy values for other board process columns
+                    // Add dummy values for foam process columns as well
+                }));
+                setProductionPlan(mappedData);
                 setLoading(false);
-                setProductionPlan(data);
             })
-            .catch(() => {
+            .catch((error) => {
                 setLoading(false);
+                console.error("Error fetching data:", error);
+                message.error("Failed to fetch data. Please try again.");
             });
     };
 
@@ -166,16 +179,16 @@ export default function FinishedGoods() {
         },
         {
             title: "Item Description",
-            dataIndex: "item_description",
-            key: "item_description",
+            dataIndex: "itemDescription",
+            key: "itemDescription",
             fixed: "left",
             width: 500,
             sorter: (a, b) => a.item_description - b.item_description,
         },
         {
             title: "Part Number",
-            dataIndex: "part_number",
-            key: "part_number",
+            dataIndex: "partNumber",
+            key: "partNumber",
             fixed: "left",
             width: 150,
             sorter: (a, b) => a.part_number - b.part_number,

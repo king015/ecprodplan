@@ -476,33 +476,33 @@ namespace App\Models{
  *
  * @property int $id
  * @property int|null $finished_goods_id
- * @property int $creaser
- * @property int $flexo_print
- * @property int $printer_slotter
- * @property int $slotting
- * @property int $clapper
- * @property int $diecut
- * @property int $stitching
- * @property int $detach
- * @property int $gluing
- * @property int $pre_assembly
- * @property int $manual_slotting
- * @property int $pallet_assembly
- * @property int $manual_printing
- * @property int $manual_cutting
- * @property int $laminating
- * @property int $box_assembly
- * @property int $fp_manual_cutting
- * @property int $fp_diecut
- * @property int $bandsaw
- * @property int $skiving
- * @property int $fp_detach
- * @property int $heating_plate
- * @property int $hotmelt
- * @property int $assembly_heating
- * @property int $fp_manual_printing
- * @property int $sealing
- * @property int $fp_packing
+ * @property int|null $creaser
+ * @property int|null $flexo_print
+ * @property int|null $printer_slotter
+ * @property int|null $slotting
+ * @property int|null $clapper
+ * @property int|null $diecut
+ * @property int|null $stitching
+ * @property int|null $detach
+ * @property int|null $gluing
+ * @property int|null $pre_assembly
+ * @property int|null $manual_slotting
+ * @property int|null $pallet_assembly
+ * @property int|null $manual_printing
+ * @property int|null $manual_cutting
+ * @property int|null $laminating
+ * @property int|null $box_assembly
+ * @property int|null $fp_manual_cutting
+ * @property int|null $fp_diecut
+ * @property int|null $bandsaw
+ * @property int|null $skiving
+ * @property int|null $fp_detach
+ * @property int|null $heating_plate
+ * @property int|null $hotmelt
+ * @property int|null $assembly_heating
+ * @property int|null $fp_manual_printing
+ * @property int|null $sealing
+ * @property int|null $fp_packing
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\FinishedGoods|null $finishedGoods

@@ -71,10 +71,17 @@ export default function FinishedGoods() {
     const getFinishedGoods = () => {
         setLoading(true);
         axiosClient
-            .get("/finished_goods")
+            .get("/finished_goods_data")
             .then((response) => {
-                setFinishedGoods(response.data.data || []);
+                const finishedGoodsData =
+                    response.data.finished_goods_data || [];
 
+                const mappedData = finishedGoodsData.map((item) => ({
+                    ...item,
+                    creaser: null,
+                    flexo_print: null,
+                }));
+                setFinishedGoods(mappedData);
                 setLoading(false);
             })
             .catch((error) => {
@@ -83,6 +90,7 @@ export default function FinishedGoods() {
                 message.error("Failed to fetch data. Please try again.");
             });
     };
+
     const handleFilterChange = (event) => {
         setFilterValue(event.target.value);
     };
@@ -227,6 +235,12 @@ export default function FinishedGoods() {
                             </Space>
                         )}
                     />
+                    <Column
+                        title="EP Code"
+                        dataIndex="code"
+                        key="code"
+                        sorter={(a, b) => a.code.localeCompare(b.code)}
+                    />
 
                     <Column
                         title="Customer"
@@ -234,18 +248,13 @@ export default function FinishedGoods() {
                         key="customer"
                         sorter={(a, b) => a.customer.localeCompare(b.customer)}
                     />
-                    <Column
-                        title="EP Code"
-                        dataIndex="code"
-                        key="code"
-                        sorter={(a, b) => a.code.localeCompare(b.code)}
-                    />
+
                     <Column
                         title="Item Description"
                         dataIndex="itemDescription"
                         key="itemDescription"
                         sorter={(a, b) =>
-                            a.item_description.localeCompare(b.item_description)
+                            a.itemDescription.localeCompare(b.itemDescription)
                         }
                     />
                     <Column
@@ -253,7 +262,7 @@ export default function FinishedGoods() {
                         dataIndex="partNumber"
                         key="partNumber"
                         sorter={(a, b) =>
-                            a.part_number.localeCompare(b.part_number)
+                            a.partNumber.localeCompare(b.partNumber)
                         }
                     />
                     <Column

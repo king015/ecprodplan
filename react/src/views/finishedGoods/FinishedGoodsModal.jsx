@@ -42,6 +42,7 @@ const FinishedGoodsModal = ({ open, handleClose }) => {
                     .post("/finished_goods", values, { headers })
                     .then(() => {
                         message.success("Finished Goods posted successfully");
+                        form.resetFields(); // Clear form fields on successful submission
                         handleClose();
                     })
                     .catch((error) => {
@@ -67,13 +68,18 @@ const FinishedGoodsModal = ({ open, handleClose }) => {
             });
     };
 
+    const handleCancel = () => {
+        form.resetFields(); // Clear form fields when modal is closed
+        handleClose();
+    };
+
     return (
         <Modal
             title="Add Finished Goods"
             visible={open}
-            onCancel={handleClose}
+            onCancel={handleCancel}
             footer={[
-                <Button key="cancel" onClick={handleClose}>
+                <Button key="cancel" onClick={handleCancel}>
                     Cancel
                 </Button>,
                 <Button

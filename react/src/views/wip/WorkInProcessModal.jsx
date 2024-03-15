@@ -1,340 +1,238 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { Modal, Select, Input, Button, InputNumber, message } from "antd";
+import axiosClient from "../../axios-client"; // Assuming this is the correct import path for your axios client
 import PropTypes from "prop-types";
-import { Modal, Form, Input, Select, Button, Row, Col, message } from "antd";
 import { SaveOutlined } from "@ant-design/icons";
-import axiosClient from "../../axios-client";
-import { customerOptions } from "./const";
 
 const { Option } = Select;
 
-const WorkInProcessModal = ({ open, handleClose }) => {
-    const [form] = Form.useForm();
+const processes = {
+    "Board Process": [
+        "Creaser",
+        "Flexo Printing",
+        "Printer Slotter",
+        "Slotting",
+        "Clapper",
+        "Diecut",
+        "Stitching",
+        "Detach",
+        "Gluing",
+        "Pre Assembly",
+        "Manual Slotting",
+        "Pallet Assembly",
+        "Manual Printing",
+        "Manual Cutting",
+        "Laminating",
+        "Box Assembly",
+    ],
 
-    const [formData, setFormData] = useState({
-        customer: "",
-        code: "",
-        itemDescription: "",
-        partNumber: "",
-        boardProcess: [],
-        foamProcess: [],
-    });
+    "Foam Process": [
+        "Manual Cutting",
+        "Diecut",
+        "Bandsaw",
+        "Skiving",
+        "Detach",
+        "Heating Plate",
+        "Hotmelt",
+        "Assembly Heating",
+        "Manual Printing",
+        "Sealing",
+        "Packing",
+    ],
+};
 
-    const [foamProcessQuantities, setFoamProcessQuantities] = useState({});
-    const [boardProcessQuantities, setBoardProcessQuantities] = useState({});
+function WorkInProcessModal({ visible, handleClose }) {
+    const [epcode, setEpcode] = useState("");
+    const [selectedProcess, setSelectedProcess] = useState("");
+    const [selectedOptions, setSelectedOptions] = useState([]);
+    const [quantities, setQuantities] = useState({}); // State to manage quantities for each selected option
+    const [finishedGoods, setFinishedGoods] = useState([]);
 
-    const handleChange = (value, name) => {
-        // Ensure that value is an array
-        const updatedValue = Array.isArray(value) ? value : [];
+    useEffect(() => {
+        const fetchFinishedGoods = async () => {
+            try {
+                const response = await axiosClient.get("/finished_goods_data");
+                const { finished_goods_data } = response.data;
+                setFinishedGoods(finished_goods_data);
+            } catch (error) {
+                console.error("Error fetching finished goods data:", error);
+            }
+        };
 
-        const quantities = updatedValue.reduce((acc, item) => {
-            acc[item] = 0;
-            return acc;
-        }, {});
+        fetchFinishedGoods();
+    }, []);
 
-        if (name === "foamProcess") {
-            setFoamProcessQuantities(quantities);
-        } else if (name === "boardProcess") {
-            setBoardProcessQuantities(quantities);
-        }
-
-        setFormData((prevData) => ({
-            ...prevData,
-            [name]: updatedValue,
-        }));
+    const handleEpcodeChange = (value) => {
+        setEpcode(value);
     };
-    const handleQuantityChange = (value, name) => {
-        if (name.startsWith("foam")) {
-            setFoamProcessQuantities((prevQuantities) => ({
-                ...prevQuantities,
-                [name]: value,
-            }));
-        } else if (name.startsWith("board")) {
-            setBoardProcessQuantities((prevQuantities) => ({
-                ...prevQuantities,
-                [name]: value,
-            }));
-        }
+
+    const handleProcessChange = (value) => {
+        setSelectedProcess(value);
+        setSelectedOptions([]);
+        setQuantities({}); // Reset quantities when process changes
     };
 
-    const handleSubmit = () => {
-        form.validateFields().then((values) => {
+    const handleSubmit = async () => {
+        try {
             const token = localStorage.getItem("ACCESS_TOKEN");
-            console.log("Token:", token); // Log the token to check if it's retrieved correctly
+
+            if (!token) {
+                message.error("Token not found in localStorage. Please login.");
+                return;
+            }
 
             const headers = {
                 Authorization: `Bearer ${token}`,
             };
-            console.log("Headers:", headers); // Log the headers to check if Authorization header is set correctly
 
             const data = {
-                customer: values.customer,
-                code: values.code || "",
-                itemDescription: values.itemDescription || "",
-                partNumber: values.partNumber || "",
-                boardProcess: formData.boardProcess.map((process) => ({
-                    name: process,
-                    quantity: boardProcessQuantities[`${process}Quantity`] || 0,
-                })),
-                foamProcess: formData.foamProcess.map((process) => ({
-                    name: process,
-                    quantity: foamProcessQuantities[`${process}Quantity`] || 0,
-                })),
+                epcode,
+                process: selectedProcess,
+                options: selectedOptions,
             };
 
-            axiosClient
-                .post("/work_in_process", data, { headers })
-                .then(() => {
-                    message.success("Work in Process saved successfully");
-                    handleClose();
-                })
-                .catch((error) => {
-                    console.error("Error posting data:", error);
-                    if (error.response) {
-                        console.log("Response data:", error.response.data);
-                        console.log("Response status:", error.response.status);
-                        console.log(
-                            "Response headers:",
-                            error.response.headers
-                        );
-                    }
-                    message.error("An error occurred while posting the data.");
-                });
-        });
+            await axiosClient.post("/work_in_process", data, { headers });
+
+            message.success("Work In Process data submitted successfully");
+            handleClose();
+        } catch (error) {
+            console.error("Error submitting Work In Process data:", error);
+            message.error(
+                "Failed to submit Work In Process data. Please try again."
+            );
+        }
+    };
+
+    const resetFields = () => {
+        setEpcode("");
+        setSelectedProcess("");
+        setSelectedOptions([]);
+        setQuantities({});
+    };
+
+    const handleQuantityChange = (value, option) => {
+        setQuantities((prevQuantities) => ({
+            ...prevQuantities,
+            [option]: value,
+        }));
     };
 
     const handleCancel = () => {
+        resetFields();
         handleClose();
     };
 
+    const selectedGood = finishedGoods.find((good) => good.code === epcode);
+
     return (
         <Modal
-            title="Add Finished Goods"
-            visible={open}
+            title="Work In Process Modal"
+            visible={visible}
             onCancel={handleCancel}
             footer={[
                 <Button key="cancel" onClick={handleCancel}>
                     Cancel
                 </Button>,
                 <Button
+                    icon={<SaveOutlined />}
                     key="submit"
                     type="primary"
-                    icon={<SaveOutlined />}
                     onClick={handleSubmit}
                 >
                     Submit
                 </Button>,
             ]}
-            width={1300}
-            height={1000}
+            width={800}
         >
-            <Form
-                form={form}
-                layout="vertical"
-                initialValues={formData}
-                onValuesChange={(changedValues, allValues) =>
-                    setFormData(allValues)
-                }
-            >
-                <Row gutter={24}>
-                    <Col span={8}>
-                        <Form.Item
-                            label="Customer"
-                            name="customer"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: "Please select a customer",
-                                },
-                            ]}
-                        >
+            <div style={{ display: "flex" }}>
+                <div style={{ flex: 1, marginRight: 16 }}>
+                    <Select
+                        placeholder="Select EP Code"
+                        value={epcode}
+                        onChange={handleEpcodeChange}
+                        style={{ marginBottom: 16, width: "100%" }}
+                        dropdownClassName="epcode-select-dropdown"
+                    >
+                        {finishedGoods.map((good) => (
+                            <Option key={good.code} value={good.code}>
+                                {good.code}
+                            </Option>
+                        ))}
+                    </Select>
+                    {selectedGood && (
+                        <div>
+                            <Input
+                                value={selectedGood.customer || ""}
+                                readOnly
+                                addonBefore="Customer"
+                                style={{ marginBottom: 8 }}
+                            />
+                            <Input
+                                value={selectedGood.itemDescription || ""}
+                                readOnly
+                                addonBefore="Item Description"
+                                style={{ marginBottom: 8 }}
+                            />
+                            <Input
+                                value={selectedGood.partNumber || ""}
+                                readOnly
+                                addonBefore="Part Number"
+                                style={{ marginBottom: 16 }}
+                            />
                             <Select
-                                placeholder="Select a customer"
-                                onChange={(value) =>
-                                    handleChange(value, "customer")
-                                }
+                                placeholder="Select Process"
+                                value={selectedProcess}
+                                onChange={handleProcessChange}
+                                style={{ width: "100%" }}
                             >
-                                {customerOptions.map((option) => (
-                                    <Option
-                                        key={option.value}
-                                        value={option.value}
-                                    >
-                                        {option.label}
+                                {Object.keys(processes).map((process) => (
+                                    <Option key={process} value={process}>
+                                        {process}
                                     </Option>
                                 ))}
                             </Select>
-                        </Form.Item>
-
-                        <Form.Item label="EP Code" name="code">
-                            <Input
-                                onChange={(e) =>
-                                    handleChange(e.target.value, "code")
-                                }
-                            />
-                        </Form.Item>
-                        <Form.Item
-                            label="Item Description"
-                            name="itemDescription"
+                        </div>
+                    )}
+                </div>
+                {selectedProcess && (
+                    <div style={{ flex: 1 }}>
+                        <Select
+                            mode="multiple"
+                            placeholder={`Select ${selectedProcess}`}
+                            value={selectedOptions}
+                            onChange={setSelectedOptions}
+                            style={{ marginTop: 16, width: "100%" }}
                         >
-                            <Input
-                                onChange={(e) =>
-                                    handleChange(
-                                        e.target.value,
-                                        "itemDescription"
-                                    )
-                                }
-                            />
-                        </Form.Item>
-                        <Form.Item label="Part Number" name="partNumber">
-                            <Input
-                                onChange={(e) =>
-                                    handleChange(e.target.value, "partNumber")
-                                }
-                            />
-                        </Form.Item>
-                    </Col>
-
-                    <Col span={8}>
-                        <Form.Item label="Board Process" name="boardProcess">
-                            <Select
-                                mode="multiple"
-                                placeholder="Select board processes"
-                                onChange={(value) =>
-                                    handleChange(value, "boardProcess")
-                                }
-                            >
-                                <Option value="Creaser">Creaser</Option>
-                                <Option value="Flexo Printing">
-                                    Flexo Printing
+                            {processes[selectedProcess].map((option) => (
+                                <Option key={option} value={option}>
+                                    {option}
                                 </Option>
-                                <Option value="Printer Slotter">
-                                    Printer Slotter
-                                </Option>
-                                <Option value="Slotting">Slotting</Option>
-                                <Option value="Clapper">Clapper</Option>
-                                <Option value="Diecut">Diecut</Option>
-                                <Option value="Stitching">Stitching</Option>
-                                <Option value="Detach">Detach</Option>
-                                <Option value="Gluing">Gluing</Option>
-                                <Option value="Pre-Assembly">
-                                    Pre-Assembly
-                                </Option>
-                                <Option value="Manual Slotting">
-                                    Manual Slotting
-                                </Option>
-                                <Option value="Packing">Packing</Option>
-                                <Option value="Pallet Assembly">
-                                    Pallet Assembly
-                                </Option>
-                                <Option value="Manual Printing">
-                                    Manual Printing
-                                </Option>
-                                <Option value="Manual Cutting">
-                                    Manual Cutting
-                                </Option>
-                                <Option value="Laminating">Laminating</Option>
-                                <Option value="Box Assembly">
-                                    Box Assembly
-                                </Option>
-                            </Select>
-
-                            {Object.entries(boardProcessQuantities).map(
-                                ([item, quantity]) => (
-                                    <Form.Item
-                                        key={item}
-                                        label={`${item} Quantity`}
-                                        name={`${item}Quantity`}
-                                    >
-                                        <Input
-                                            type="number"
-                                            value={quantity}
-                                            onChange={(e) =>
-                                                handleQuantityChange(
-                                                    e.target.value,
-                                                    `${item}Quantity`
-                                                )
-                                            }
-                                        />
-                                    </Form.Item>
-                                )
-                            )}
-
-                            {/* Render the total quantity if any item selected */}
-                            <Form.Item label="Total Board Process Quantity">
-                                <Input
-                                    disabled
-                                    value={formData.boardProcess.length}
+                            ))}
+                        </Select>
+                        {/* Render the number field if there are selected options */}
+                        {selectedOptions.map((option, index) => (
+                            <div key={index}>
+                                <InputNumber
+                                    value={quantities[option] || 0} // Use quantities state for value
+                                    min={0}
+                                    onChange={(value) =>
+                                        handleQuantityChange(value, option)
+                                    }
+                                    style={{ marginTop: 5, width: "100%" }}
+                                    placeholder="Quantity" // Use a static placeholder
+                                    name={`quantity_${option}`}
                                 />
-                            </Form.Item>
-                        </Form.Item>
-                    </Col>
-
-                    <Col span={8}>
-                        <Form.Item label="Foam Process" name="foamProcess">
-                            <Select
-                                mode="multiple"
-                                placeholder="Select foam processes"
-                                onChange={(value) =>
-                                    handleChange(value, "foamProcess")
-                                }
-                            >
-                                <Option value="Manual Cutting">
-                                    Manual Cutting
-                                </Option>
-                                <Option value="Diecut">Diecut</Option>
-                                <Option value="Bandsaw">Bandsaw</Option>
-                                <Option value="Skiving">Skiving</Option>
-                                <Option value="Detach">Detach</Option>
-                                <Option value="Heating Plate">
-                                    Heating Plate
-                                </Option>
-                                <Option value="Hotmelt">Hotmelt</Option>
-                                <Option value="Assembly Heating">
-                                    Assembly Heating
-                                </Option>
-                                <Option value="Manual Printing">
-                                    Manual Printing
-                                </Option>
-                                <Option value="Sealing">Sealing</Option>
-                                <Option value="Packing">Packing</Option>
-                            </Select>
-                            {/* Render the generated number input fields */}
-                            {Object.entries(foamProcessQuantities).map(
-                                ([item, quantity]) => (
-                                    <Form.Item
-                                        key={item}
-                                        label={`${item} Quantity`}
-                                        name={`${item}Quantity`}
-                                    >
-                                        <Input
-                                            type="number"
-                                            value={quantity}
-                                            onChange={(e) =>
-                                                handleQuantityChange(
-                                                    e.target.value,
-                                                    `${item}Quantity`
-                                                )
-                                            }
-                                        />
-                                    </Form.Item>
-                                )
-                            )}
-
-                            <Form.Item label="Total Foam Process Quantity">
-                                <Input
-                                    disabled
-                                    value={formData.foamProcess.length}
-                                />
-                            </Form.Item>
-                        </Form.Item>
-                    </Col>
-                </Row>
-            </Form>
+                            </div>
+                        ))}
+                    </div>
+                )}
+            </div>
         </Modal>
     );
-};
+}
 
 WorkInProcessModal.propTypes = {
-    open: PropTypes.bool.isRequired,
+    visible: PropTypes.bool.isRequired,
     handleClose: PropTypes.func.isRequired,
 };
 
