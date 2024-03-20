@@ -15,12 +15,14 @@ import {
     EditOutlined,
     DeleteOutlined,
     PlusCircleOutlined,
+    MinusCircleOutlined,
+    SearchOutlined,
 } from "@ant-design/icons";
 import axiosClient from "../../axios-client";
 import FinishedGoodsModal from "./FinishedGoodsModal";
 import { Link } from "react-router-dom";
 
-const { Text } = Typography;
+// const { Text } = Typography;
 const { Column } = Table;
 
 export default function FinishedGoods() {
@@ -31,7 +33,7 @@ export default function FinishedGoods() {
     const [filterValue, setFilterValue] = useState("");
 
     const [page, setPage] = useState(1);
-    const [pageSize, setPageSize] = useState(5);
+    const [pageSize, setPageSize] = useState(10);
 
     const handleRefresh = () => {
         getFinishedGoods();
@@ -114,57 +116,88 @@ export default function FinishedGoods() {
         <>
             <div
                 style={{
-                    marginBottom: 16,
+                    marginBottom: 10,
                     display: "flex",
                     alignItems: "center",
+                    justifyContent: "flex-start",
                     borderBottom: "1px solid #ddd",
-                    paddingBottom: 8,
+                    paddingBottom: 9,
                 }}
             >
-                <Typography.Title level={3} style={{ marginRight: 16 }}>
-                    Finished Goods
+                <Typography.Title
+                    level={0}
+                    style={{
+                        color: "#1890ff",
+                        marginRight: 5,
+                        fontWeight: 600,
+                        fontSize: 12,
+                        marginBottom: 0,
+                    }}
+                >
+                    FINISHED GOODS
                 </Typography.Title>
+                <Typography variant="body2" style={{ marginRight: 8 }}>
+                    <span style={{ margin: "0 8px" }}>/</span>
+                    <Link
+                        to="/dashboard"
+                        style={{
+                            color: "#1890ff",
+                            fontWeight: 600,
+                            fontSize: 12,
+                            textDecoration: "none",
+                            marginLeft: 5,
+                        }}
+                    >
+                        HOME
+                    </Link>
+                </Typography>
+            </div>
 
-                <Text strong style={{ margin: "0 8px" }}>
-                    /
-                </Text>
-                <Link to="/dashboard">
-                    <Button type="link">Home</Button>
-                </Link>
+            <div className="">
+                <Typography.Title
+                    level={0}
+                    style={{
+                        color: "#1890ff",
+                        marginRight: 16,
+                        marginTop: "16px",
+                        marginBottom: "16px",
+                        fontWeight: 400,
+                        fontSize: "20px",
+                    }}
+                >
+                    FINISHED GOODS
+                </Typography.Title>
             </div>
             <div
                 style={{
-                    marginBottom: 16,
+                    marginBottom: 10,
                     display: "flex",
                     alignItems: "center",
                 }}
             >
-                <Typography.Text
-                    strong
-                    style={{ marginRight: 8, color: "#1E90FF" }}
-                >
-                    Filter:
-                </Typography.Text>
                 <Input
-                    placeholder="Enter text to filter"
+                    placeholder="Search"
+                    prefix={<SearchOutlined style={{ marginRight: 8 }} />}
                     value={filterValue}
                     onChange={handleFilterChange}
-                    style={{ width: 200, marginRight: 8 }}
+                    style={{
+                        width: 300,
+                        marginRight: 8,
+                    }}
                 />
 
-                <Tooltip title="Add FG" placement="right">
-                    <Button
-                        icon={<PlusCircleOutlined />}
-                        onClick={handleOpenModal}
-                        style={{
-                            marginRight: 8,
-                            borderRadius: "50%",
-                            alignContent: "center",
-                            textAlign: "center",
-                            color: "#1E90FF",
-                        }}
-                    />
-                </Tooltip>
+                <Button
+                    icon={<PlusCircleOutlined />}
+                    onClick={handleOpenModal}
+                    style={{
+                        marginRight: 8,
+                        borderRadius: "5px",
+                        color: "#1E90FF",
+                    }}
+                >
+                    Add Item
+                </Button>
+
                 <Tooltip title="Refresh" placement="right">
                     <Button
                         icon={<SyncOutlined />}
@@ -196,15 +229,36 @@ export default function FinishedGoods() {
                     bordered
                     rowKey="id"
                     size="small"
-                    scroll={{ x: 800 }}
+                    scroll={{ x: 1500 }}
                     style={{ backgroundColor: "#f0f2f5" }}
                 >
                     <Column
+                        key="delete"
+                        width={20}
+                        render={(text, record) => (
+                            <Space size="small">
+                                <Tooltip title="Delete">
+                                    <Button
+                                        size="small"
+                                        icon={
+                                            <DeleteOutlined
+                                                style={{ color: "red" }}
+                                            />
+                                        }
+                                        onClick={() => onDeleteClick(record)}
+                                    />
+                                </Tooltip>
+                            </Space>
+                        )}
+                    />
+                    <Column
                         key="edit"
+                        width={20}
                         render={(text, record) => (
                             <Space size="small">
                                 <Tooltip title="Edit">
                                     <Button
+                                        size="small"
                                         icon={
                                             <EditOutlined
                                                 style={{ color: "#1E90FF" }}
@@ -218,18 +272,44 @@ export default function FinishedGoods() {
                             </Space>
                         )}
                     />
+
                     <Column
-                        key="delete"
+                        key="add"
+                        width={20}
                         render={(text, record) => (
                             <Space size="small">
-                                <Tooltip title="Delete">
+                                <Tooltip title="Add FG In">
                                     <Button
+                                        size="small"
                                         icon={
-                                            <DeleteOutlined
-                                                style={{ color: "red" }}
+                                            <PlusCircleOutlined
+                                                style={{ color: "#1E90FF" }}
                                             />
                                         }
-                                        onClick={() => onDeleteClick(record)}
+                                        onClick={() =>
+                                            console.log("Edit", record)
+                                        }
+                                    />
+                                </Tooltip>
+                            </Space>
+                        )}
+                    />
+                    <Column
+                        key="add"
+                        width={20}
+                        render={(text, record) => (
+                            <Space size="small">
+                                <Tooltip title="Add FG Out">
+                                    <Button
+                                        size="small"
+                                        icon={
+                                            <MinusCircleOutlined
+                                                style={{ color: "#1E90FF" }}
+                                            />
+                                        }
+                                        onClick={() =>
+                                            console.log("Edit", record)
+                                        }
                                     />
                                 </Tooltip>
                             </Space>

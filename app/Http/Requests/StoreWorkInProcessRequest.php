@@ -28,6 +28,10 @@ class StoreWorkInProcessRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'customer'=>'required|string',
+            'code'=>'required|string',
+            'itemDescription'=>'required|string',
+            'partNumber'=>'required|string',
             'creaser'=>'nullable|integer',
             'flexo_print'=>'nullable|integer',
             'printer_slotter'=>'nullable|integer',

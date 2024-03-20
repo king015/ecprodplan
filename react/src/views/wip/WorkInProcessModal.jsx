@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Modal, Select, Input, Button, InputNumber, message } from "antd";
+import { Modal, Select, Input, Button, InputNumber, message, Form } from "antd";
 import axiosClient from "../../axios-client"; // Assuming this is the correct import path for your axios client
 import PropTypes from "prop-types";
 import { SaveOutlined } from "@ant-design/icons";
@@ -17,6 +17,7 @@ const processes = {
         "Stitching",
         "Detach",
         "Gluing",
+        "Packing",
         "Pre Assembly",
         "Manual Slotting",
         "Pallet Assembly",
@@ -47,6 +48,9 @@ function WorkInProcessModal({ visible, handleClose }) {
     const [selectedOptions, setSelectedOptions] = useState([]);
     const [quantities, setQuantities] = useState({}); // State to manage quantities for each selected option
     const [finishedGoods, setFinishedGoods] = useState([]);
+    const [loading, setLoading] = useState(false);
+
+    const [form] = Form.useForm();
 
     useEffect(() => {
         const fetchFinishedGoods = async () => {
@@ -69,11 +73,13 @@ function WorkInProcessModal({ visible, handleClose }) {
     const handleProcessChange = (value) => {
         setSelectedProcess(value);
         setSelectedOptions([]);
-        setQuantities({}); // Reset quantities when process changes
+        setQuantities({});
     };
 
     const handleSubmit = async () => {
         try {
+            setLoading(true);
+
             const token = localStorage.getItem("ACCESS_TOKEN");
 
             if (!token) {
@@ -85,21 +91,147 @@ function WorkInProcessModal({ visible, handleClose }) {
                 Authorization: `Bearer ${token}`,
             };
 
+            const selectedGood = finishedGoods.find(
+                (good) => good.code === epcode
+            );
+
+            if (!selectedGood) {
+                message.error("Please select a valid EP Code.");
+                return;
+            }
+
+            // Check if the data already exists
+            const existingData = await axiosClient.get("/work_in_process", {
+                headers,
+                params: {
+                    customer: selectedGood.customer,
+                    code: selectedGood.code,
+                    itemDescription: selectedGood.itemDescription,
+                    partNumber: selectedGood.partNumber,
+                    process: selectedProcess,
+                    options: selectedOptions,
+                    quantities: quantities,
+                },
+            });
+
+            if (existingData.length > 0) {
+                // Data already exists, show error message
+                message.error("Data already exists!");
+                return;
+            }
+
+            // Include selected processes in the data object
             const data = {
-                epcode,
+                customer: selectedGood.customer,
+                code: selectedGood.code,
+                itemDescription: selectedGood.itemDescription,
+                partNumber: selectedGood.partNumber,
                 process: selectedProcess,
                 options: selectedOptions,
+                quantities: quantities,
+                // Add selected processes here
+                creaser: selectedOptions.includes("Creaser")
+                    ? quantities["Creaser"]
+                    : null,
+                flexo_print: selectedOptions.includes("Flexo Printing")
+                    ? quantities["Flexo Printing"]
+                    : null,
+                printer_slotter: selectedOptions.includes("Printer Slotter")
+                    ? quantities["Printer Slotter"]
+                    : null,
+                slotting: selectedOptions.includes("Slotting")
+                    ? quantities["Slotting"]
+                    : null,
+                clapper: selectedOptions.includes("Clapper")
+                    ? quantities["Clapper"]
+                    : null,
+                diecut: selectedOptions.includes("Diecut")
+                    ? quantities["Diecut"]
+                    : null,
+                stitching: selectedOptions.includes("Stitching")
+                    ? quantities["Stitching"]
+                    : null,
+                detach: selectedOptions.includes("Detach")
+                    ? quantities["Detach"]
+                    : null,
+                gluing: selectedOptions.includes("Gluing")
+                    ? quantities["Gluing"]
+                    : null,
+                pre_assembly: selectedOptions.includes("Pre Assembly")
+                    ? quantities["Pre Assembly"]
+                    : null,
+                manual_slotting: selectedOptions.includes("Manual Slotting")
+                    ? quantities["Manual Slotting"]
+                    : null,
+                packing: selectedOptions.includes("Packing")
+                    ? quantities["Packing"]
+                    : null,
+                pallet_assembly: selectedOptions.includes("Pallet Assembly")
+                    ? quantities["Pallet Assembly"]
+                    : null,
+                manual_printing: selectedOptions.includes("Manual Printing")
+                    ? quantities["Manual Printing"]
+                    : null,
+                manual_cutting: selectedOptions.includes("Manual Cutting")
+                    ? quantities["Manual Cutting"]
+                    : null,
+                laminating: selectedOptions.includes("Laminating")
+                    ? quantities["Laminating"]
+                    : null,
+                box_assembly: selectedOptions.includes("Box Assembly")
+                    ? quantities["Box Assembly"]
+                    : null,
+                fp_manual_cutting: selectedOptions.includes("FP Manual Cutting")
+                    ? quantities["FP Manual Cutting"]
+                    : null,
+                fp_diecut: selectedOptions.includes("FP Diecut")
+                    ? quantities["FP Diecut"]
+                    : null,
+                bandsaw: selectedOptions.includes("Bandsaw")
+                    ? quantities["Bandsaw"]
+                    : null,
+                skiving: selectedOptions.includes("Skiving")
+                    ? quantities["Skiving"]
+                    : null,
+                fp_detach: selectedOptions.includes("FP Detach")
+                    ? quantities["FP Detach"]
+                    : null,
+                heating_plate: selectedOptions.includes("Heating Plate")
+                    ? quantities["Heating Plate"]
+                    : null,
+                hotmelt: selectedOptions.includes("Hotmelt")
+                    ? quantities["Hotmelt"]
+                    : null,
+                assembly_heating: selectedOptions.includes("Assembly Heating")
+                    ? quantities["Assembly Heating"]
+                    : null,
+                fp_manual_printing: selectedOptions.includes(
+                    "FP Manual Printing"
+                )
+                    ? quantities["FP Manual Printing"]
+                    : null,
+                sealing: selectedOptions.includes("Sealing")
+                    ? quantities["Sealing"]
+                    : null,
+                fp_packing: selectedOptions.includes("FP Packing")
+                    ? quantities["FP Packing"]
+                    : null,
             };
 
             await axiosClient.post("/work_in_process", data, { headers });
 
             message.success("Work In Process data submitted successfully");
             handleClose();
+
+            // Reset form fields
+            form.resetFields();
         } catch (error) {
             console.error("Error submitting Work In Process data:", error);
             message.error(
                 "Failed to submit Work In Process data. Please try again."
             );
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -138,6 +270,7 @@ function WorkInProcessModal({ visible, handleClose }) {
                     key="submit"
                     type="primary"
                     onClick={handleSubmit}
+                    loading={loading}
                 >
                     Submit
                 </Button>,
@@ -209,17 +342,17 @@ function WorkInProcessModal({ visible, handleClose }) {
                                 </Option>
                             ))}
                         </Select>
-                        {/* Render the number field if there are selected options */}
+
                         {selectedOptions.map((option, index) => (
                             <div key={index}>
                                 <InputNumber
-                                    value={quantities[option] || 0} // Use quantities state for value
+                                    value={quantities[option] || 0}
                                     min={0}
                                     onChange={(value) =>
                                         handleQuantityChange(value, option)
                                     }
                                     style={{ marginTop: 5, width: "100%" }}
-                                    placeholder="Quantity" // Use a static placeholder
+                                    placeholder="Quantity"
                                     name={`quantity_${option}`}
                                 />
                             </div>

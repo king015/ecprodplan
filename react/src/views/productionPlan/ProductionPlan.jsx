@@ -12,17 +12,21 @@ import {
     Menu,
     Dropdown,
     Modal,
+    InputNumber,
 } from "antd";
 import {
     SyncOutlined,
     EditOutlined,
     DeleteOutlined,
     FileExcelOutlined,
+    TagsOutlined,
+    SearchOutlined,
 } from "@ant-design/icons";
 import axiosClient from "../../axios-client";
 import { exportToCSV, exportToExcel } from "../../exportUtils";
+import ProductionProcessModal from "./ProductionProcessModal";
 
-const { Text } = Typography;
+// const { Text } = Typography;
 
 export default function FinishedGoods() {
     const [productionPlan, setProductionPlan] = useState([]);
@@ -30,10 +34,27 @@ export default function FinishedGoods() {
     // const { setNotification } = useStateContext();
 
     const [filterValue, setFilterValue] = useState("");
-    const [pagination, setPagination] = useState({ current: 1, pageSize: 5 });
+    const [pagination, setPagination] = useState({ current: 1 });
+
+    const [openProcessModal, setOpenProcessModal] = useState(false);
+
+    const [data, setData] = useState([
+        {
+            key: "1",
+            weekly_requisites: 0,
+            mon: 0,
+            tues: 0,
+            wed: 0,
+            thurs: 0,
+            fri: 0,
+            sat: 0,
+        },
+        // Add more initial data if needed
+    ]);
 
     useEffect(() => {
         getProductionPlan();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const onDeleteClick = (plan) => {
@@ -66,29 +87,16 @@ export default function FinishedGoods() {
     const getProductionPlan = () => {
         setLoading(true);
         axiosClient
-            .get("/finished_goods_data")
-            .then((response) => {
-                const finishedGoodsData =
-                    response.data.finished_goods_data || [];
-                // Map finished goods data to match the structure of workInProcess
-                const mappedData = finishedGoodsData.map((item) => ({
-                    ...item,
-                    // Add dummy values for other columns not present in finished goods data
-                    creaser: null,
-                    flexo_print: null,
-                    // Add more dummy values for other board process columns
-                    // Add dummy values for foam process columns as well
-                }));
-                setProductionPlan(mappedData);
+            .get("/work_in_process")
+            .then(({ data: { data = [], meta = {} } }) => {
+                setProductionPlan(data);
                 setLoading(false);
+                setPagination({ ...pagination, total: meta.total });
             })
-            .catch((error) => {
+            .catch(() => {
                 setLoading(false);
-                console.error("Error fetching data:", error);
-                message.error("Failed to fetch data. Please try again.");
             });
     };
-
     const handleFilterChange = (event) => {
         setFilterValue(event.target.value);
     };
@@ -119,6 +127,36 @@ export default function FinishedGoods() {
         </Menu>
     );
 
+    const handleOpenProcessModal = () => {
+        setOpenProcessModal(true);
+    };
+
+    const handleCloseProcessModal = () => {
+        setOpenProcessModal(false);
+    };
+
+    const handleInputChange = (value, dataIndex, key) => {
+        const newData = [...data];
+        const index = newData.findIndex((item) => key === item.key);
+        if (index > -1) {
+            newData[index][dataIndex] = value;
+            setData(newData);
+
+            // Send updated data to backend
+            axiosClient
+                .put(`/production-plan/${key}`, { [dataIndex]: value })
+                .then((response) => {
+                    // Handle success
+                    console.log("Data updated successfully:", response.data);
+                })
+                .catch((error) => {
+                    // Handle error
+                    console.error("Error updating data:", error);
+                    message.error("Failed to update data. Please try again.");
+                });
+        }
+    };
+
     const columns = [
         {
             title: "",
@@ -135,6 +173,22 @@ export default function FinishedGoods() {
                                 console.log("Edit", record);
                                 message.info(`Editing record ${record.id}`);
                             }}
+                        />
+                    </Tooltip>
+                </Space>
+            ),
+        },
+        {
+            key: "action2",
+            fixed: "left",
+            width: 35,
+            render: () => (
+                <Space size="small" style={{ width: 100 }}>
+                    <Tooltip title="View Processes" placement="right">
+                        <Button
+                            icon={<TagsOutlined style={{ color: "#006400" }} />}
+                            size="small"
+                            onClick={handleOpenProcessModal}
                         />
                     </Tooltip>
                 </Space>
@@ -182,7 +236,7 @@ export default function FinishedGoods() {
             dataIndex: "itemDescription",
             key: "itemDescription",
             fixed: "left",
-            width: 500,
+            width: 400,
             sorter: (a, b) => a.item_description - b.item_description,
         },
         {
@@ -190,7 +244,7 @@ export default function FinishedGoods() {
             dataIndex: "partNumber",
             key: "partNumber",
             fixed: "left",
-            width: 150,
+            width: 200,
             sorter: (a, b) => a.part_number - b.part_number,
         },
         {
@@ -198,7 +252,20 @@ export default function FinishedGoods() {
             dataIndex: "weekly_requisites",
             key: "weekly_requisites",
             fixed: "left",
-            width: 60,
+            width: 75,
+            render: (text, record) => (
+                <InputNumber
+                    value={text}
+                    style={{ width: "60px" }}
+                    onChange={(value) =>
+                        handleInputChange(
+                            value,
+                            "weekly_requisites",
+                            record.key
+                        )
+                    }
+                />
+            ),
             sorter: (a, b) => a.weekly_requisites - b.weekly_requisites,
         },
         {
@@ -207,44 +274,86 @@ export default function FinishedGoods() {
                 {
                     title: "M",
                     dataIndex: "mon",
-                    key: "mon",
-                    sorter: (a, b) => a.mon - b.mon,
                     width: 60,
+                    render: (text, record) => (
+                        <InputNumber
+                            value={text}
+                            style={{ width: "50px" }}
+                            onChange={(value) =>
+                                handleInputChange(value, "mon", record.key)
+                            }
+                        />
+                    ),
                 },
                 {
                     title: "T",
                     dataIndex: "tues",
-                    key: "tues",
-                    sorter: (a, b) => a.tues - b.tues,
                     width: 60,
+                    render: (text, record) => (
+                        <InputNumber
+                            value={text}
+                            style={{ width: "50px" }}
+                            onChange={(value) =>
+                                handleInputChange(value, "tues", record.key)
+                            }
+                        />
+                    ),
                 },
                 {
                     title: "W",
                     dataIndex: "wed",
-                    key: "wed",
-                    sorter: (a, b) => a.wed - b.wed,
                     width: 60,
+                    render: (text, record) => (
+                        <InputNumber
+                            value={text}
+                            style={{ width: "50px" }}
+                            onChange={(value) =>
+                                handleInputChange(value, "wed", record.key)
+                            }
+                        />
+                    ),
                 },
                 {
                     title: "TH",
                     dataIndex: "thurs",
-                    key: "thurs",
-                    sorter: (a, b) => a.thurs - b.thurs,
                     width: 60,
+                    render: (text, record) => (
+                        <InputNumber
+                            value={text}
+                            style={{ width: "50px" }}
+                            onChange={(value) =>
+                                handleInputChange(value, "thurs", record.key)
+                            }
+                        />
+                    ),
                 },
                 {
                     title: "F",
                     dataIndex: "fri",
-                    key: "fri",
-                    sorter: (a, b) => a.fri - b.fri,
                     width: 60,
+                    render: (text, record) => (
+                        <InputNumber
+                            value={text}
+                            style={{ width: "50px" }}
+                            onChange={(value) =>
+                                handleInputChange(value, "fri", record.key)
+                            }
+                        />
+                    ),
                 },
                 {
                     title: "S",
                     dataIndex: "sat",
-                    key: "sat",
-                    sorter: (a, b) => a.sat - b.sat,
                     width: 60,
+                    render: (text, record) => (
+                        <InputNumber
+                            value={text}
+                            style={{ width: "50px" }}
+                            onChange={(value) =>
+                                handleInputChange(value, "sat", record.key)
+                            }
+                        />
+                    ),
                 },
                 {
                     title: "FG",
@@ -252,6 +361,7 @@ export default function FinishedGoods() {
                     key: "finished_goods",
                     sorter: (a, b) => a.finished_goods - b.finished_goods,
                     width: 60,
+                    editable: true,
                 },
             ],
         },
@@ -468,53 +578,75 @@ export default function FinishedGoods() {
         <>
             <div
                 style={{
+                    marginBottom: 10,
                     display: "flex",
-                    justifyContent: "space-between",
                     alignItems: "center",
+                    justifyContent: "flex-start",
                     borderBottom: "1px solid #ddd",
-                    paddingBottom: 8,
+                    paddingBottom: 9,
                 }}
             >
-                <Typography.Title level={3} style={{ marginRight: 16 }}>
-                    Production Plan
-                </Typography.Title>
-
-                <Text strong style={{ margin: "0 8px" }}>
-                    /
-                </Text>
-                <Link to="/dashboard">
-                    <Button type="link">Home</Button>
-                </Link>
-            </div>
-            <div
-                style={{
-                    marginBottom: 16,
-                    display: "flex",
-                    alignItems: "center",
-                    borderBottom: "1px solid #ddd",
-                    paddingBottom: 8,
-                }}
-            ></div>
-
-            <div
-                style={{
-                    marginBottom: "16px",
-                    display: "flex",
-                    alignItems: "center",
-                    paddingBottom: 8,
-                }}
-            >
-                <Typography.Text
-                    strong
-                    style={{ marginRight: 8, color: "#1E90FF" }}
+                <Typography.Title
+                    level={0}
+                    style={{
+                        color: "#1890ff",
+                        marginRight: 5,
+                        fontWeight: 600,
+                        fontSize: 12,
+                        marginBottom: 0,
+                    }}
                 >
-                    Filter:
-                </Typography.Text>
+                    PRODUCTION PLAN
+                </Typography.Title>
+                <Typography variant="body2" style={{ marginRight: 8 }}>
+                    <span style={{ margin: "0 8px" }}>/</span>
+                    <Link
+                        to="/dashboard"
+                        style={{
+                            color: "#1890ff",
+                            fontWeight: 600,
+                            fontSize: 12,
+                            textDecoration: "none",
+                            marginLeft: 5,
+                        }}
+                    >
+                        HOME
+                    </Link>
+                </Typography>
+            </div>
+
+            <div className="">
+                <Typography.Title
+                    level={0}
+                    style={{
+                        color: "#1890ff",
+                        marginRight: 16,
+                        marginTop: "16px",
+                        marginBottom: "16px",
+                        fontWeight: 400,
+                        fontSize: "20px",
+                    }}
+                >
+                    PRODUCTION PLAN
+                </Typography.Title>
+            </div>
+
+            <div
+                style={{
+                    display: "flex",
+                    alignItems: "center",
+                    marginBottom: 10,
+                }}
+            >
                 <Input
-                    placeholder="Enter text to filter"
+                    placeholder="Search"
+                    prefix={<SearchOutlined style={{ marginRight: 8 }} />}
                     value={filterValue}
                     onChange={handleFilterChange}
-                    style={{ marginRight: "8px", width: "200px" }}
+                    style={{
+                        width: 300,
+                        marginRight: 8,
+                    }}
                 />
                 <Tooltip title="Refresh" placement="right">
                     <Button
@@ -562,6 +694,13 @@ export default function FinishedGoods() {
                     style={{ backgroundColor: "#f0f2f5" }}
                 />
             </div>
+
+            <ProductionProcessModal
+                visible={openProcessModal}
+                onClose={handleCloseProcessModal}
+                process="Viewer"
+                data={productionPlan}
+            />
         </>
     );
 }

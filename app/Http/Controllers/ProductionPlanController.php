@@ -13,8 +13,9 @@ class ProductionPlanController extends Controller
      */
     public function index()
     {
-        $productionPlans = ProductionPlan::orderBy('created_at', 'desc')->paginate(10);
-        return ProductionPlanResource::collection($productionPlans);
+        $workInProcess = ProductionPlan::with('finishedGoods')->orderBy('id', 'desc')->get();
+
+        return ProductionPlanResource::collection($workInProcess);
     }
 
     /**

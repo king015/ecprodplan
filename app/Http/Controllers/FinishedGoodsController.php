@@ -62,4 +62,13 @@ class FinishedGoodsController extends Controller
         $finishedGoods->delete();
         return response()->noContent();
     }
+
+    /**
+     * Count the number of work in process items.
+     */
+    public function count()
+    {
+        $count = FinishedGoods::count();
+        return response()->json(['count' => $count]);
+    }
 }

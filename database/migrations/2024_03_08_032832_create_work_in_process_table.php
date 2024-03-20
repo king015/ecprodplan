@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('work_in_process', function (Blueprint $table) {
             $table->id();
+            $table->string('customer');
+            $table->string('code');
+            $table->string('itemDescription');
+            $table->string('partNumber');
             $table->unsignedBigInteger('finished_goods_id')->nullable();
             $table->integer('creaser')->nullable();
             $table->integer('flexo_print')->nullable();
@@ -25,6 +29,7 @@ return new class extends Migration
             $table->integer('gluing')->nullable();
             $table->integer('pre_assembly')->nullable();
             $table->integer('manual_slotting')->nullable();
+            $table->integer('packing')->nullable();
             $table->integer('pallet_assembly')->nullable();
             $table->integer('manual_printing')->nullable();
             $table->integer('manual_cutting')->nullable();

@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 
 const { Text } = Typography;
 
-const ProcessModal = ({ visible, onClose, process, loading }) => {
+const ProductionProcessModal = ({ visible, onClose, process, loading }) => {
     const [data, setData] = useState([]);
     const [totalQuantity, setTotalQuantity] = useState(0);
 
@@ -89,11 +89,11 @@ const ProcessModal = ({ visible, onClose, process, loading }) => {
     );
 };
 
-ProcessModal.propTypes = {
+ProductionProcessModal.propTypes = {
     visible: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
     process: PropTypes.string.isRequired,
     loading: PropTypes.bool.isRequired, // Loading state
 };
 
-export default ProcessModal;
+export default ProductionProcessModal;

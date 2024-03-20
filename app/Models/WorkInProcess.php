@@ -10,6 +10,10 @@ class WorkInProcess extends Model
     use HasFactory;
 
     protected $fillable = [
+        'customer',
+        'code',
+        'itemDescription',
+        'partNumber',
         'creaser',
         'flexo_print',
         'printer_slotter',

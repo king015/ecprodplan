@@ -7,9 +7,9 @@ import { Link } from "react-router-dom";
 function Dashboard() {
     const [activityData, setActivityData] = useState([]);
     const [loading, setLoading] = useState(true);
-    const usersValue = 0;
-    const workInProgressValue = 0;
-    const finishedGoodsValue = 0;
+    const [usersValue, setUsersValue] = useState(0);
+    const [workInProgressValue, setWorkInProgressValue] = useState(0);
+    const [finishedGoodsValue, setFinishedGoodsValue] = useState(0);
 
     const data = [
         { year: "2021", value: 3 },
@@ -64,20 +64,34 @@ function Dashboard() {
     ];
 
     useEffect(() => {
-        const fetchActivityData = async () => {
+        const fetchData = async () => {
             try {
-                const response = await axiosClient.get("/activity-log");
-                setActivityData(response.data);
+                const [
+                    usersResponse,
+                    workInProgressResponse,
+                    finishedGoodsResponse,
+                    activityLogResponse,
+                ] = await Promise.all([
+                    axiosClient.get("/users/count"),
+                    axiosClient.get("/work_in_process/count"),
+                    axiosClient.get("/finished_goods/count"),
+                    axiosClient.get("/activity_log"),
+                ]);
+
+                setUsersValue(usersResponse.data.count);
+                setWorkInProgressValue(workInProgressResponse.data.count);
+                setFinishedGoodsValue(finishedGoodsResponse.data.count);
+                setActivityData(activityLogResponse.data);
             } catch (error) {
-                console.error("Error fetching activity data:", error);
+                console.error("Error fetching data:", error);
             } finally {
                 setLoading(false);
             }
         };
 
-        fetchActivityData();
+        fetchData();
 
-        const intervalId = setInterval(fetchActivityData, 5000);
+        const intervalId = setInterval(fetchData, 5000);
 
         return () => clearInterval(intervalId);
     }, []);
@@ -88,38 +102,26 @@ function Dashboard() {
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
-                padding: "20px",
                 background: "#f0f2f5",
                 textAlign: "left",
                 marginLeft: "20px",
             }}
         >
-            <h1
-                style={{
-                    fontSize: "2.5rem",
-                    fontWeight: "bold",
-                    marginBottom: "20px",
-                    color: "#333",
-                }}
-            >
-                Dashboard
-            </h1>
             <div
                 style={{
                     display: "flex",
                     justifyContent: "center",
                     flexWrap: "wrap",
-                    maxWidth: "1700px",
+                    maxWidth: "1500px",
                     width: "100%",
                     margin: "0 auto",
+                    padding: "20px",
                 }}
             >
                 <div
                     style={{
-                        padding: "20px",
                         margin: "10px",
-                        width: "calc(33% - 20px)",
-                        transition: "transform 0.3s",
+                        flex: "1 1 300px",
                     }}
                 >
                     <Card
@@ -133,7 +135,6 @@ function Dashboard() {
                             color: "#fff",
                             width: "100%",
                             boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-                            transition: "transform 0.3s",
                         }}
                         hoverable
                         actions={[
@@ -141,7 +142,6 @@ function Dashboard() {
                                 <Button
                                     type="primary"
                                     style={{
-                                        marginTop: "10px",
                                         background: "#ff9a00",
                                         borderColor: "#ff9a00",
                                     }}
@@ -151,24 +151,15 @@ function Dashboard() {
                             </Link>,
                         ]}
                     >
-                        <p
-                            style={{
-                                fontSize: "1.2rem",
-                                fontWeight: "bold",
-                                marginTop: "10px",
-                            }}
-                        >
-                            Total Users: {usersValue}
-                        </p>
+                        <p>Total Users: {usersValue}</p>
                     </Card>
                 </div>
 
+                {/* Work In Process Card */}
                 <div
                     style={{
-                        padding: "20px",
                         margin: "10px",
-                        width: "calc(33% - 20px)",
-                        transition: "transform 0.3s",
+                        flex: "1 1 300px", // Set flex properties for responsive sizing
                     }}
                 >
                     <Card
@@ -182,7 +173,6 @@ function Dashboard() {
                             color: "#fff",
                             width: "100%",
                             boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-                            transition: "transform 0.3s",
                         }}
                         hoverable
                         actions={[
@@ -193,7 +183,6 @@ function Dashboard() {
                                 <Button
                                     type="primary"
                                     style={{
-                                        marginTop: "10px",
                                         background: "#00FFC8",
                                         borderColor: "#00FFC8",
                                     }}
@@ -203,24 +192,15 @@ function Dashboard() {
                             </Link>,
                         ]}
                     >
-                        <p
-                            style={{
-                                fontSize: "1.2rem",
-                                fontWeight: "bold",
-                                marginTop: "10px",
-                            }}
-                        >
-                            Total Work In Process: {workInProgressValue}
-                        </p>
+                        <p>Total Work In Process: {workInProgressValue}</p>
                     </Card>
                 </div>
 
+                {/* Finished Goods Card */}
                 <div
                     style={{
-                        padding: "20px",
                         margin: "10px",
-                        width: "calc(33% - 20px)",
-                        transition: "transform 0.3s",
+                        flex: "1 1 300px", // Set flex properties for responsive sizing
                     }}
                 >
                     <Card
@@ -234,7 +214,6 @@ function Dashboard() {
                             color: "#fff",
                             width: "100%",
                             boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-                            transition: "transform 0.3s",
                         }}
                         hoverable
                         actions={[
@@ -245,7 +224,6 @@ function Dashboard() {
                                 <Button
                                     type="primary"
                                     style={{
-                                        marginTop: "10px",
                                         background: "#B06AB3",
                                         borderColor: "#B06AB3",
                                     }}
@@ -255,15 +233,7 @@ function Dashboard() {
                             </Link>,
                         ]}
                     >
-                        <p
-                            style={{
-                                fontSize: "1.2rem",
-                                fontWeight: "bold",
-                                marginTop: "10px",
-                            }}
-                        >
-                            Total Finished Goods: {finishedGoodsValue}
-                        </p>
+                        <p>Total Finished Goods: {finishedGoodsValue}</p>
                     </Card>
                 </div>
             </div>
@@ -335,10 +305,14 @@ function Dashboard() {
                         <Table
                             dataSource={activityData}
                             columns={columns}
-                            pagination={false}
+                            pagination={true}
                             scroll={{ y: 400 }}
                             bordered
-                            style={{ borderRadius: "8px" }}
+                            style={{
+                                borderRadius: "8px",
+                                width: "100%", // Set table width to fill the container
+                                overflowX: "auto", // Add horizontal scroll if necessary
+                            }}
                         />
                     </Spin>
                 </div>

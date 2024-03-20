@@ -63,4 +63,10 @@ class UserController extends Controller
 
         return response("", 204);
     }
+
+    public function count()
+{
+    $count = User::count();
+    return response()->json(['count' => $count]);
+}
 }
