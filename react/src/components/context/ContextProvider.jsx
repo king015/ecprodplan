@@ -47,7 +47,7 @@ export const ContextProvider = ({ children }) => {
         const timeout = setTimeout(() => {
             logout();
             message.error("Session expired. Please login again.");
-        }, 10 * 60 * 100000);
+        }, 3600000);
         setSessionTimeout(timeout);
     };
 

@@ -111,7 +111,7 @@ export default function Production() {
         {
             key: "action",
 
-            width: 25,
+            width: 15,
             render: (text, record) => (
                 <Space size="small" style={{ width: 5 }}>
                     <Tooltip title="Delete" placement="right">
@@ -130,7 +130,7 @@ export default function Production() {
         {
             key: "action2",
 
-            width: 25,
+            width: 15,
             render: () => (
                 <Space size="small" style={{ width: 5 }}>
                     <Tooltip title="View Processes" placement="right">
@@ -145,7 +145,7 @@ export default function Production() {
         },
         {
             key: "action3",
-            width: 25,
+            width: 15,
 
             render: (text, record) => (
                 <Space size="small" style={{ width: 5 }}>

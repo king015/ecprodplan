@@ -237,7 +237,7 @@ export default function FinishedGoods() {
                         width={20}
                         render={(text, record) => (
                             <Space size="small">
-                                <Tooltip title="Delete">
+                                <Tooltip title="Delete" placement="right">
                                     <Button
                                         size="small"
                                         icon={
@@ -256,7 +256,7 @@ export default function FinishedGoods() {
                         width={20}
                         render={(text, record) => (
                             <Space size="small">
-                                <Tooltip title="Edit">
+                                <Tooltip title="Edit" placement="right">
                                     <Button
                                         size="small"
                                         icon={
@@ -278,7 +278,7 @@ export default function FinishedGoods() {
                         width={20}
                         render={(text, record) => (
                             <Space size="small">
-                                <Tooltip title="Add FG In">
+                                <Tooltip title="Add FG In" placement="right">
                                     <Button
                                         size="small"
                                         icon={
@@ -299,7 +299,7 @@ export default function FinishedGoods() {
                         width={20}
                         render={(text, record) => (
                             <Space size="small">
-                                <Tooltip title="Add FG Out">
+                                <Tooltip title="Add FG Out" placement="right">
                                     <Button
                                         size="small"
                                         icon={

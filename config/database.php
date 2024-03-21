@@ -93,6 +93,20 @@ return [
             // 'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'false'),
         ],
 
+        'other_server_connection' => [
+            'driver' => 'mysql',
+            'host' => 'https://exelpack-api-exelpack.exelpackcorp.com/',
+            'port' => '3306',
+            'database' => 'u229214969_exelsys',
+            'username' => 'u229214969_exelsysad',
+            'password' => 'Admin123',
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'strict' => true,
+            'engine' => null,
+        ],
+
     ],
 
     /*
