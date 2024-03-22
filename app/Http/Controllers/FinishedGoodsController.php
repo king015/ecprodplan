@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreFinishedGoodsRequest;
+use App\Http\Requests\UpdateFinishedGoodsRequest;
 use App\Models\FinishedGoods;
 use Illuminate\Http\Request;
 use App\Http\Resources\FinishedGoodsResource;
@@ -44,11 +45,9 @@ class FinishedGoodsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, FinishedGoods $finishedGoods)
+    public function update(UpdateFinishedGoodsRequest $request, FinishedGoods $finishedGoods)
     {
-        $data = $request->validate([
-            // Define validation rules for your fields here
-        ]);
+        $data = $request->validated();
 
         $finishedGoods->update($data);
         return new FinishedGoodsResource($finishedGoods);
@@ -70,5 +69,39 @@ class FinishedGoodsController extends Controller
     {
         $count = FinishedGoods::count();
         return response()->json(['count' => $count]);
+    }
+
+    /**
+     * Update the quantity of a specific finished goods item.
+     */
+    public function updateQuantity(Request $request, $id)
+    {
+        try {
+            // Validate the request data
+            $validatedData = $request->validate([
+                'quantity' => 'required|integer|min:0',
+            ]);
+
+            // Find the finished goods item by its ID
+            $finishedGoods = FinishedGoods::findOrFail($id);
+
+            // Update the quantity of the finished goods item
+            $finishedGoods->quantity = $validatedData['quantity'];
+            $finishedGoods->save();
+
+            // Return success response
+            return response()->json([
+                'message' => 'Quantity updated successfully.',
+                'finished_goods' => new FinishedGoodsResource($finishedGoods),
+            ]);
+        } catch (\Exception $e) {
+            // Log the error for debugging
+            \Log::error('Error updating quantity: ' . $e->getMessage());
+
+            // Return error response
+            return response()->json([
+                'error' => 'Failed to update quantity. Please try again later.',
+            ], 500);
+        }
     }
 }

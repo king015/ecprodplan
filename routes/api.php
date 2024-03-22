@@ -3,6 +3,7 @@ use App\Http\Controllers\Api\ActivityLogController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\FinishedGoodsController;
+use App\Http\Controllers\PmmsMasterlistController;
 use App\Http\Controllers\ProductionPlanController;
 use App\Http\Controllers\WorkInProcessController;
 use App\Models\ProductionPlan;
@@ -20,6 +21,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('/production_plan', ProductionPlanController::class);
     Route::apiResource('/finished_goods', FinishedGoodsController::class);
     Route::apiResource('/work_in_process', WorkInProcessController::class);
+    Route::get('/pmms_masterlist', [PmmsMasterlistController::class, 'index']);
+    Route::post('/finished_goods/{id}/update_quantity', [FinishedGoodsController::class, 'updateQuantity']);
 });
 
 Route::post('/signup', [AuthController::class, 'signup']);

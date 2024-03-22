@@ -93,20 +93,19 @@ return [
             // 'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'false'),
         ],
 
-        'other_server_connection' => [
+        'pmms_connection' => [
             'driver' => 'mysql',
-            'host' => 'https://exelpack-api-exelpack.exelpackcorp.com/',
-            'port' => '3306',
-            'database' => 'u229214969_exelsys',
-            'username' => 'u229214969_exelsysad',
-            'password' => 'Admin123',
+            'host' => env('PMMS_DB_HOST', 'https://exelpack-api-exelpack.exelpackcorp.com/'),
+            'port' => env('PMMS_DB_PORT', '3306'),
+            'database' => env('PMMS_DB_DATABASE', 'u229214969_exelsys'),
+            'username' => env('PMMS_DB_USERNAME', 'u229214969_exelsysad'),
+            'password' => env('PMMS_DB_PASSWORD', 'Admin123'),
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',
             'prefix' => '',
             'strict' => true,
             'engine' => null,
         ],
-
     ],
 
     /*

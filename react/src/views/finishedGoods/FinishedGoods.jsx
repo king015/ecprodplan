@@ -21,6 +21,7 @@ import {
 import axiosClient from "../../axios-client";
 import FinishedGoodsModal from "./FinishedGoodsModal";
 import { Link } from "react-router-dom";
+import FinishedGoodsInModal from "./FinishedGoodsInModal";
 
 // const { Text } = Typography;
 const { Column } = Table;
@@ -30,7 +31,10 @@ export default function FinishedGoods() {
     const [loading, setLoading] = useState(false);
     // const { setNotification } = useStateContext();
     const [openModal, setOpenModal] = useState(false);
+    const [openFinishedGoodsInModal, setOpenFinishedGoodsInModal] =
+        useState(false);
     const [filterValue, setFilterValue] = useState("");
+    const [selectedItemId, setSelectedItemId] = useState(null);
 
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
@@ -45,6 +49,16 @@ export default function FinishedGoods() {
 
     const handleCloseModal = () => {
         setOpenModal(false);
+    };
+
+    // Modify the handleOpenFinishedGoodsInModal function to accept the id parameter
+    const handleOpenFinishedGoodsInModal = (id) => {
+        setOpenFinishedGoodsInModal(true);
+        setSelectedItemId(id); // Store the id in component state
+    };
+
+    const handleCloseFinishedGoodsInModal = () => {
+        setOpenFinishedGoodsInModal(false);
     };
 
     const onDeleteClick = (fg) => {
@@ -82,6 +96,7 @@ export default function FinishedGoods() {
                     ...item,
                     creaser: null,
                     flexo_print: null,
+                    ending_inventory: item.beginning_inventory, // Set ending_inventory equal to beginning_inventory initially
                 }));
                 setFinishedGoods(mappedData);
                 setLoading(false);
@@ -287,7 +302,9 @@ export default function FinishedGoods() {
                                             />
                                         }
                                         onClick={() =>
-                                            console.log("Edit", record)
+                                            handleOpenFinishedGoodsInModal(
+                                                record.id
+                                            )
                                         }
                                     />
                                 </Tooltip>
@@ -402,6 +419,11 @@ export default function FinishedGoods() {
             <FinishedGoodsModal
                 open={openModal}
                 handleClose={handleCloseModal}
+            />
+            <FinishedGoodsInModal
+                visible={openFinishedGoodsInModal}
+                handleClose={handleCloseFinishedGoodsInModal}
+                selectedItemId={selectedItemId}
             />
         </>
     );

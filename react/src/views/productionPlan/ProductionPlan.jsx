@@ -89,14 +89,45 @@ export default function FinishedGoods() {
         axiosClient
             .get("/work_in_process")
             .then(({ data: { data = [], meta = {} } }) => {
-                setProductionPlan(data);
-                setLoading(false);
-                setPagination({ ...pagination, total: meta.total });
+                // Fetch the ending_inventory data from finished_goods
+                const promises = data.map((item) => {
+                    return axiosClient
+                        .get(`/finished_goods_data/${item.finished_goods_id}`)
+                        .then((response) => {
+                            const finishedGoodsData = response.data || [];
+                            return {
+                                ...item,
+                                ending_inventory:
+                                    finishedGoodsData.ending_inventory || 0, // Default to 0 if ending_inventory is not available
+                            };
+                        })
+                        .catch((error) => {
+                            console.error(
+                                "Error fetching finished_goods data:",
+                                error
+                            );
+                            return {
+                                ...item,
+                                ending_inventory: 0,
+                            };
+                        });
+                });
+
+                Promise.all(promises)
+                    .then((updatedData) => {
+                        setProductionPlan(updatedData);
+                        setLoading(false);
+                        setPagination({ ...pagination, total: meta.total });
+                    })
+                    .catch(() => {
+                        setLoading(false);
+                    });
             })
             .catch(() => {
                 setLoading(false);
             });
     };
+
     const handleFilterChange = (event) => {
         setFilterValue(event.target.value);
     };
@@ -356,12 +387,11 @@ export default function FinishedGoods() {
                     ),
                 },
                 {
-                    title: "FG",
-                    dataIndex: "finished_goods",
-                    key: "finished_goods",
-                    sorter: (a, b) => a.finished_goods - b.finished_goods,
-                    width: 60,
-                    editable: true,
+                    title: "FG ",
+                    dataIndex: "ending_inventory",
+                    key: "ending_inventory",
+                    width: 100,
+                    sorter: (a, b) => a.ending_inventory - b.ending_inventory,
                 },
             ],
         },

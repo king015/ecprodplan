@@ -244,7 +244,7 @@ export default function DefaultLayouts() {
                 {open && (
                     <>
                         <div className="version">
-                            <span className="version-text">ECPPS</span>
+                            <span className="version-text">ECPPMS</span>
                             <span
                                 className="version-text"
                                 style={{

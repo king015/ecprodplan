@@ -46,7 +46,7 @@ function WorkInProcessModal({ visible, handleClose }) {
     const [epcode, setEpcode] = useState("");
     const [selectedProcess, setSelectedProcess] = useState("");
     const [selectedOptions, setSelectedOptions] = useState([]);
-    const [quantities, setQuantities] = useState({}); // State to manage quantities for each selected option
+    const [quantities, setQuantities] = useState({});
     const [finishedGoods, setFinishedGoods] = useState([]);
     const [loading, setLoading] = useState(false);
 

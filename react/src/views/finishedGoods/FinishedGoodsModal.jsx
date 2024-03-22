@@ -1,16 +1,6 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
-import {
-    Button,
-    Modal,
-    Form,
-    Input,
-    Select,
-    DatePicker,
-    Row,
-    Col,
-    message,
-} from "antd";
+import { Button, Modal, Form, Input, Select, Row, Col, message } from "antd";
 import { SaveOutlined } from "@ant-design/icons";
 import { customerOptions } from "./const";
 import axiosClient from "../../axios-client";
@@ -92,7 +82,7 @@ const FinishedGoodsModal = ({ open, handleClose }) => {
                     Submit
                 </Button>,
             ]}
-            width={900}
+            width={500}
         >
             <Form
                 form={form}
@@ -104,16 +94,11 @@ const FinishedGoodsModal = ({ open, handleClose }) => {
                     partNumber: "",
                     location: "",
                     beginning_inventory: "",
-                    beginning_date: null,
-                    ending_inventory: "",
-                    ending_date: null,
-                    fg_in: "",
-                    fg_out: "",
                 }}
             >
                 <Row gutter={[16, 0]}>
                     {/* Left Column */}
-                    <Col span={12}>
+                    <Col span={24}>
                         <Form.Item
                             label="EP Code"
                             name="code"
@@ -195,89 +180,6 @@ const FinishedGoodsModal = ({ open, handleClose }) => {
                                 {
                                     required: true,
                                     message: "Please input Beginning Inventory",
-                                },
-                            ]}
-                        >
-                            <Input
-                                style={{ height: "35px", width: "100%" }}
-                                type="number"
-                            />
-                        </Form.Item>
-                    </Col>
-
-                    {/* Right Column */}
-                    <Col span={12}>
-                        <Form.Item
-                            label="Beginning Inventory Date"
-                            name="beginning_date"
-                            rules={[
-                                {
-                                    required: true,
-                                    message:
-                                        "Please select Beginning Inventory Date",
-                                },
-                            ]}
-                        >
-                            <DatePicker
-                                style={{ height: "35px", width: "100%" }}
-                            />
-                        </Form.Item>
-
-                        <Form.Item
-                            label="Ending Inventory"
-                            name="ending_inventory"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: "Please input Ending Inventory",
-                                },
-                            ]}
-                        >
-                            <Input
-                                style={{ height: "35px", width: "100%" }}
-                                type="number"
-                            />
-                        </Form.Item>
-
-                        <Form.Item
-                            label="Ending Inventory Date"
-                            name="ending_date"
-                            rules={[
-                                {
-                                    required: true,
-                                    message:
-                                        "Please select Ending Inventory Date",
-                                },
-                            ]}
-                        >
-                            <DatePicker
-                                style={{ height: "35px", width: "100%" }}
-                            />
-                        </Form.Item>
-
-                        <Form.Item
-                            label="FG In"
-                            name="fg_in"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: "Please input FG In",
-                                },
-                            ]}
-                        >
-                            <Input
-                                style={{ height: "35px", width: "100%" }}
-                                type="number"
-                            />
-                        </Form.Item>
-
-                        <Form.Item
-                            label="FG Out"
-                            name="fg_out"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: "Please input FG Out",
                                 },
                             ]}
                         >
