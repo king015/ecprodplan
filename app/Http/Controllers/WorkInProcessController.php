@@ -16,10 +16,11 @@ class WorkInProcessController extends Controller
      */
     public function index()
     {
-        $workInProcess = WorkInProcess::with('finishedGoods')->orderBy('id', 'desc')->paginate(10);
+        $workInProcess = WorkInProcess::with('finishedGoods')->orderBy('id', 'desc')->get();
 
         return WorkInProcessResource::collection($workInProcess);
     }
+
 
     /**
      * Store a newly created resource in storage.
@@ -63,5 +64,14 @@ class WorkInProcessController extends Controller
         $workInProcess->delete();
 
         return response()->noContent();
+    }
+
+    /**
+     * Count the number of work in process items.
+     */
+    public function count()
+    {
+        $count = WorkInProcess::count();
+        return response()->json(['count' => $count]);
     }
 }

@@ -1,8 +1,7 @@
 <?php
-
 namespace App\Http\Requests;
 
-use Carbon\Carbon;
+use App\Models\FinishedGoods;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreWorkInProcessRequest extends FormRequest
@@ -12,7 +11,13 @@ class StoreWorkInProcessRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        // Check if the user is authenticated
+        if ($this->user()) {
+            // Check if the user can create FinishedGoods
+            return $this->user()->can('create', FinishedGoods::class);
+        }
+
+        return false;
     }
 
     /**
@@ -23,34 +28,38 @@ class StoreWorkInProcessRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'creaser'=>'integer',
-            'flexo_print'=>'integer',
-            'printer_slotter'=>'integer',
-            'slotting'=>'integer',
-            'clapper'=>'integer',
-            'diecut'=>'integer',
-            'stitching'=>'integer',
-            'detach'=>'integer',
-            'gluing'=>'integer',
-            'pre_assembly'=>'integer',
-            'manual_slotting'=>'integer',
-            'packing'=>'integer',
-            'pallet_assembly'=>'integer',
-            'manual_printing'=>'integer',
-            'manual_cutting'=>'integer',
-            'laminating'=>'integer',
-            'box_assembly'=>'integer',
-            'fp_manual_cutting'=>'integer',
-            'fp_diecut'=>'integer',
-            'bandsaw'=>'integer',
-            'skiving'=>'integer',
-            'fp_detach'=>'integer',
-            'heating_plate' => 'integer',
-            'hotmelt'=>'integer',
-            'assembly_heating'=>'integer',
-            'fp_manual_printing'=>'integer',
-            'sealing'=>'integer',
-            'fp_packing'=>'integer',
+            'customer'=>'required|string',
+            'code'=>'required|string',
+            'itemDescription'=>'required|string',
+            'partNumber'=>'required|string',
+            'creaser'=>'nullable|integer',
+            'flexo_print'=>'nullable|integer',
+            'printer_slotter'=>'nullable|integer',
+            'slotting'=>'nullable|integer',
+            'clapper'=>'nullable|integer',
+            'diecut'=>'nullable|integer',
+            'stitching'=>'nullable|integer',
+            'detach'=>'nullable|integer',
+            'gluing'=>'nullable|integer',
+            'pre_assembly'=>'nullable|integer',
+            'manual_slotting'=>'nullable|integer',
+            'packing'=>'nullable|integer',
+            'pallet_assembly'=>'nullable|integer',
+            'manual_printing'=>'nullable|integer',
+            'manual_cutting'=>'nullable|integer',
+            'laminating'=>'nullable|integer',
+            'box_assembly'=>'nullable|integer',
+            'fp_manual_cutting'=>'nullable|integer',
+            'fp_diecut'=>'nullable|integer',
+            'bandsaw'=>'nullable|integer',
+            'skiving'=>'nullable|integer',
+            'fp_detach'=>'nullable|integer',
+            'heating_plate' => 'nullable|integer',
+            'hotmelt'=>'nullable|integer',
+            'assembly_heating'=>'nullable|integer',
+            'fp_manual_printing'=>'nullable|integer',
+            'sealing'=>'nullable|integer',
+            'fp_packing'=>'nullable|integer',
         ];
     }
 

@@ -138,19 +138,20 @@ export default function Users() {
                     style={{ width: 200, marginRight: 8 }}
                 />
 
-                <Tooltip title="Add" placement="right">
-                    <Button
-                        icon={<PlusCircleOutlined />}
-                        onClick={handleOpenModal}
-                        style={{
-                            marginRight: 8,
-                            borderRadius: "50%",
-                            alignContent: "center",
-                            textAlign: "center",
-                            color: "#1E90FF",
-                        }}
-                    />
-                </Tooltip>
+                <Button
+                    icon={<PlusCircleOutlined />}
+                    onClick={handleOpenModal}
+                    style={{
+                        marginRight: 8,
+                        borderRadius: 5,
+                        alignContent: "center",
+                        textAlign: "center",
+                        color: "#1E90FF",
+                    }}
+                >
+                    Add User
+                </Button>
+
                 <Tooltip title="Refresh" placement="right">
                     <Button
                         icon={<SyncOutlined />}

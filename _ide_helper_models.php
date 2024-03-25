@@ -475,34 +475,39 @@ namespace App\Models{
  * 
  *
  * @property int $id
+ * @property string $customer
+ * @property string $code
+ * @property string $itemDescription
+ * @property string $partNumber
  * @property int|null $finished_goods_id
- * @property int $creaser
- * @property int $flexo_print
- * @property int $printer_slotter
- * @property int $slotting
- * @property int $clapper
- * @property int $diecut
- * @property int $stitching
- * @property int $detach
- * @property int $gluing
- * @property int $pre_assembly
- * @property int $manual_slotting
- * @property int $pallet_assembly
- * @property int $manual_printing
- * @property int $manual_cutting
- * @property int $laminating
- * @property int $box_assembly
- * @property int $fp_manual_cutting
- * @property int $fp_diecut
- * @property int $bandsaw
- * @property int $skiving
- * @property int $fp_detach
- * @property int $heating_plate
- * @property int $hotmelt
- * @property int $assembly_heating
- * @property int $fp_manual_printing
- * @property int $sealing
- * @property int $fp_packing
+ * @property int|null $creaser
+ * @property int|null $flexo_print
+ * @property int|null $printer_slotter
+ * @property int|null $slotting
+ * @property int|null $clapper
+ * @property int|null $diecut
+ * @property int|null $stitching
+ * @property int|null $detach
+ * @property int|null $gluing
+ * @property int|null $pre_assembly
+ * @property int|null $manual_slotting
+ * @property int|null $packing
+ * @property int|null $pallet_assembly
+ * @property int|null $manual_printing
+ * @property int|null $manual_cutting
+ * @property int|null $laminating
+ * @property int|null $box_assembly
+ * @property int|null $fp_manual_cutting
+ * @property int|null $fp_diecut
+ * @property int|null $bandsaw
+ * @property int|null $skiving
+ * @property int|null $fp_detach
+ * @property int|null $heating_plate
+ * @property int|null $hotmelt
+ * @property int|null $assembly_heating
+ * @property int|null $fp_manual_printing
+ * @property int|null $sealing
+ * @property int|null $fp_packing
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\FinishedGoods|null $finishedGoods
@@ -514,8 +519,10 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|WorkInProcess whereBandsaw($value)
  * @method static \Illuminate\Database\Eloquent\Builder|WorkInProcess whereBoxAssembly($value)
  * @method static \Illuminate\Database\Eloquent\Builder|WorkInProcess whereClapper($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|WorkInProcess whereCode($value)
  * @method static \Illuminate\Database\Eloquent\Builder|WorkInProcess whereCreaser($value)
  * @method static \Illuminate\Database\Eloquent\Builder|WorkInProcess whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|WorkInProcess whereCustomer($value)
  * @method static \Illuminate\Database\Eloquent\Builder|WorkInProcess whereDetach($value)
  * @method static \Illuminate\Database\Eloquent\Builder|WorkInProcess whereDiecut($value)
  * @method static \Illuminate\Database\Eloquent\Builder|WorkInProcess whereFinishedGoodsId($value)
@@ -529,11 +536,14 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|WorkInProcess whereHeatingPlate($value)
  * @method static \Illuminate\Database\Eloquent\Builder|WorkInProcess whereHotmelt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|WorkInProcess whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|WorkInProcess whereItemDescription($value)
  * @method static \Illuminate\Database\Eloquent\Builder|WorkInProcess whereLaminating($value)
  * @method static \Illuminate\Database\Eloquent\Builder|WorkInProcess whereManualCutting($value)
  * @method static \Illuminate\Database\Eloquent\Builder|WorkInProcess whereManualPrinting($value)
  * @method static \Illuminate\Database\Eloquent\Builder|WorkInProcess whereManualSlotting($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|WorkInProcess wherePacking($value)
  * @method static \Illuminate\Database\Eloquent\Builder|WorkInProcess wherePalletAssembly($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|WorkInProcess wherePartNumber($value)
  * @method static \Illuminate\Database\Eloquent\Builder|WorkInProcess wherePreAssembly($value)
  * @method static \Illuminate\Database\Eloquent\Builder|WorkInProcess wherePrinterSlotter($value)
  * @method static \Illuminate\Database\Eloquent\Builder|WorkInProcess whereSealing($value)

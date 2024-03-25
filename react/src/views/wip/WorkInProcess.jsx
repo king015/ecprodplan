@@ -15,29 +15,42 @@ import {
     DeleteOutlined,
     PlusCircleOutlined,
     SyncOutlined,
+    SearchOutlined,
+    TagsOutlined,
 } from "@ant-design/icons";
 import axiosClient from "../../axios-client";
 import WorkInProcessModal from "./WorkInProcessModal";
+import ProcessModal from "./ProcessModal";
 
-const { Text } = Typography;
+// const { Text } = Typography;
 
 export default function Production() {
-    const [productions, setProductions] = useState([]);
+    const [workInProcess, setWorkInProcess] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [openModal, setOpenModal] = useState(false);
+    const [openWorkInProcessModal, setOpenWorkInProcessModal] = useState(false);
+    const [openProcessModal, setOpenProcessModal] = useState(false);
     const [filterValue, setFilterValue] = useState("");
-    const [pagination, setPagination] = useState({ current: 1, pageSize: 5 });
+    const [pagination, setPagination] = useState({ current: 1 });
 
-    const handleOpenModal = () => {
-        setOpenModal(true);
+    const handleOpenWorkInProcessModal = () => {
+        setOpenWorkInProcessModal(true);
     };
 
-    const handleCloseModal = () => {
-        setOpenModal(false);
+    const handleCloseWorkInProcessModal = () => {
+        setOpenWorkInProcessModal(false);
+    };
+
+    const handleOpenProcessModal = () => {
+        setOpenProcessModal(true);
+    };
+
+    const handleCloseProcessModal = () => {
+        setOpenProcessModal(false);
     };
 
     useEffect(() => {
         getWorkInProcess();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const onDeleteClick = (production) => {
@@ -49,7 +62,7 @@ export default function Production() {
             cancelText: "No",
             onOk() {
                 axiosClient
-                    .delete(`/production/${production.id}`)
+                    .delete(`/work_in_process/${production.id}`)
                     .then(() => {
                         getWorkInProcess();
                         message.success("Data successfully deleted");
@@ -66,15 +79,14 @@ export default function Production() {
     const getWorkInProcess = () => {
         setLoading(true);
         axiosClient
-            .get("/combined_data") // Fetch combined data from the API
-            .then((response) => {
-                setProductions(response.data.combined_data || []); // Set combined data to state
+            .get("/work_in_process")
+            .then(({ data: { data = [], meta = {} } }) => {
+                setWorkInProcess(data);
                 setLoading(false);
+                setPagination({ ...pagination, total: meta.total });
             })
-            .catch((error) => {
+            .catch(() => {
                 setLoading(false);
-                console.error("Error fetching data:", error);
-                message.error("Failed to fetch data. Please try again.");
             });
     };
 
@@ -86,7 +98,7 @@ export default function Production() {
         setFilterValue(event.target.value);
     };
 
-    const filteredData = productions.filter((production) =>
+    const filteredData = workInProcess.filter((production) =>
         Object.values(production).some(
             (value) =>
                 value &&
@@ -98,29 +110,10 @@ export default function Production() {
     const columns = [
         {
             key: "action",
-            width: 35,
-            fixed: "left",
+
+            width: 15,
             render: (text, record) => (
-                <Space size="small" style={{ width: 100 }}>
-                    <Tooltip title="Edit" placement="right">
-                        <Button
-                            icon={<EditOutlined style={{ color: "#1E90FF" }} />}
-                            size="small"
-                            onClick={() => {
-                                console.log("Edit", record);
-                                message.info(`Editing record ${record.id}`);
-                            }}
-                        />
-                    </Tooltip>
-                </Space>
-            ),
-        },
-        {
-            key: "action",
-            fixed: "left",
-            width: 35,
-            render: (text, record) => (
-                <Space size="small" style={{ width: 100 }}>
+                <Space size="small" style={{ width: 5 }}>
                     <Tooltip title="Delete" placement="right">
                         <Button
                             icon={<DeleteOutlined style={{ color: "red" }} />}
@@ -135,10 +128,45 @@ export default function Production() {
             ),
         },
         {
+            key: "action2",
+
+            width: 15,
+            render: () => (
+                <Space size="small" style={{ width: 5 }}>
+                    <Tooltip title="View Processes" placement="right">
+                        <Button
+                            icon={<TagsOutlined style={{ color: "#006400" }} />}
+                            size="small"
+                            onClick={handleOpenProcessModal}
+                        />
+                    </Tooltip>
+                </Space>
+            ),
+        },
+        {
+            key: "action3",
+            width: 15,
+
+            render: (text, record) => (
+                <Space size="small" style={{ width: 5 }}>
+                    <Tooltip title="Edit" placement="right">
+                        <Button
+                            icon={<EditOutlined style={{ color: "#1E90FF" }} />}
+                            size="small"
+                            onClick={() => {
+                                console.log("Edit", record);
+                                message.info(`Editing record ${record.id}`);
+                            }}
+                        />
+                    </Tooltip>
+                </Space>
+            ),
+        },
+        {
             title: "EP Code",
             dataIndex: "code",
             key: "code",
-            fixed: "left",
+
             width: 100,
             sorter: (a, b) => a.code.localeCompare(b.code),
         },
@@ -147,16 +175,15 @@ export default function Production() {
             dataIndex: "customer",
             key: "customer",
             width: 200,
-            fixed: "left",
+
             sorter: (a, b) => a.customer.localeCompare(b.customer),
         },
-
         {
             title: "Item Description",
             dataIndex: "itemDescription",
             key: "itemDescription",
-            fixed: "left",
-            width: 500,
+
+            width: 350,
             sorter: (a, b) =>
                 a.itemDescription.localeCompare(b.itemDescription),
         },
@@ -164,217 +191,9 @@ export default function Production() {
             title: "Part Number",
             dataIndex: "partNumber",
             key: "partNumber",
-            fixed: "left",
-            width: 150,
-            sorter: (a, b) => a.partNumber.localeCompare(b.partNumber),
-        },
 
-        {
-            title: "Board Process",
-            children: [
-                {
-                    title: "CR",
-                    dataIndex: "creaser",
-                    key: "creaser",
-                    sorter: (a, b) => a.creaser - b.creaser,
-                    width: 60,
-                },
-                {
-                    title: "FP",
-                    dataIndex: "flexo_print",
-                    key: "flexo_print",
-                    sorter: (a, b) => a.flexo_print - b.flexo_print,
-                    width: 60,
-                },
-                {
-                    title: "P-S",
-                    dataIndex: "printer_slotter",
-                    key: "printer_slotter",
-                    sorter: (a, b) => a.printer_slotter - b.printer_slotter,
-                    width: 60,
-                },
-                {
-                    title: "SLO",
-                    dataIndex: "slotting",
-                    key: "slotting",
-                    sorter: (a, b) => a.slotting - b.slotting,
-                    width: 60,
-                },
-                {
-                    title: "CLA",
-                    dataIndex: "clapper",
-                    key: "clapper",
-                    width: 60,
-                    sorter: (a, b) => a.clapper - b.clapper,
-                },
-                {
-                    title: "D-C",
-                    dataIndex: "diecut",
-                    key: "diecut",
-                    sorter: (a, b) => a.diecut - b.diecut,
-                    width: 60,
-                },
-                {
-                    title: "ST",
-                    dataIndex: "stitching",
-                    key: "stitching",
-                    width: 60,
-                    sorter: (a, b) => a.stitching - b.stitching,
-                },
-                {
-                    title: "DE",
-                    dataIndex: "detach",
-                    key: "detach",
-                    width: 60,
-                    sorter: (a, b) => a.detach - b.detach,
-                },
-                {
-                    title: "GL",
-                    dataIndex: "gluing",
-                    key: "gluing",
-                    width: 60,
-                    sorter: (a, b) => a.gluing - b.gluing,
-                },
-                {
-                    title: "P-A",
-                    dataIndex: "pre_assembly",
-                    key: "pre_assembly",
-                    width: 60,
-                    sorter: (a, b) => a.pre_assembly - b.pre_assembly,
-                },
-                {
-                    title: "M-S",
-                    dataIndex: "manual_slotting",
-                    key: "manual_slotting",
-                    width: 60,
-                    sorter: (a, b) => a.manual_slotting - b.manual_slotting,
-                },
-                {
-                    title: "PA",
-                    dataIndex: "packing",
-                    key: "packing",
-                    width: 60,
-                    sorter: (a, b) => a.packing - b.packing,
-                },
-                {
-                    title: "M-P",
-                    dataIndex: "manual_printing",
-                    key: "manual_printing",
-                    width: 60,
-                    sorter: (a, b) => a.manual_printing - b.manual_printing,
-                },
-                {
-                    title: "PAL-A",
-                    dataIndex: "pallet_assembly",
-                    key: "pallet_assembly",
-                    sorter: (a, b) => a.pallet_assembly - b.pallet_assembly,
-                    width: 60,
-                },
-                {
-                    title: "M-C",
-                    dataIndex: "manual_cutting",
-                    key: "manual_cutting",
-                    width: 60,
-                    sorter: (a, b) => a.manual_cutting - b.manual_cutting,
-                },
-                {
-                    title: "LAM",
-                    dataIndex: "laminating",
-                    key: "laminating",
-                    width: 60,
-                    sorter: (a, b) => a.laminating - b.laminating,
-                },
-                {
-                    title: "B-A",
-                    dataIndex: "box_assembly",
-                    key: "box_assembly",
-                    width: 60,
-                    sorter: (a, b) => a.box_assembly - b.box_assembly,
-                },
-            ],
-        },
-        {
-            title: "Foam Process",
-            children: [
-                {
-                    title: "M-C",
-                    dataIndex: "fp_manual_cutting",
-                    key: "fp_manual_cutting",
-                    width: 60,
-                    sorter: (a, b) => a.fp_manual_cutting - b.fp_manual_cutting,
-                },
-                {
-                    title: "D-C",
-                    dataIndex: "fp_diecut",
-                    key: "fp_diecut",
-                    width: 60,
-                    sorter: (a, b) => a.fp_diecut - b.fp_diecut,
-                },
-                {
-                    title: "B-S",
-                    dataIndex: "bandsaw",
-                    key: "bandsaw",
-                    width: 60,
-                    sorter: (a, b) => a.bandsaw - b.bandsaw,
-                },
-                {
-                    title: "SK",
-                    dataIndex: "skiving",
-                    key: "skiving",
-                    width: 60,
-                    sorter: (a, b) => a.skiving - b.skiving,
-                },
-                {
-                    title: "DE",
-                    dataIndex: "fp_detach",
-                    key: "fp_detach",
-                    width: 60,
-                    sorter: (a, b) => a.fp_detach - b.fp_detach,
-                },
-                {
-                    title: "H-P",
-                    dataIndex: "heating_plate",
-                    key: "heating_plate",
-                    width: 60,
-                    sorter: (a, b) => a.heating_plate - b.heating_plate,
-                },
-                {
-                    title: "H-M",
-                    dataIndex: "hotmelt",
-                    key: "hotmelt",
-                    sorter: (a, b) => a.hotmelt - b.hotmelt,
-                    width: 65,
-                },
-                {
-                    title: "A-H",
-                    dataIndex: "assembly_heating",
-                    key: "assembly_heating",
-                    width: 60,
-                    sorter: (a, b) => a.assembly_heating - b.assembly_heating,
-                },
-                {
-                    title: "M-P",
-                    dataIndex: "fp_manual_printing",
-                    key: "fp_manual_printing",
-                    sorter: (a, b) =>
-                        a.fp_manual_printing - b.fp_manual_printing,
-                    width: 60,
-                },
-                {
-                    title: "SE",
-                    dataIndex: "sealing",
-                    key: "sealing",
-                    width: 60,
-                    sorter: (a, b) => a.sealing - b.sealing,
-                },
-                {
-                    title: "PA",
-                    dataIndex: "fp_packing",
-                    key: "fp_packing",
-                    width: 60,
-                    sorter: (a, b) => a.fp_packing - b.fp_packing,
-                },
-            ],
+            width: 200,
+            sorter: (a, b) => a.partNumber.localeCompare(b.partNumber),
         },
     ];
 
@@ -382,81 +201,95 @@ export default function Production() {
         <>
             <div
                 style={{
-                    marginBottom: 16,
+                    marginBottom: 10,
                     display: "flex",
                     alignItems: "center",
+                    justifyContent: "flex-start",
                     borderBottom: "1px solid #ddd",
-                    paddingBottom: 8,
+                    paddingBottom: 9,
                 }}
             >
                 <Typography.Title
-                    level={3}
+                    level={0}
                     style={{
-                        marginRight: 16,
-                        fontWeight: "bold",
-                        fontSize: "1.5rem",
+                        color: "#1890ff",
+                        marginRight: 5,
+                        fontWeight: 600,
+                        fontSize: 12,
+                        marginBottom: 0,
                     }}
                 >
-                    Work In Process
+                    WORK IN PROCESS
                 </Typography.Title>
                 <Typography variant="body2" style={{ marginRight: 8 }}>
-                    <Text strong style={{ margin: "0 8px" }}>
-                        /
-                    </Text>
+                    <span style={{ margin: "0 8px" }}>/</span>
                     <Link
                         to="/dashboard"
                         style={{
                             color: "#1890ff",
+                            fontWeight: 600,
+                            fontSize: 12,
                             textDecoration: "none",
-                            marginLeft: "8px",
+                            marginLeft: 5,
                         }}
                     >
                         HOME
                     </Link>
                 </Typography>
             </div>
+
+            <div className="">
+                <Typography.Title
+                    level={0}
+                    style={{
+                        color: "#1890ff",
+                        marginRight: 16,
+                        marginTop: "16px",
+                        marginBottom: "16px",
+                        fontWeight: 400,
+                        fontSize: "20px",
+                    }}
+                >
+                    WORK IN PROCESS
+                </Typography.Title>
+            </div>
+
             <div
                 style={{
-                    marginBottom: 16,
                     display: "flex",
                     alignItems: "center",
+                    marginBottom: 10,
                 }}
             >
-                <Typography.Text
-                    strong
-                    style={{ marginRight: 8, color: "#1E90FF" }}
-                >
-                    Filter:
-                </Typography.Text>
                 <Input
-                    placeholder="Enter text to filter"
+                    placeholder="Search"
+                    prefix={<SearchOutlined style={{ marginRight: 8 }} />}
                     value={filterValue}
                     onChange={handleFilterChange}
-                    style={{ width: 200, marginRight: 8 }}
+                    style={{
+                        width: 300,
+                        marginRight: 8,
+                    }}
                 />
 
-                <Tooltip title="Add" placement="right">
-                    <Button
-                        icon={<PlusCircleOutlined />}
-                        onClick={handleOpenModal}
-                        style={{
-                            marginRight: 8,
-                            borderRadius: "50%",
-                            alignContent: "center",
-                            textAlign: "center",
-                            color: "#1E90FF",
-                        }}
-                    />
-                </Tooltip>
+                <Button
+                    icon={<PlusCircleOutlined />}
+                    onClick={handleOpenWorkInProcessModal}
+                    style={{
+                        marginRight: 8,
+                        borderRadius: "5px",
+                        color: "#1E90FF",
+                    }}
+                >
+                    Add Item
+                </Button>
+
                 <Tooltip title="Refresh" placement="right">
                     <Button
                         icon={<SyncOutlined />}
                         onClick={handleRefresh}
                         style={{
-                            marginRight: 8,
                             borderRadius: "50%",
-                            textAlign: "center",
-                            alignContent: "center",
                             color: "#1E90FF",
                         }}
                     />
@@ -476,13 +309,19 @@ export default function Production() {
                         },
                     }}
                     size="small"
-                    scroll={{ x: 1000 }}
+                    scroll={{ x: 1500 }}
                     style={{ backgroundColor: "#f0f2f5" }}
                 />
             </div>
             <WorkInProcessModal
-                open={openModal}
-                handleClose={handleCloseModal}
+                visible={openWorkInProcessModal}
+                handleClose={handleCloseWorkInProcessModal}
+            />
+            <ProcessModal
+                visible={openProcessModal}
+                onClose={handleCloseProcessModal}
+                process="Viewer"
+                data={workInProcess}
             />
         </>
     );

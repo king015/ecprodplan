@@ -14,17 +14,17 @@ return new class extends Migration
         Schema::create('finished_goods', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('production_plan_id')->nullable();
-            $table->string('customer');
-            $table->string('code');
-            $table->string('itemDescription');
-            $table->string('partNumber');
-            $table->string('location');
-            $table->unsignedBigInteger('beginning_inventory');
-            $table->date('beginning_date');
-            $table->unsignedBigInteger('ending_inventory');
-            $table->date('ending_date');
-            $table->unsignedBigInteger('fg_in');
-            $table->unsignedBigInteger('fg_out');
+            $table->string('customer')->nullable();
+            $table->string('code')->nullable();
+            $table->string('itemDescription')->nullable();
+            $table->string('partNumber')->nullable();
+            $table->string('location')->nullable();
+            $table->unsignedBigInteger('beginning_inventory')->nullable();
+            $table->date('beginning_date')->nullable();
+            $table->unsignedBigInteger('ending_inventory')->nullable();
+            $table->date('ending_date')->nullable();
+            $table->unsignedBigInteger('fg_in')->nullable();
+            $table->unsignedBigInteger('fg_out')->nullable();
             $table->timestamps();
         });
     }

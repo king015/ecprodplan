@@ -1,0 +1,147 @@
+.logo {
+    height: 32px;
+    margin: 16px;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.site-layout .site-layout-background {
+    background: #fff;
+}
+
+.trigger {
+    font-size: 18px;
+    line-height: 64px;
+    padding: 0 24px;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.trigger:hover {
+    color: #1890ff;
+}
+
+.user-info-container {
+    display: flex;
+    align-items: center;
+    margin-right: 24px;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+}
+
+.user-icon {
+    margin-right: 8px;
+    font-size: 20px;
+    color: white;
+}
+
+.user-name {
+    font-size: 16px;
+    color: white;
+}
+
+.user-info-icon {
+    font-size: 16px;
+    margin-left: 8px;
+    color: #fff;
+}
+
+.version {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 10px;
+    background-color: #001529;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.version-text {
+    display: flex;
+    align-items: center;
+    padding: 5px;
+    font-weight: bold;
+}
+
+.ant-layout-sider-trigger {
+    background: #001529;
+}
+
+.ant-layout-sider-collapsed .ant-menu-submenu-title {
+    padding: 0 !important;
+}
+
+.ant-layout-sider-collapsed .ant-menu-submenu-title .ant-menu-submenu-arrow {
+    display: none !important;
+}
+
+.drawer-header {
+    margin-top: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    flex-direction: column;
+    background-color: #000015;
+    border-top: 0.5px solid #ddd;
+    border-bottom: 0.5px solid #fff;
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.user-email {
+    font-size: 12px;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.logout-container {
+    position: absolute;
+    bottom: 0px;
+    left: 0;
+    width: 100%;
+    padding: 16px;
+    cursor: pointer;
+    border-top: 0.9px #ddd solid;
+}
+
+.logout-icon {
+    margin-right: 15px;
+    background: #00008b;
+    padding: 7px;
+    border-radius: 5px 5px 5px 5px;
+    transition: 0.5s all ease;
+}
+
+.logout-container:hover {
+    background: #000015;
+}
+
+.logout-item {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    height: 20px;
+}
+
+.logout-divider {
+    margin-top: 16px;
+    margin-bottom: 16px;
+    border-top: 1px solid #ddd;
+}

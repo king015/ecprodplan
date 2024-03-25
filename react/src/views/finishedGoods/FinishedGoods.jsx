@@ -15,12 +15,16 @@ import {
     EditOutlined,
     DeleteOutlined,
     PlusCircleOutlined,
+    MinusCircleOutlined,
+    SearchOutlined,
 } from "@ant-design/icons";
 import axiosClient from "../../axios-client";
 import FinishedGoodsModal from "./FinishedGoodsModal";
 import { Link } from "react-router-dom";
+import FinishedGoodsInModal from "./FinishedGoodsInModal";
+import FinishedGoodsEditModal from "./FinishedGoodsEdit";
 
-const { Text } = Typography;
+// const { Text } = Typography;
 const { Column } = Table;
 
 export default function FinishedGoods() {
@@ -28,10 +32,16 @@ export default function FinishedGoods() {
     const [loading, setLoading] = useState(false);
     // const { setNotification } = useStateContext();
     const [openModal, setOpenModal] = useState(false);
+    const [openFinishedGoodsInModal, setOpenFinishedGoodsInModal] =
+        useState(false);
     const [filterValue, setFilterValue] = useState("");
+    const [selectedItemId, setSelectedItemId] = useState(null);
 
     const [page, setPage] = useState(1);
-    const [pageSize, setPageSize] = useState(5);
+    const [pageSize, setPageSize] = useState(10);
+    const [openEditModal, setOpenEditModal] = useState(false);
+
+    const [selectedEditItemId, setSelectedEditItemId] = useState(null);
 
     const handleRefresh = () => {
         getFinishedGoods();
@@ -43,6 +53,26 @@ export default function FinishedGoods() {
 
     const handleCloseModal = () => {
         setOpenModal(false);
+    };
+
+    // Modify the handleOpenFinishedGoodsInModal function to accept the id parameter
+    const handleOpenFinishedGoodsInModal = (id) => {
+        setOpenFinishedGoodsInModal(true);
+        setSelectedItemId(id); // Store the id in component state
+    };
+
+    const handleCloseFinishedGoodsInModal = () => {
+        setOpenFinishedGoodsInModal(false);
+    };
+
+    const handleOpenEditModal = (id) => {
+        setSelectedEditItemId(id);
+        setOpenEditModal(true);
+    };
+
+    const handleCloseEditModal = () => {
+        setSelectedEditItemId(null);
+        setOpenEditModal(false);
     };
 
     const onDeleteClick = (fg) => {
@@ -73,8 +103,8 @@ export default function FinishedGoods() {
         axiosClient
             .get("/finished_goods")
             .then((response) => {
-                setFinishedGoods(response.data.data || []);
-
+                const finishedGoodsData = response.data.data || [];
+                setFinishedGoods(finishedGoodsData);
                 setLoading(false);
             })
             .catch((error) => {
@@ -83,6 +113,7 @@ export default function FinishedGoods() {
                 message.error("Failed to fetch data. Please try again.");
             });
     };
+
     const handleFilterChange = (event) => {
         setFilterValue(event.target.value);
     };
@@ -106,57 +137,88 @@ export default function FinishedGoods() {
         <>
             <div
                 style={{
-                    marginBottom: 16,
+                    marginBottom: 10,
                     display: "flex",
                     alignItems: "center",
+                    justifyContent: "flex-start",
                     borderBottom: "1px solid #ddd",
-                    paddingBottom: 8,
+                    paddingBottom: 9,
                 }}
             >
-                <Typography.Title level={3} style={{ marginRight: 16 }}>
-                    Finished Goods
+                <Typography.Title
+                    level={0}
+                    style={{
+                        color: "#1890ff",
+                        marginRight: 5,
+                        fontWeight: 600,
+                        fontSize: 12,
+                        marginBottom: 0,
+                    }}
+                >
+                    FINISHED GOODS
                 </Typography.Title>
+                <Typography variant="body2" style={{ marginRight: 8 }}>
+                    <span style={{ margin: "0 8px" }}>/</span>
+                    <Link
+                        to="/dashboard"
+                        style={{
+                            color: "#1890ff",
+                            fontWeight: 600,
+                            fontSize: 12,
+                            textDecoration: "none",
+                            marginLeft: 5,
+                        }}
+                    >
+                        HOME
+                    </Link>
+                </Typography>
+            </div>
 
-                <Text strong style={{ margin: "0 8px" }}>
-                    /
-                </Text>
-                <Link to="/dashboard">
-                    <Button type="link">Home</Button>
-                </Link>
+            <div className="">
+                <Typography.Title
+                    level={0}
+                    style={{
+                        color: "#1890ff",
+                        marginRight: 16,
+                        marginTop: "16px",
+                        marginBottom: "16px",
+                        fontWeight: 400,
+                        fontSize: "20px",
+                    }}
+                >
+                    FINISHED GOODS
+                </Typography.Title>
             </div>
             <div
                 style={{
-                    marginBottom: 16,
+                    marginBottom: 10,
                     display: "flex",
                     alignItems: "center",
                 }}
             >
-                <Typography.Text
-                    strong
-                    style={{ marginRight: 8, color: "#1E90FF" }}
-                >
-                    Filter:
-                </Typography.Text>
                 <Input
-                    placeholder="Enter text to filter"
+                    placeholder="Search"
+                    prefix={<SearchOutlined style={{ marginRight: 8 }} />}
                     value={filterValue}
                     onChange={handleFilterChange}
-                    style={{ width: 200, marginRight: 8 }}
+                    style={{
+                        width: 300,
+                        marginRight: 8,
+                    }}
                 />
 
-                <Tooltip title="Add FG" placement="right">
-                    <Button
-                        icon={<PlusCircleOutlined />}
-                        onClick={handleOpenModal}
-                        style={{
-                            marginRight: 8,
-                            borderRadius: "50%",
-                            alignContent: "center",
-                            textAlign: "center",
-                            color: "#1E90FF",
-                        }}
-                    />
-                </Tooltip>
+                <Button
+                    icon={<PlusCircleOutlined />}
+                    onClick={handleOpenModal}
+                    style={{
+                        marginRight: 8,
+                        borderRadius: "5px",
+                        color: "#1E90FF",
+                    }}
+                >
+                    Add Item
+                </Button>
+
                 <Tooltip title="Refresh" placement="right">
                     <Button
                         icon={<SyncOutlined />}
@@ -188,17 +250,83 @@ export default function FinishedGoods() {
                     bordered
                     rowKey="id"
                     size="small"
-                    scroll={{ x: 800 }}
+                    scroll={{ x: 1500 }}
                     style={{ backgroundColor: "#f0f2f5" }}
                 >
                     <Column
-                        key="edit"
+                        key="delete"
+                        width={20}
                         render={(text, record) => (
                             <Space size="small">
-                                <Tooltip title="Edit">
+                                <Tooltip title="Delete" placement="right">
                                     <Button
+                                        size="small"
+                                        icon={
+                                            <DeleteOutlined
+                                                style={{ color: "red" }}
+                                            />
+                                        }
+                                        onClick={() => onDeleteClick(record)}
+                                    />
+                                </Tooltip>
+                            </Space>
+                        )}
+                    />
+                    <Column
+                        key="edit"
+                        width={20}
+                        render={(text, record) => (
+                            <Space size="small">
+                                <Tooltip title="Edit" placement="right">
+                                    <Button
+                                        size="small"
                                         icon={
                                             <EditOutlined
+                                                style={{ color: "#1E90FF" }}
+                                            />
+                                        }
+                                        onClick={() =>
+                                            handleOpenEditModal(record.id)
+                                        }
+                                    />
+                                </Tooltip>
+                            </Space>
+                        )}
+                    />
+
+                    <Column
+                        key="add"
+                        width={20}
+                        render={(text, record) => (
+                            <Space size="small">
+                                <Tooltip title="Add FG In" placement="right">
+                                    <Button
+                                        size="small"
+                                        icon={
+                                            <PlusCircleOutlined
+                                                style={{ color: "#1E90FF" }}
+                                            />
+                                        }
+                                        onClick={() =>
+                                            handleOpenFinishedGoodsInModal(
+                                                record.id
+                                            )
+                                        }
+                                    />
+                                </Tooltip>
+                            </Space>
+                        )}
+                    />
+                    <Column
+                        key="add"
+                        width={20}
+                        render={(text, record) => (
+                            <Space size="small">
+                                <Tooltip title="Add FG Out" placement="right">
+                                    <Button
+                                        size="small"
+                                        icon={
+                                            <MinusCircleOutlined
                                                 style={{ color: "#1E90FF" }}
                                             />
                                         }
@@ -211,21 +339,10 @@ export default function FinishedGoods() {
                         )}
                     />
                     <Column
-                        key="delete"
-                        render={(text, record) => (
-                            <Space size="small">
-                                <Tooltip title="Delete">
-                                    <Button
-                                        icon={
-                                            <DeleteOutlined
-                                                style={{ color: "red" }}
-                                            />
-                                        }
-                                        onClick={() => onDeleteClick(record)}
-                                    />
-                                </Tooltip>
-                            </Space>
-                        )}
+                        title="EP Code"
+                        dataIndex="code"
+                        key="code"
+                        sorter={(a, b) => a.code.localeCompare(b.code)}
                     />
 
                     <Column
@@ -234,18 +351,13 @@ export default function FinishedGoods() {
                         key="customer"
                         sorter={(a, b) => a.customer.localeCompare(b.customer)}
                     />
-                    <Column
-                        title="EP Code"
-                        dataIndex="code"
-                        key="code"
-                        sorter={(a, b) => a.code.localeCompare(b.code)}
-                    />
+
                     <Column
                         title="Item Description"
                         dataIndex="itemDescription"
                         key="itemDescription"
                         sorter={(a, b) =>
-                            a.item_description.localeCompare(b.item_description)
+                            a.itemDescription.localeCompare(b.itemDescription)
                         }
                     />
                     <Column
@@ -253,7 +365,7 @@ export default function FinishedGoods() {
                         dataIndex="partNumber"
                         key="partNumber"
                         sorter={(a, b) =>
-                            a.part_number.localeCompare(b.part_number)
+                            a.partNumber.localeCompare(b.partNumber)
                         }
                     />
                     <Column
@@ -271,7 +383,7 @@ export default function FinishedGoods() {
                         }
                     />
                     <Column
-                        title="Beginning Date"
+                        title="Date"
                         dataIndex="beginning_date"
                         key="beginning_date"
                         sorter={(a, b) =>
@@ -280,32 +392,55 @@ export default function FinishedGoods() {
                         }
                     />
                     <Column
-                        title="Ending Inventory"
-                        dataIndex="ending_inventory"
-                        key="ending_inventory"
-                        sorter={(a, b) =>
-                            a.ending_inventory - b.ending_inventory
-                        }
-                    />
-                    <Column
-                        title="Ending Date"
-                        dataIndex="ending_date"
-                        key="ending_date"
-                        sorter={(a, b) =>
-                            new Date(a.ending_date) - new Date(b.ending_date)
-                        }
-                    />
-                    <Column
-                        title="In"
+                        title="I"
                         dataIndex="fg_in"
                         key="fg_in"
                         sorter={(a, b) => a.fg_in - b.fg_in}
                     />
                     <Column
-                        title="Out"
+                        title="O"
                         dataIndex="fg_out"
                         key="fg_out"
                         sorter={(a, b) => a.fg_out - b.fg_out}
+                    />
+                    <Column
+                        title="Ending Inventory"
+                        dataIndex="ending_inventory"
+                        key="ending_inventory"
+                        render={(text, record) =>
+                            record.fg_in !== undefined
+                                ? record.beginning_inventory + record.fg_in
+                                : record.beginning_inventory
+                        }
+                        sorter={(a, b) => {
+                            // Get the ending inventory values for both records
+                            const endingInventoryA =
+                                a.fg_in !== undefined
+                                    ? a.beginning_inventory + a.fg_in
+                                    : a.beginning_inventory;
+                            const endingInventoryB =
+                                b.fg_in !== undefined
+                                    ? b.beginning_inventory + b.fg_in
+                                    : b.beginning_inventory;
+
+                            // Compare the ending inventory values
+                            if (endingInventoryA < endingInventoryB) {
+                                return -1;
+                            }
+                            if (endingInventoryA > endingInventoryB) {
+                                return 1;
+                            }
+                            return 0;
+                        }}
+                    />
+
+                    <Column
+                        title="Date"
+                        dataIndex="ending_date"
+                        key="ending_date"
+                        sorter={(a, b) =>
+                            new Date(a.ending_date) - new Date(b.ending_date)
+                        }
                     />
                 </Table>
             </div>
@@ -313,6 +448,16 @@ export default function FinishedGoods() {
             <FinishedGoodsModal
                 open={openModal}
                 handleClose={handleCloseModal}
+            />
+            <FinishedGoodsInModal
+                visible={openFinishedGoodsInModal}
+                handleClose={handleCloseFinishedGoodsInModal}
+                selectedItemId={selectedItemId}
+            />
+            <FinishedGoodsEditModal
+                visible={openEditModal}
+                handleClose={handleCloseEditModal}
+                selectedItemId={selectedEditItemId}
             />
         </>
     );

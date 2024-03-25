@@ -1,16 +1,6 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
-import {
-    Button,
-    Modal,
-    Form,
-    Input,
-    Select,
-    DatePicker,
-    Row,
-    Col,
-    message,
-} from "antd";
+import { Button, Modal, Form, Input, Select, Row, Col, message } from "antd";
 import { SaveOutlined } from "@ant-design/icons";
 import { customerOptions } from "./const";
 import axiosClient from "../../axios-client";
@@ -42,6 +32,7 @@ const FinishedGoodsModal = ({ open, handleClose }) => {
                     .post("/finished_goods", values, { headers })
                     .then(() => {
                         message.success("Finished Goods posted successfully");
+                        form.resetFields(); // Clear form fields on successful submission
                         handleClose();
                     })
                     .catch((error) => {
@@ -67,13 +58,18 @@ const FinishedGoodsModal = ({ open, handleClose }) => {
             });
     };
 
+    const handleCancel = () => {
+        form.resetFields(); // Clear form fields when modal is closed
+        handleClose();
+    };
+
     return (
         <Modal
             title="Add Finished Goods"
             visible={open}
-            onCancel={handleClose}
+            onCancel={handleCancel}
             footer={[
-                <Button key="cancel" onClick={handleClose}>
+                <Button key="cancel" onClick={handleCancel}>
                     Cancel
                 </Button>,
                 <Button
@@ -86,7 +82,7 @@ const FinishedGoodsModal = ({ open, handleClose }) => {
                     Submit
                 </Button>,
             ]}
-            width={800}
+            width={500}
         >
             <Form
                 form={form}
@@ -98,38 +94,11 @@ const FinishedGoodsModal = ({ open, handleClose }) => {
                     partNumber: "",
                     location: "",
                     beginning_inventory: "",
-                    beginning_date: null,
-                    ending_inventory: "",
-                    ending_date: null,
-                    fg_in: "",
-                    fg_out: "",
                 }}
             >
                 <Row gutter={[16, 0]}>
-                    <Col span={12}>
-                        <Form.Item
-                            label="Customer"
-                            name="customer"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: "Please select customer",
-                                },
-                            ]}
-                        >
-                            <Select style={{ width: "100%", height: "35px" }}>
-                                {customerOptions.map((option) => (
-                                    <Option
-                                        key={option.value}
-                                        value={option.value}
-                                    >
-                                        {option.label}
-                                    </Option>
-                                ))}
-                            </Select>
-                        </Form.Item>
-                    </Col>
-                    <Col span={12}>
+                    {/* Left Column */}
+                    <Col span={24}>
                         <Form.Item
                             label="EP Code"
                             name="code"
@@ -140,10 +109,31 @@ const FinishedGoodsModal = ({ open, handleClose }) => {
                                 },
                             ]}
                         >
-                            <Input style={{ width: "100%", height: "35px" }} />
+                            <Input style={{ height: "35px", width: "100%" }} />
                         </Form.Item>
-                    </Col>
-                    <Col span={12}>
+
+                        <Form.Item
+                            label="Customer"
+                            name="customer"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Please select customer",
+                                },
+                            ]}
+                        >
+                            <Select style={{ height: "35px", width: "100%" }}>
+                                {customerOptions.map((option) => (
+                                    <Option
+                                        key={option.value}
+                                        value={option.value}
+                                    >
+                                        {option.label}
+                                    </Option>
+                                ))}
+                            </Select>
+                        </Form.Item>
+
                         <Form.Item
                             label="Item Description"
                             name="itemDescription"
@@ -154,10 +144,9 @@ const FinishedGoodsModal = ({ open, handleClose }) => {
                                 },
                             ]}
                         >
-                            <Input style={{ width: "100%", height: "35px" }} />
+                            <Input style={{ height: "35px", width: "100%" }} />
                         </Form.Item>
-                    </Col>
-                    <Col span={12}>
+
                         <Form.Item
                             label="Part Number"
                             name="partNumber"
@@ -168,10 +157,9 @@ const FinishedGoodsModal = ({ open, handleClose }) => {
                                 },
                             ]}
                         >
-                            <Input style={{ width: "100%", height: "35px" }} />
+                            <Input style={{ height: "35px", width: "100%" }} />
                         </Form.Item>
-                    </Col>
-                    <Col span={12}>
+
                         <Form.Item
                             label="Location"
                             name="location"
@@ -182,10 +170,9 @@ const FinishedGoodsModal = ({ open, handleClose }) => {
                                 },
                             ]}
                         >
-                            <Input style={{ width: "100%", height: "35px" }} />
+                            <Input style={{ height: "35px", width: "100%" }} />
                         </Form.Item>
-                    </Col>
-                    <Col span={12}>
+
                         <Form.Item
                             label="Beginning Inventory"
                             name="beginning_inventory"
@@ -197,93 +184,7 @@ const FinishedGoodsModal = ({ open, handleClose }) => {
                             ]}
                         >
                             <Input
-                                style={{ width: "100%", height: "35px" }}
-                                type="number"
-                            />
-                        </Form.Item>
-                    </Col>
-                    <Col span={12}>
-                        <Form.Item
-                            label="Beginning Inventory Date"
-                            name="beginning_date"
-                            rules={[
-                                {
-                                    required: true,
-                                    message:
-                                        "Please select Beginning Inventory Date",
-                                },
-                            ]}
-                        >
-                            <DatePicker
-                                style={{ width: "100%", height: "35px" }}
-                            />
-                        </Form.Item>
-                    </Col>
-
-                    <Col span={12}>
-                        <Form.Item
-                            label="Ending Inventory"
-                            name="ending_inventory"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: "Please input Ending Inventory",
-                                },
-                            ]}
-                        >
-                            <Input
-                                style={{ width: "100%", height: "35px" }}
-                                type="number"
-                            />
-                        </Form.Item>
-                    </Col>
-                    <Col span={12}>
-                        <Form.Item
-                            label="Ending Inventory Date"
-                            name="ending_date"
-                            rules={[
-                                {
-                                    required: true,
-                                    message:
-                                        "Please select Beginning Inventory Date",
-                                },
-                            ]}
-                        >
-                            <DatePicker
-                                style={{ width: "100%", height: "35px" }}
-                            />
-                        </Form.Item>
-                    </Col>
-                    <Col span={12}>
-                        <Form.Item
-                            label="FG In"
-                            name="fg_in"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: "Please input FG In",
-                                },
-                            ]}
-                        >
-                            <Input
-                                style={{ width: "100%", height: "35px" }}
-                                type="number"
-                            />
-                        </Form.Item>
-                    </Col>
-                    <Col span={12}>
-                        <Form.Item
-                            label="FG Out"
-                            name="fg_out"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: "Please input FG Out",
-                                },
-                            ]}
-                        >
-                            <Input
-                                style={{ width: "100%", height: "35px" }}
+                                style={{ height: "35px", width: "100%" }}
                                 type="number"
                             />
                         </Form.Item>
