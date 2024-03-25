@@ -29,17 +29,17 @@ class StoreFinishedGoodsRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'customer' => 'string',
-            'code' => 'string',
-            'itemDescription' => 'string',
-            'partNumber' => 'string',
-            'location' => 'string',
-            'beginning_inventory' => 'integer',
-            'beginning_date' => 'date',
-            'ending_inventory' => 'integer',
-            'ending_date' => 'date',
-            'fg_in' => 'integer',
-            'fg_out' => 'integer',
+            'customer' => 'nullable|string',
+            'code' => 'nullable|string',
+            'itemDescription' => 'nullable|string',
+            'partNumber' => 'nullable|string',
+            'location' => 'nullable|string',
+            'beginning_inventory' => 'nullable|integer',
+            'beginning_date' => 'nullable|date',
+            'ending_inventory' => 'nullable|integer',
+            'ending_date' => 'nullable|date',
+            'fg_in' => 'nullable|integer',
+            'fg_out' => 'nullable|integer',
         ];
     }
 

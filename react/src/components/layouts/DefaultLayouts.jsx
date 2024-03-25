@@ -103,20 +103,15 @@ export default function DefaultLayouts() {
                     </div>
                 </div>
                 <Menu theme="dark" defaultSelectedKeys={["1"]} mode="inline">
-                    <Menu.Item
-                        key="1"
-                        disabled
-                        icon={
-                            <CalendarOutlined
-                                style={{
-                                    background: "#00008B",
-                                    padding: "7px",
-                                    borderRadius: "5px",
-                                    color: "#fff", // Set font color to white
-                                }}
-                            />
-                        }
-                    >
+                    <Menu.Item key="1" disabled>
+                        <CalendarOutlined
+                            style={{
+                                backgroundColor: "#00008B",
+                                padding: "7px",
+                                borderRadius: "5px",
+                                color: "#fff",
+                            }}
+                        />
                         <Text strong style={{ color: "#fff" }}>
                             {currentTime.toLocaleDateString("en-US", {
                                 weekday: "short",
@@ -126,20 +121,15 @@ export default function DefaultLayouts() {
                             })}
                         </Text>
                     </Menu.Item>
-                    <Menu.Item
-                        key="2"
-                        disabled
-                        icon={
-                            <ClockCircleOutlined
-                                style={{
-                                    background: "#00008B",
-                                    padding: "7px",
-                                    borderRadius: "5px",
-                                    color: "#fff",
-                                }}
-                            />
-                        }
-                    >
+                    <Menu.Item key="2" disabled>
+                        <ClockCircleOutlined
+                            style={{
+                                backgroundColor: "#00008B",
+                                padding: "7px",
+                                borderRadius: "5px",
+                                color: "#fff",
+                            }}
+                        />
                         <Text strong style={{ color: "#fff" }}>
                             {currentTime.toLocaleTimeString()}
                         </Text>
@@ -150,10 +140,9 @@ export default function DefaultLayouts() {
                         icon={
                             <DesktopOutlined
                                 style={{
-                                    background: "#00008B",
+                                    backgroundColor: "#00008B",
                                     padding: "7px",
-                                    borderRadius: "5px 5px 5px 5px",
-                                    alignContent: "center",
+                                    borderRadius: "5px",
                                 }}
                             />
                         }
@@ -166,10 +155,9 @@ export default function DefaultLayouts() {
                         icon={
                             <FundProjectionScreenOutlined
                                 style={{
-                                    background: "#00008B",
+                                    backgroundColor: "#00008B",
                                     padding: "7px",
-                                    borderRadius: "5px 5px 5px 5px",
-                                    alignContent: "center",
+                                    borderRadius: "5px",
                                 }}
                             />
                         }
@@ -199,10 +187,9 @@ export default function DefaultLayouts() {
                         icon={
                             <UserOutlined
                                 style={{
-                                    background: "#00008B",
+                                    backgroundColor: "#00008B",
                                     padding: "7px",
-                                    borderRadius: "5px 5px 5px 5px",
-                                    alignContent: "center",
+                                    borderRadius: "5px",
                                 }}
                             />
                         }
@@ -215,10 +202,9 @@ export default function DefaultLayouts() {
                         icon={
                             <FormOutlined
                                 style={{
-                                    background: "#00008B",
+                                    backgroundColor: "#00008B",
                                     padding: "7px",
-                                    borderRadius: "5px 5px 5px 5px",
-                                    alignContent: "center",
+                                    borderRadius: "5px",
                                 }}
                             />
                         }
@@ -228,19 +214,15 @@ export default function DefaultLayouts() {
                     </Menu.Item>
 
                     {open && (
-                        <>
-                            <div
-                                className="logout-container"
-                                onClick={onLogout}
-                            >
-                                <div className="logout-item">
-                                    <LogoutOutlined className="logout-icon" />
-                                    <span className="logout-text">Logout</span>
-                                </div>
+                        <div className="logout-container" onClick={onLogout}>
+                            <div className="logout-item">
+                                <LogoutOutlined className="logout-icon" />
+                                <span className="logout-text">Logout</span>
                             </div>
-                        </>
+                        </div>
                     )}
                 </Menu>
+
                 {open && (
                     <>
                         <div className="version">
@@ -282,10 +264,7 @@ export default function DefaultLayouts() {
                 <Content style={{ margin: "16px" }}>
                     <div
                         className="site-layout-background"
-                        style={{
-                            padding: 50,
-                            minHeight: 360,
-                        }}
+                        style={{ padding: 50, minHeight: 360 }}
                     >
                         <Outlet />
                     </div>

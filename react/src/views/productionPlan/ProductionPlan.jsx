@@ -106,9 +106,11 @@ export default function FinishedGoods() {
                                 "Error fetching finished_goods data:",
                                 error
                             );
+                            // Return an object with the error message
                             return {
                                 ...item,
                                 ending_inventory: 0,
+                                error: "Error fetching finished_goods data",
                             };
                         });
                 });

@@ -6,7 +6,6 @@ use App\Http\Controllers\FinishedGoodsController;
 use App\Http\Controllers\PmmsMasterlistController;
 use App\Http\Controllers\ProductionPlanController;
 use App\Http\Controllers\WorkInProcessController;
-use App\Models\ProductionPlan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -21,8 +20,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('/production_plan', ProductionPlanController::class);
     Route::apiResource('/finished_goods', FinishedGoodsController::class);
     Route::apiResource('/work_in_process', WorkInProcessController::class);
+    Route::put('/finished_goods/{id}/fg_in', [FinishedGoodsController::class, 'updateFGIn']);
+    Route::put('/finished_goods/{id}/beginning_inventory', [FinishedGoodsController::class, 'updateBeginningInventory']);
+    // Define the route for updating FG In
     Route::get('/pmms_masterlist', [PmmsMasterlistController::class, 'index']);
     Route::post('/finished_goods/{id}/update_quantity', [FinishedGoodsController::class, 'updateQuantity']);
+    Route::put('/finished_goods/{id}/ending_inventory', [FinishedGoodsController::class, 'updateEndingInventory']);
 });
 
 Route::post('/signup', [AuthController::class, 'signup']);
@@ -87,5 +90,3 @@ Route::get('/finished_goods_data', function () {
         ], 500);
     }
 });
-
-

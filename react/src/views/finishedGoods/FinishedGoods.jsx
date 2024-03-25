@@ -22,6 +22,7 @@ import axiosClient from "../../axios-client";
 import FinishedGoodsModal from "./FinishedGoodsModal";
 import { Link } from "react-router-dom";
 import FinishedGoodsInModal from "./FinishedGoodsInModal";
+import FinishedGoodsEditModal from "./FinishedGoodsEdit";
 
 // const { Text } = Typography;
 const { Column } = Table;
@@ -38,6 +39,9 @@ export default function FinishedGoods() {
 
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
+    const [openEditModal, setOpenEditModal] = useState(false);
+
+    const [selectedEditItemId, setSelectedEditItemId] = useState(null);
 
     const handleRefresh = () => {
         getFinishedGoods();
@@ -59,6 +63,16 @@ export default function FinishedGoods() {
 
     const handleCloseFinishedGoodsInModal = () => {
         setOpenFinishedGoodsInModal(false);
+    };
+
+    const handleOpenEditModal = (id) => {
+        setSelectedEditItemId(id);
+        setOpenEditModal(true);
+    };
+
+    const handleCloseEditModal = () => {
+        setSelectedEditItemId(null);
+        setOpenEditModal(false);
     };
 
     const onDeleteClick = (fg) => {
@@ -87,18 +101,10 @@ export default function FinishedGoods() {
     const getFinishedGoods = () => {
         setLoading(true);
         axiosClient
-            .get("/finished_goods_data")
+            .get("/finished_goods")
             .then((response) => {
-                const finishedGoodsData =
-                    response.data.finished_goods_data || [];
-
-                const mappedData = finishedGoodsData.map((item) => ({
-                    ...item,
-                    creaser: null,
-                    flexo_print: null,
-                    ending_inventory: item.beginning_inventory, // Set ending_inventory equal to beginning_inventory initially
-                }));
-                setFinishedGoods(mappedData);
+                const finishedGoodsData = response.data.data || [];
+                setFinishedGoods(finishedGoodsData);
                 setLoading(false);
             })
             .catch((error) => {
@@ -280,7 +286,7 @@ export default function FinishedGoods() {
                                             />
                                         }
                                         onClick={() =>
-                                            console.log("Edit", record)
+                                            handleOpenEditModal(record.id)
                                         }
                                     />
                                 </Tooltip>
@@ -377,7 +383,7 @@ export default function FinishedGoods() {
                         }
                     />
                     <Column
-                        title="Beginning Date"
+                        title="Date"
                         dataIndex="beginning_date"
                         key="beginning_date"
                         sorter={(a, b) =>
@@ -386,32 +392,55 @@ export default function FinishedGoods() {
                         }
                     />
                     <Column
-                        title="Ending Inventory"
-                        dataIndex="ending_inventory"
-                        key="ending_inventory"
-                        sorter={(a, b) =>
-                            a.ending_inventory - b.ending_inventory
-                        }
-                    />
-                    <Column
-                        title="Ending Date"
-                        dataIndex="ending_date"
-                        key="ending_date"
-                        sorter={(a, b) =>
-                            new Date(a.ending_date) - new Date(b.ending_date)
-                        }
-                    />
-                    <Column
-                        title="In"
+                        title="I"
                         dataIndex="fg_in"
                         key="fg_in"
                         sorter={(a, b) => a.fg_in - b.fg_in}
                     />
                     <Column
-                        title="Out"
+                        title="O"
                         dataIndex="fg_out"
                         key="fg_out"
                         sorter={(a, b) => a.fg_out - b.fg_out}
+                    />
+                    <Column
+                        title="Ending Inventory"
+                        dataIndex="ending_inventory"
+                        key="ending_inventory"
+                        render={(text, record) =>
+                            record.fg_in !== undefined
+                                ? record.beginning_inventory + record.fg_in
+                                : record.beginning_inventory
+                        }
+                        sorter={(a, b) => {
+                            // Get the ending inventory values for both records
+                            const endingInventoryA =
+                                a.fg_in !== undefined
+                                    ? a.beginning_inventory + a.fg_in
+                                    : a.beginning_inventory;
+                            const endingInventoryB =
+                                b.fg_in !== undefined
+                                    ? b.beginning_inventory + b.fg_in
+                                    : b.beginning_inventory;
+
+                            // Compare the ending inventory values
+                            if (endingInventoryA < endingInventoryB) {
+                                return -1;
+                            }
+                            if (endingInventoryA > endingInventoryB) {
+                                return 1;
+                            }
+                            return 0;
+                        }}
+                    />
+
+                    <Column
+                        title="Date"
+                        dataIndex="ending_date"
+                        key="ending_date"
+                        sorter={(a, b) =>
+                            new Date(a.ending_date) - new Date(b.ending_date)
+                        }
                     />
                 </Table>
             </div>
@@ -424,6 +453,11 @@ export default function FinishedGoods() {
                 visible={openFinishedGoodsInModal}
                 handleClose={handleCloseFinishedGoodsInModal}
                 selectedItemId={selectedItemId}
+            />
+            <FinishedGoodsEditModal
+                visible={openEditModal}
+                handleClose={handleCloseEditModal}
+                selectedItemId={selectedEditItemId}
             />
         </>
     );

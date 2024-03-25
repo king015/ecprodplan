@@ -7,6 +7,7 @@ import moment from "moment";
 const FinishedGoodsInModal = ({ visible, handleClose, selectedItemId }) => {
     const [loading, setLoading] = useState(false);
     const [initialValues, setInitialValues] = useState(null);
+    const [form] = Form.useForm();
 
     useEffect(() => {
         if (visible && selectedItemId) {
@@ -15,7 +16,11 @@ const FinishedGoodsInModal = ({ visible, handleClose, selectedItemId }) => {
                 .get(`/finished_goods/${selectedItemId}`)
                 .then((response) => {
                     const { quantity, date, remarks } = response.data;
-                    setInitialValues({ quantity, date: moment(date), remarks });
+                    setInitialValues({
+                        fg_in: quantity,
+                        date: moment(date),
+                        remarks,
+                    });
                     setLoading(false);
                 })
                 .catch(() => {
@@ -28,7 +33,6 @@ const FinishedGoodsInModal = ({ visible, handleClose, selectedItemId }) => {
     }, [visible, selectedItemId]);
 
     const handleFinish = () => {
-        // Perform any validation here if needed
         const token = localStorage.getItem("ACCESS_TOKEN");
 
         if (!token) {
@@ -40,44 +44,50 @@ const FinishedGoodsInModal = ({ visible, handleClose, selectedItemId }) => {
             Authorization: `Bearer ${token}`,
         };
 
-        axiosClient
-            .get("/finished_goods")
-            .then((response) => {
-                const beginningInventory = response.data.beginning_inventory;
-                const newQuantity = initialValues.quantity;
-                const updatedBeginningInventory =
-                    beginningInventory + newQuantity;
+        const { fg_in } = form.getFieldsValue(); // Get the value of fg_in from the form
+        const submittedQuantity = parseInt(fg_in, 10); // Parse the submitted quantity
 
-                // Update beginning inventory first
-                return axiosClient.post(
-                    "/beginning_inventory",
-                    { beginning_inventory: updatedBeginningInventory },
-                    { headers }
-                );
+        // Fetch current beginning inventory
+        axiosClient
+            .get(`/finished_goods/${selectedItemId}`)
+            .then((response) => {
+                const currentBeginningInventory =
+                    response.data.beginning_inventory || 0;
+
+                // Calculate updated ending inventory
+                const updatedEndingInventory =
+                    currentBeginningInventory + submittedQuantity;
+
+                // Update beginning inventory with submitted quantity (fg_in)
+                return axiosClient
+                    .put(
+                        `/finished_goods/${selectedItemId}/beginning_inventory`,
+                        { beginning_inventory: submittedQuantity },
+                        { headers }
+                    )
+                    .then(() => {
+                        // Update ending inventory with updated value
+                        return axiosClient.put(
+                            `/finished_goods/${selectedItemId}/ending_inventory`,
+                            { ending_inventory: updatedEndingInventory },
+                            { headers }
+                        );
+                    });
             })
             .then(() => {
-                // Then update finished goods quantity
-                return axiosClient.post(
-                    `/finished_goods/${selectedItemId}/update_quantity`,
-                    {
-                        quantity: initialValues.quantity,
-                        date: initialValues.date,
-                        remarks: initialValues.remarks,
-                    },
-                    { headers }
-                );
-            })
-            .then(() => {
-                // Handle success response
-                message.success("Beginning inventory updated successfully.");
+                // Handle success
+                message.success("Inventory updated successfully.");
                 handleClose(); // Close the modal
             })
             .catch(() => {
-                // Handle error response
-                message.error(
-                    "Failed to update beginning inventory or quantity. Please try again."
-                );
+                // Handle error
+                message.error("Failed to update inventory. Please try again.");
             });
+    };
+
+    const handleQuantityChange = (e) => {
+        const { value } = e.target;
+        setInitialValues({ ...initialValues, fg_in: value });
     };
 
     return (
@@ -101,13 +111,17 @@ const FinishedGoodsInModal = ({ visible, handleClose, selectedItemId }) => {
         >
             {initialValues && (
                 <Form layout="vertical" initialValues={initialValues}>
-                    <Form.Item label="Quantity" name="Beginning_inventory">
+                    <Form.Item label="Quantity" name="fg_in">
                         <Input
                             type="number"
                             style={{ width: "100%", height: 40 }}
+                            value={initialValues.fg_in}
+                            onChange={(e) =>
+                                handleQuantityChange(e.target.value)
+                            }
                         />
                     </Form.Item>
-                    <Form.Item label="Date" name="beginning_date">
+                    <Form.Item label="Date" name="date">
                         <DatePicker
                             style={{
                                 width: "100%",
