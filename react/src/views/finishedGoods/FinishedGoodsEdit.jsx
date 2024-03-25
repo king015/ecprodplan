@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { Modal, Form, Input, Button, message } from "antd";
 import axiosClient from "../../axios-client";
+import { ToTopOutlined } from "@ant-design/icons";
+import {} from "@ant-design/icons";
 
 const FinishedGoodsEditModal = ({ visible, handleClose, selectedItemId }) => {
     const [loading, setLoading] = useState(false);
@@ -69,6 +71,7 @@ const FinishedGoodsEditModal = ({ visible, handleClose, selectedItemId }) => {
                 <Button
                     key="submit"
                     type="primary"
+                    icon={<ToTopOutlined />}
                     onClick={handleFinish}
                     loading={loading}
                 >
