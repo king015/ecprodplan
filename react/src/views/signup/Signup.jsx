@@ -1,34 +1,29 @@
+import { useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
-import { createRef, useState } from "react";
-import { useStateContext } from "../../components/context/ContextProvider";
-import axiosClient from "../../axios-client";
+import { Typography, Form, Input, Button, Alert, Card, Space } from "antd";
 import {
-    Box,
-    Button,
-    TextField,
-    Typography,
-    Alert,
-    Link,
-    Paper,
-    Container,
-} from "@mui/material";
+    UserOutlined,
+    MailOutlined,
+    LockOutlined,
+    LoadingOutlined,
+} from "@ant-design/icons";
+import axiosClient from "../../axios-client";
+import { useStateContext } from "../../components/context/ContextProvider";
 
-export default function Signup() {
-    const nameRef = createRef();
-    const emailRef = createRef();
-    const passwordRef = createRef();
-    const passwordConfirmationRef = createRef();
-    const { setUser, setToken } = useStateContext();
+const { Title } = Typography;
+
+const Signup = () => {
     const [errors, setErrors] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const { setUser, setToken } = useStateContext();
 
-    const onSubmit = (ev) => {
-        ev.preventDefault();
-
+    const onFinish = (values) => {
+        setLoading(true);
         const payload = {
-            name: nameRef.current.value,
-            email: emailRef.current.value,
-            password: passwordRef.current.value,
-            password_confirmation: passwordConfirmationRef.current.value,
+            name: values.name,
+            email: values.email,
+            password: values.password,
+            password_confirmation: values.password_confirmation,
         };
         axiosClient
             .post("/signup", payload)
@@ -45,110 +40,125 @@ export default function Signup() {
                             .join(", ")
                     );
                 }
+            })
+            .finally(() => {
+                setLoading(false);
             });
     };
 
     return (
-        <Container component="main" maxWidth="xs">
-            <Box
-                sx={{
-                    marginTop: 8,
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                }}
-            >
-                <Paper
-                    elevation={6}
-                    sx={{
-                        my: { xs: 3, md: 6 },
-                        p: { xs: 2, md: 3 },
-                        width: "100%",
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                    }}
+        <div
+            style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "100vh",
+            }}
+        >
+            <Card style={{ width: 400 }}>
+                <Title
+                    level={3}
+                    style={{ textAlign: "center", marginBottom: 24 }}
                 >
-                    <Typography component="h1" variant="h5" sx={{ mb: 2 }}>
-                        Signup for Free
-                    </Typography>
-
-                    {errors && (
-                        <Alert severity="error" sx={{ width: "100%", mb: 2 }}>
-                            {errors}
-                        </Alert>
-                    )}
-
-                    <Box
-                        component="form"
-                        onSubmit={onSubmit}
-                        noValidate
-                        sx={{ mt: 1 }}
+                    Create an Account
+                </Title>
+                {errors && (
+                    <Alert
+                        message={errors}
+                        type="error"
+                        style={{ marginBottom: 16 }}
+                    />
+                )}
+                <Form
+                    name="signup"
+                    initialValues={{ remember: true }}
+                    onFinish={onFinish}
+                    layout="vertical"
+                >
+                    <Form.Item
+                        name="name"
+                        rules={[
+                            {
+                                required: true,
+                                message: "Please enter your name!",
+                            },
+                        ]}
                     >
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            id="name"
-                            label="Full Name"
-                            name="name"
-                            autoComplete="name"
-                            autoFocus
-                            inputRef={nameRef}
+                        <Input
+                            prefix={<UserOutlined />}
+                            placeholder="Full Name"
                         />
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            id="email"
-                            label="Email Address"
-                            name="email"
-                            autoComplete="email"
-                            inputRef={emailRef}
+                    </Form.Item>
+                    <Form.Item
+                        name="email"
+                        rules={[
+                            {
+                                required: true,
+                                message: "Please enter your email!",
+                            },
+                        ]}
+                    >
+                        <Input
+                            prefix={<MailOutlined />}
+                            type="email"
+                            placeholder="Email Address"
                         />
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            name="password"
-                            label="Password"
-                            type="password"
-                            id="password"
-                            autoComplete="new-password"
-                            inputRef={passwordRef}
+                    </Form.Item>
+                    <Form.Item
+                        name="password"
+                        rules={[
+                            {
+                                required: true,
+                                message: "Please enter your password!",
+                            },
+                        ]}
+                    >
+                        <Input.Password
+                            prefix={<LockOutlined />}
+                            placeholder="Password"
                         />
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            name="password_confirmation"
-                            label="Confirm Password"
-                            type="password"
-                            id="password_confirmation"
-                            autoComplete="new-password"
-                            inputRef={passwordConfirmationRef}
+                    </Form.Item>
+                    <Form.Item
+                        name="password_confirmation"
+                        rules={[
+                            {
+                                required: true,
+                                message: "Please confirm your password!",
+                            },
+                        ]}
+                    >
+                        <Input.Password
+                            prefix={<LockOutlined />}
+                            placeholder="Confirm Password"
                         />
-                        <Button
-                            type="submit"
-                            fullWidth
-                            variant="contained"
-                            sx={{ mt: 3, mb: 2 }}
+                    </Form.Item>
+                    <Form.Item>
+                        <Space
+                            direction="vertical"
+                            size="middle"
+                            style={{ width: "100%" }}
                         >
-                            Signup
-                        </Button>
-                        <Typography variant="body2" align="center">
-                            Already registered?{" "}
-                            <Link
-                                component={RouterLink}
-                                to="/login"
-                                variant="body2"
+                            <Button
+                                type="primary"
+                                htmlType="submit"
+                                loading={loading}
+                                icon={loading ? <LoadingOutlined /> : null}
+                                style={{ width: "100%" }}
                             >
-                                Sign in
-                            </Link>
-                        </Typography>
-                    </Box>
-                </Paper>
-            </Box>
-        </Container>
+                                {loading ? "Signing up..." : "Signup"}
+                            </Button>
+                            <Typography.Paragraph
+                                style={{ textAlign: "center", marginBottom: 0 }}
+                            >
+                                Already registered?{" "}
+                                <RouterLink to="/login">Sign in</RouterLink>
+                            </Typography.Paragraph>
+                        </Space>
+                    </Form.Item>
+                </Form>
+            </Card>
+        </div>
     );
-}
+};
+
+export default Signup;
