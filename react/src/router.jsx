@@ -10,8 +10,9 @@ import UserForm from "./views/users/UserForm";
 import FinishedGoods from "./views/finishedGoods/FinishedGoods";
 
 import ProductionPlan from "./views/productionPlan/ProductionPlan";
-import Logs from "./views/Views";
+
 import WorkInProcess from "./views/wip/WorkInProcess";
+import Logs from "./views/logs/Logs";
 
 const router = createBrowserRouter([
     {
