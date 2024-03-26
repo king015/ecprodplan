@@ -1,0 +1,91 @@
+/* Add custom styles for FinishedGoods component */
+.finished-goods-container {
+    margin-bottom: 20px;
+}
+
+.finished-goods-title {
+    color: #1890ff;
+    font-weight: 600;
+    font-size: 20px;
+    margin: 16px 0;
+}
+
+.finished-goods-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.finished-goods-search {
+    width: 300px;
+    margin-right: 8px;
+}
+
+.finished-goods-button {
+    border-radius: 5px;
+    color: #1e90ff;
+}
+
+.finished-goods-button-refresh {
+    border-radius: 50%;
+    color: #1e90ff;
+}
+
+.finished-goods-table {
+    max-width: 1800px;
+    background-color: #f0f2f5;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 16px;
+    margin-top: 20px;
+    overflow: hidden;
+    border-collapse: collapse; /* Collapse table borders */
+}
+
+.finished-goods-table th,
+.finished-goods-table td {
+    padding: 12px; /* Add padding to table cells */
+    text-align: left; /* Align text to the left within cells */
+    border-bottom: 1px solid #ddd; /* Add bottom border to table cells */
+}
+
+.finished-goods-table th {
+    background-color: #e8e8e8; /* Background color for table header */
+    font-weight: bold; /* Bold font for table header */
+}
+
+.finished-goods-table tbody tr:hover {
+    background-color: #fff; /* Highlight row on hover */
+}
+
+.finished-goods-table thead th:last-child,
+.finished-goods-table tbody td:last-child {
+    text-align: center; /* Align last column text to center */
+}
+
+.finished-goods-table thead th:first-child,
+.finished-goods-table tbody td:first-child {
+    text-align: center; /* Align first column text to center */
+}
+
+.finished-goods-table tbody tr:last-child td {
+    border-bottom: none; /* Remove bottom border for last row */
+}
+
+.finished-goods-table-cell {
+    background-color: #f0f2f5;
+    border-bottom: 1px solid #ddd;
+    transition: background-color 0.3s ease;
+}
+
+.finished-goods-table-cell:hover {
+    background-color: #fff;
+}
+
+.finished-goods-pagination {
+    margin-top: 16px;
+    text-align: center;
+}
+
+/* Add more custom styles as needed */

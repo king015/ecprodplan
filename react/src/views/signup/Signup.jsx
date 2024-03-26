@@ -9,6 +9,7 @@ import {
 } from "@ant-design/icons";
 import axiosClient from "../../axios-client";
 import { useStateContext } from "../../components/context/ContextProvider";
+import "./Signup.css";
 
 const { Title } = Typography;
 
@@ -47,26 +48,16 @@ const Signup = () => {
     };
 
     return (
-        <div
-            style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                height: "100vh",
-            }}
-        >
-            <Card style={{ width: 400 }}>
-                <Title
-                    level={3}
-                    style={{ textAlign: "center", marginBottom: 24 }}
-                >
+        <div className="signup-container">
+            <Card className="signup-card">
+                <Title level={3} className="signup-title">
                     Create an Account
                 </Title>
                 {errors && (
                     <Alert
                         message={errors}
                         type="error"
-                        style={{ marginBottom: 16 }}
+                        className="signup-alert"
                     />
                 )}
                 <Form
@@ -74,6 +65,7 @@ const Signup = () => {
                     initialValues={{ remember: true }}
                     onFinish={onFinish}
                     layout="vertical"
+                    className="signup-form"
                 >
                     <Form.Item
                         name="name"
@@ -87,6 +79,7 @@ const Signup = () => {
                         <Input
                             prefix={<UserOutlined />}
                             placeholder="Full Name"
+                            className="signup-input"
                         />
                     </Form.Item>
                     <Form.Item
@@ -102,6 +95,7 @@ const Signup = () => {
                             prefix={<MailOutlined />}
                             type="email"
                             placeholder="Email Address"
+                            className="signup-input"
                         />
                     </Form.Item>
                     <Form.Item
@@ -116,6 +110,7 @@ const Signup = () => {
                         <Input.Password
                             prefix={<LockOutlined />}
                             placeholder="Password"
+                            className="signup-input"
                         />
                     </Form.Item>
                     <Form.Item
@@ -130,6 +125,7 @@ const Signup = () => {
                         <Input.Password
                             prefix={<LockOutlined />}
                             placeholder="Confirm Password"
+                            className="signup-input"
                         />
                     </Form.Item>
                     <Form.Item>
@@ -143,13 +139,11 @@ const Signup = () => {
                                 htmlType="submit"
                                 loading={loading}
                                 icon={loading ? <LoadingOutlined /> : null}
-                                style={{ width: "100%" }}
+                                className="signup-button"
                             >
                                 {loading ? "Signing up..." : "Signup"}
                             </Button>
-                            <Typography.Paragraph
-                                style={{ textAlign: "center", marginBottom: 0 }}
-                            >
+                            <Typography.Paragraph className="signup-link">
                                 Already registered?{" "}
                                 <RouterLink to="/login">Sign in</RouterLink>
                             </Typography.Paragraph>

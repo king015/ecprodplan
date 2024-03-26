@@ -21,10 +21,11 @@ import {
 import axiosClient from "../../axios-client";
 import WorkInProcessModal from "./WorkInProcessModal";
 import ProcessModal from "./ProcessModal";
+import "./WorkInProcess.css";
 
 // const { Text } = Typography;
 
-export default function Production() {
+export default function WorkInProcess() {
     const [workInProcess, setWorkInProcess] = useState([]);
     const [loading, setLoading] = useState(false);
     const [openWorkInProcessModal, setOpenWorkInProcessModal] = useState(false);

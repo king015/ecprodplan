@@ -1,0 +1,86 @@
+/* Styling for Signup container */
+.signup-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: #f5f5f5; /* Light gray background */
+    background: linear-gradient(
+        135deg,
+        #f5f5f5 0%,
+        #e0e0e0 100%
+    ); /* Gradient background */
+    padding: 20px; /* Add padding to the container */
+    box-sizing: border-box; /* Include padding in the height */
+}
+
+/* Styling for Signup card */
+.signup-card {
+    width: 400px;
+    padding: 24px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+}
+
+/* Styling for Signup title */
+.signup-title {
+    text-align: center;
+    margin-bottom: 24px;
+    font-size: 24px;
+    color: #333333;
+}
+
+/* Styling for Signup alert */
+.signup-alert {
+    margin-bottom: 16px;
+    border-radius: 4px;
+}
+
+/* Styling for Signup form */
+.signup-form {
+    width: 100%;
+}
+
+/* Styling for Signup input */
+.signup-input {
+    width: 100%;
+    margin-bottom: 16px;
+    border-radius: 4px;
+    border: 1px solid #cccccc;
+    padding: 12px;
+}
+
+.signup-input:focus {
+    outline: none;
+    border-color: #1890ff;
+    box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+}
+
+/* Styling for Signup button */
+.signup-button {
+    width: 100%;
+    border-radius: 4px;
+    font-weight: bold;
+    background-color: #1890ff;
+    color: #ffffff;
+    border: none;
+    padding: 12px;
+    transition: background-color 0.3s ease;
+}
+
+.signup-button:hover {
+    background-color: #40a9ff;
+}
+
+/* Styling for Signup link */
+.signup-link {
+    text-align: center;
+    margin-bottom: 0;
+    color: #1890ff;
+    font-weight: bold;
+}
+
+.signup-link:hover {
+    color: #40a9ff;
+}

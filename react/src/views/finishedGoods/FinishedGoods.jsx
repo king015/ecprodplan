@@ -23,6 +23,7 @@ import FinishedGoodsModal from "./FinishedGoodsModal";
 import { Link } from "react-router-dom";
 import FinishedGoodsInModal from "./FinishedGoodsInModal";
 import FinishedGoodsEditModal from "./FinishedGoodsEdit";
+import "./FinishedGoods.css";
 
 // const { Text } = Typography;
 const { Column } = Table;
@@ -144,6 +145,7 @@ export default function FinishedGoods() {
                     borderBottom: "1px solid #ddd",
                     paddingBottom: 9,
                 }}
+                className="finished-goods-container"
             >
                 <Typography.Title
                     level={0}
@@ -234,7 +236,10 @@ export default function FinishedGoods() {
                 </Tooltip>
             </div>
 
-            <div style={{ maxWidth: "1800px" }}>
+            <div
+                style={{ maxWidth: "1800px" }}
+                className="finished-goods-table"
+            >
                 <Table
                     dataSource={filteredData}
                     loading={loading}
@@ -251,7 +256,7 @@ export default function FinishedGoods() {
                     rowKey="id"
                     size="small"
                     scroll={{ x: 1500 }}
-                    style={{ backgroundColor: "#f0f2f5" }}
+                    className="finished-goods-table-cell"
                 >
                     <Column
                         key="delete"
