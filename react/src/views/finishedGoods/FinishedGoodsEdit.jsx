@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { Modal, Form, Input, Button, message } from "antd";
 import axiosClient from "../../axios-client";
+import { ToTopOutlined } from "@ant-design/icons";
 
 const FinishedGoodsEditModal = ({ visible, handleClose, selectedItemId }) => {
     const [loading, setLoading] = useState(false);
@@ -14,9 +15,9 @@ const FinishedGoodsEditModal = ({ visible, handleClose, selectedItemId }) => {
             axiosClient
                 .get(`/finished_goods/${selectedItemId}`)
                 .then((response) => {
-                    const data = response.data.data; // Access the 'data' property
-                    setInitialValues(data || {}); // Set initial form values with fetched data or empty object if null
-                    form.setFieldsValue(data || {}); // Set form fields with fetched data or empty object if null
+                    console.log("API response:", response.data);
+                    const data = response.data.data;
+                    setInitialValues(data || {});
                     setLoading(false);
                 })
                 .catch((error) => {
@@ -27,18 +28,17 @@ const FinishedGoodsEditModal = ({ visible, handleClose, selectedItemId }) => {
                     setLoading(false);
                 });
         }
-    }, [visible, selectedItemId, form]);
+    }, [visible, selectedItemId]);
 
     const handleFinish = () => {
         form.validateFields()
             .then((values) => {
                 setLoading(true);
-                // Implement the logic to update the item with the provided values
                 axiosClient
                     .put(`/finished_goods/${selectedItemId}`, values)
                     .then(() => {
                         message.success("Edit successful.");
-                        handleClose(); // Close the modal after successful edit
+                        handleClose();
                     })
                     .catch((error) => {
                         console.error("Error updating item:", error);
@@ -54,7 +54,7 @@ const FinishedGoodsEditModal = ({ visible, handleClose, selectedItemId }) => {
     };
 
     const handleCancel = () => {
-        handleClose(); // Close the modal without saving changes
+        handleClose();
     };
 
     return (
@@ -69,6 +69,7 @@ const FinishedGoodsEditModal = ({ visible, handleClose, selectedItemId }) => {
                 <Button
                     key="submit"
                     type="primary"
+                    icon={<ToTopOutlined />}
                     onClick={handleFinish}
                     loading={loading}
                 >
@@ -163,7 +164,7 @@ const FinishedGoodsEditModal = ({ visible, handleClose, selectedItemId }) => {
 FinishedGoodsEditModal.propTypes = {
     visible: PropTypes.bool.isRequired,
     handleClose: PropTypes.func.isRequired,
-    selectedItemId: PropTypes.string.isRequired, // Prop type for the selected item ID
+    selectedItemId: PropTypes.string.isRequired,
 };
 
 export default FinishedGoodsEditModal;

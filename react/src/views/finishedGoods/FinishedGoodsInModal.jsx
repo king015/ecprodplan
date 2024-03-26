@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { Modal, Form, Input, DatePicker, Button, message } from "antd";
 import axiosClient from "../../axios-client";
 import moment from "moment";
+import { ToTopOutlined } from "@ant-design/icons";
 
 const FinishedGoodsInModal = ({ visible, handleClose, selectedItemId }) => {
     const [loading, setLoading] = useState(false);
@@ -47,6 +48,8 @@ const FinishedGoodsInModal = ({ visible, handleClose, selectedItemId }) => {
         const { fg_in } = form.getFieldsValue(); // Get the value of fg_in from the form
         const submittedQuantity = parseInt(fg_in, 10); // Parse the submitted quantity
 
+        setLoading(true); // Set loading to true when starting the submission
+
         // Fetch current beginning inventory
         axiosClient
             .get(`/finished_goods/${selectedItemId}`)
@@ -82,6 +85,9 @@ const FinishedGoodsInModal = ({ visible, handleClose, selectedItemId }) => {
             .catch(() => {
                 // Handle error
                 message.error("Failed to update inventory. Please try again.");
+            })
+            .finally(() => {
+                setLoading(false); // Set loading to false after submission completes (success or error)
             });
     };
 
@@ -100,6 +106,7 @@ const FinishedGoodsInModal = ({ visible, handleClose, selectedItemId }) => {
                     Cancel
                 </Button>,
                 <Button
+                    icon={<ToTopOutlined />}
                     key="submit"
                     type="primary"
                     onClick={handleFinish}

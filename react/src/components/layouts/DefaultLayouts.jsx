@@ -44,7 +44,6 @@ export default function DefaultLayouts() {
     const onLogout = (e) => {
         e.preventDefault();
 
-        // Display confirmation message
         Modal.confirm({
             title: "Logout Confirmation",
             content: "Are you sure you want to logout?",
@@ -60,15 +59,11 @@ export default function DefaultLayouts() {
                         message.success("Logged out successfully");
                     })
                     .catch(() => {})
-                    .finally(() => {
-                        // setLoading(false);
-                    });
+                    .finally(() => {});
 
                 message.loading("Logging out...");
             },
-            onCancel: () => {
-                // Do nothing if user cancels logout
-            },
+            onCancel: () => {},
         });
     };
 
@@ -261,10 +256,22 @@ export default function DefaultLayouts() {
                         />
                     )}
                 </Header>
-                <Content style={{ margin: "16px" }}>
+                <Content
+                    style={{
+                        margin: "16px",
+                        backgroundColor: "#f0f2f5",
+                        padding: "24px",
+                        borderRadius: "8px",
+                        boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+                    }}
+                >
                     <div
                         className="site-layout-background"
-                        style={{ padding: 50, minHeight: 360 }}
+                        style={{
+                            padding: "24px",
+                            minHeight: "360px",
+                            borderRadius: "8px",
+                        }}
                     >
                         <Outlet />
                     </div>

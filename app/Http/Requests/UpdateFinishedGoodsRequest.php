@@ -18,22 +18,22 @@ class UpdateFinishedGoodsRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array
      */
     public function rules(): array
     {
         return [
-            'customer' => 'string|required',
-            'code' => 'string|required',
-            'itemDescription' => 'string|required',
-            'partNumber' => 'string|required',
-            'location' => 'string|required',
-            'beginning_inventory' => 'integer|required',
-            'beginning_date' => 'date|required',
-            'ending_inventory' => 'integer|nullable',
-            'ending_date' => 'date|nullable',
-            'fg_in' => 'integer|nullable',
-            'fg_out' => 'integer|nullable',
+            'customer' => 'required|string',
+            'code' => 'required|string',
+            'itemDescription' => 'required|string',
+            'partNumber' => 'required|string',
+            'location' => 'required|string',
+            'beginning_inventory' => 'required|integer',
+            'beginning_date' => 'required|date',
+            'ending_inventory' => 'nullable|integer',
+            'ending_date' => 'nullable|date',
+            'fg_in' => 'nullable|integer',
+            'fg_out' => 'nullable|integer',
         ];
     }
 
@@ -42,7 +42,7 @@ class UpdateFinishedGoodsRequest extends FormRequest
      *
      * @return array
      */
-    public function validationData()
+    public function validationData(): array
     {
         $data = parent::validationData();
 
