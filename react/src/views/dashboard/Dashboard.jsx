@@ -3,6 +3,7 @@ import { Line } from "@ant-design/charts";
 import { useEffect, useState } from "react";
 import axiosClient from "../../axios-client";
 import { Link } from "react-router-dom";
+import "./Dashboard.css";
 
 function Dashboard() {
     const [activityData, setActivityData] = useState([]);

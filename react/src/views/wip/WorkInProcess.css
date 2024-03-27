@@ -1,0 +1,63 @@
+/* WorkInProcess.css */
+
+/* Styles for the header */
+.work-in-process-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 9px;
+    margin-bottom: 10px;
+}
+
+/* Styles for the title */
+.work-in-process-title {
+    color: #1890ff;
+    margin-right: 5px;
+    font-weight: 600;
+    font-size: 12px;
+    margin-bottom: 0;
+}
+
+/* Styles for the navigation link */
+.work-in-process-link {
+    color: #1890ff;
+    font-weight: 600;
+    font-size: 12px;
+    text-decoration: none;
+    margin-left: 5px;
+}
+
+/* Styles for the controls container */
+.work-in-process-controls {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+/* Styles for the input field */
+.work-in-process-input {
+    width: 300px;
+    margin-right: 8px;
+}
+
+/* Styles for the buttons */
+.work-in-process-button {
+    border-radius: 5px;
+    color: #1e90ff;
+    margin-right: 8px;
+}
+
+/* Styles for the refresh button */
+.work-in-process-refresh {
+    border-radius: 50%;
+    color: #1e90ff;
+}
+
+/* Styles for the table container */
+.work-in-process-table {
+    max-width: 1800px;
+    background-color: #f0f2f5;
+}
+
+/* Additional styles can be added as needed */
