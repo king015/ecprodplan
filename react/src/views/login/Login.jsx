@@ -3,7 +3,8 @@ import { Link } from "react-router-dom";
 import { message, Form, Input, Button, Typography, Layout } from "antd";
 import axiosClient from "../../axios-client";
 import { useStateContext } from "../../components/context/ContextProvider";
-import loginBackground from "../../assets/logo3.jpg";
+// import loginBackground from "../../assets/logo3.jpg";
+import "./Login.css";
 
 const { Content } = Layout;
 const { Title } = Typography;
@@ -36,39 +37,10 @@ export default function Login() {
 
     return (
         <Layout>
-            <Content
-                style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    minHeight: "100vh",
-                    background: "#ffffff",
-                }}
-            >
-                <div
-                    style={{
-                        flex: 1,
-                        background: `url(${loginBackground})`,
-                        backgroundSize: "100% 100%",
-                        backgroundPosition: "center",
-                        backgroundRepeat: "no-repeat",
-                        height: "100vh",
-                    }}
-                ></div>
-                <div
-                    style={{
-                        flex: 1,
-                        padding: "20px",
-                        maxWidth: "400px",
-                        borderLeft: "1px solid #e0e0e0",
-                        height: "100vh",
-                        alignContent: "center",
-                    }}
-                >
-                    <Title
-                        level={4}
-                        style={{ textAlign: "left", marginBottom: "30px" }}
-                    >
+            <Content className="login-content">
+                <div className="login-background"></div>
+                <div className="login-form-container">
+                    <Title level={4} className="login-title">
                         Welcome!
                     </Title>
                     <Form
@@ -79,7 +51,7 @@ export default function Login() {
                             remember: true,
                         }}
                         size="large"
-                        style={{ textAlign: "center" }}
+                        className="login-form"
                     >
                         <Form.Item
                             name="email"
@@ -93,11 +65,7 @@ export default function Login() {
                             <Input
                                 size="large"
                                 placeholder="Email Address"
-                                style={{
-                                    borderRadius: "10px",
-                                    border: "1px solid #ccc", // Add border
-                                    padding: "12px", // Add padding
-                                }}
+                                className="login-input"
                             />
                         </Form.Item>
                         <Form.Item
@@ -112,11 +80,7 @@ export default function Login() {
                             <Input.Password
                                 size="large"
                                 placeholder="Password"
-                                style={{
-                                    borderRadius: "10px",
-                                    border: "1px solid #ccc", // Add border
-                                    padding: "12px", // Add padding
-                                }}
+                                className="login-input"
                             />
                         </Form.Item>
                         <Form.Item>
@@ -124,19 +88,13 @@ export default function Login() {
                                 type="primary"
                                 htmlType="submit"
                                 loading={loading}
-                                style={{
-                                    width: "100%",
-                                    borderRadius: "10px",
-                                    backgroundColor: "#1890ff", // Change button color
-                                    borderColor: "#1890ff", // Change border color
-                                }}
+                                className="login-button"
                             >
                                 {loading ? "Signing in..." : "Sign In"}
                             </Button>
                         </Form.Item>
                     </Form>
-
-                    <div style={{ textAlign: "center" }}>
+                    <div className="login-signup-link">
                         <Link to="/signup">
                             Don&apos;t have an account? Sign Up
                         </Link>
